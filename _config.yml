@@ -17,3 +17,8 @@ github_username:  deicidia
 
 # Build settings
 markdown: kramdown
+
+# Collections
+collections:
+  scans:
+    output: true
