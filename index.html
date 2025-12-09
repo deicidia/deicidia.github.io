@@ -4,30 +4,13 @@ layout: default
 
 <div class="home">
 
-  <h1 class="page-heading">Tests Perso</h1>
-
-  <!-- Boutons / liste de tests -->
-  <div class="actions">
-    <a class="button" href="{{ '/_tests/panda-roux.html' | prepend: site.baseurl }}">Panda Roux</a>
-  </div>
-
-  <!-- Section tests (nouvelle) -->
-  <section class="tests">
-    <h2 class="section-heading">Tests</h2>
-    <ul class="test-list">
-      {% for test in site.tests %}
-      <li><a href="{{ test.url | prepend: site.baseurl }}">{{ test.title }}</a></li>
-      {% endfor %}
-    </ul>
-  </section>
-
-  <!-- Recettes -->
-  <h2 class="page-heading">Recettes</h2>
+  <h2 class="page-heading">Posts</h2>
 
   <ul class="post-list">
     {% assign sortedPosts = site.posts | sort: 'title' %}
     {% for post in sortedPosts %}
     <li>
+      <p class="post-date">{{ post.date | date: "%Y-%m-%d" }}</p>
       <h2>
         <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
       </h2>
