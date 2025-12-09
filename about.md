@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Keckecékeca
+title: À-PROPOS
 permalink: /À-PROPOS/
 ---
 
-Recettes de la famille Thoumine et Ygrie.
+Blog.
