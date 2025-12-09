@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 09 Dec 2025 13:18:54 +0100</pubDate>
-    <lastBuildDate>Tue, 09 Dec 2025 13:18:54 +0100</lastBuildDate>
+    <pubDate>Tue, 09 Dec 2025 13:23:20 +0100</pubDate>
+    <lastBuildDate>Tue, 09 Dec 2025 13:23:20 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -17,7 +17,8 @@
 
 &lt;h2 id=&quot;premiers-essais&quot;&gt;Premiers essais&lt;/h2&gt;
 
-&lt;p class=&quot;notice&quot;&gt;Visualisation 3D d’un &lt;a href=&quot;/scans/panda-roux.html&quot;&gt;Panda roux&lt;/a&gt; (Scaniverse).&lt;/p&gt;
+&lt;p&gt;Visualisation 3D d’un &lt;a href=&quot;/scans/panda-roux.html&quot;&gt;Panda roux&lt;/a&gt; (Scaniverse).&lt;/p&gt;
+
 &lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; Double clique sur le modèle pour une meilleure manipulation de l’objet.&lt;/p&gt;
 
 &lt;h2 id=&quot;plan-daction&quot;&gt;Plan d’action&lt;/h2&gt;
