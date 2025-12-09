@@ -218,6 +218,14 @@
 .post-content {
     margin-bottom: $spacing-unit;
     text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    word-break: break-word;
+    overflow-wrap: break-word;
+
+    p {
+        text-align: justify;
+    }
 
     h2 {
         font-size: 32px;

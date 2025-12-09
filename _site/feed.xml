@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nathan Thoumine</title>
+    <description>Blog.
+</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 09 Dec 2025 12:50:04 +0100</pubDate>
+    <lastBuildDate>Tue, 09 Dec 2025 12:50:04 +0100</lastBuildDate>
+    <generator>Jekyll v4.3.2</generator>
+    
+      <item>
+        <title>UAV &amp; RL &amp; 3DGS</title>
+        <description>&lt;h2 id=&quot;objectif&quot;&gt;Objectif&lt;/h2&gt;
+&lt;p&gt;Le projet vise à utiliser l’Apprentissage par Renforcement (RL) pour que le drone apprenne à optimiser sa trajectoire de vol. L’objectif est de maximiser la qualité de la reconstruction 3D (3D Gaussian Splatting) en exploitant le feedback d’incertitude du modèle. Cela permet de couvrir efficacement les zones mal reconstruites tout en minimisant le temps de vol.&lt;/p&gt;
+
+&lt;h2 id=&quot;premiers-essais&quot;&gt;Premiers essais&lt;/h2&gt;
+
+&lt;p&gt;Visualisation 3D “&lt;a href=&quot;/scans/panda-roux.html&quot;&gt;Panda&lt;/a&gt;” (Scaniverse).&lt;/p&gt;
+</description>
+        <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
+        <link>http://localhost:4000/2025/12/09/UAV-&-RL-&-3DGS.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/12/09/UAV-&-RL-&-3DGS.html</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
