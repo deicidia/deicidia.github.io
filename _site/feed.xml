@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 10 Dec 2025 14:06:35 +0100</pubDate>
-    <lastBuildDate>Wed, 10 Dec 2025 14:06:35 +0100</lastBuildDate>
+    <pubDate>Wed, 10 Dec 2025 14:30:44 +0100</pubDate>
+    <lastBuildDate>Wed, 10 Dec 2025 14:30:44 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -17,7 +17,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/images/prometheus.gif&quot; alt=&quot;image&quot; width=&quot;auto&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
 &lt;blockquote&gt;
-  &lt;p&gt;Pour avoir un équivalent, il me faudrait un drone comme l’Antigravity A1, mais c’est trop cher.&lt;/p&gt;
+  &lt;p&gt;Je fixe une caméra Insta360 sur un drone et le tour est joué, probablement.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h3 id=&quot;pipeline&quot;&gt;Pipeline&lt;/h3&gt;
