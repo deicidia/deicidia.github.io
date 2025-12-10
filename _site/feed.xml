@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 Dec 2025 00:00:23 +0100</pubDate>
-    <lastBuildDate>Thu, 11 Dec 2025 00:00:23 +0100</lastBuildDate>
+    <pubDate>Thu, 11 Dec 2025 00:01:07 +0100</pubDate>
+    <lastBuildDate>Thu, 11 Dec 2025 00:01:07 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -27,6 +27,7 @@
 &lt;h2 id=&quot;premiers-pas-avec-3dgs&quot;&gt;Premiers pas avec 3DGS&lt;/h2&gt;
 
 &lt;h3 id=&quot;test-avec-téléphone&quot;&gt;Test avec téléphone&lt;/h3&gt;
+
 &lt;p&gt;Visualisation 3D d’un &lt;strong&gt;&lt;a href=&quot;/scans/panda-roux.html&quot;&gt;panda roux&lt;/a&gt;&lt;/strong&gt;, reconstruite à partir de données &lt;strong&gt;Scaniverse&lt;/strong&gt; et exporté avec &lt;strong&gt;SuperSplat&lt;/strong&gt;.&lt;/p&gt;
 
 &lt;blockquote&gt;
