@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 10 Dec 2025 16:42:35 +0100</pubDate>
-    <lastBuildDate>Wed, 10 Dec 2025 16:42:35 +0100</lastBuildDate>
+    <pubDate>Thu, 11 Dec 2025 00:00:23 +0100</pubDate>
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:23 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -37,8 +37,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/images/zig.png&quot; alt=&quot;image&quot; width=&quot;auto&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Retour d’expérience :&lt;/strong&gt;&lt;br /&gt;
-Avec seulement 30 images, le résultat est peu satisfaisant. Les paramètres par défaut de &lt;strong&gt;COLMAP&lt;/strong&gt; et &lt;strong&gt;BRUSH&lt;/strong&gt; ne semblent pas adaptés à ce cas, et les temps de calcul sont significativement élevés.&lt;/p&gt;
+&lt;p&gt;Avec seulement 30 images, le résultat est peu satisfaisant. Les paramètres par défaut de &lt;strong&gt;COLMAP&lt;/strong&gt; et &lt;strong&gt;BRUSH&lt;/strong&gt; ne semblent pas adaptés à ce cas, et les temps de calcul sont significativement élevés.&lt;/p&gt;
 
 &lt;p&gt;À titre de comparaison, &lt;strong&gt;Scaniverse&lt;/strong&gt; traite une vidéo de 2 minutes en environ &lt;strong&gt;2 à 5 minutes sur smartphone&lt;/strong&gt;, alors que la même charge de travail nécessite ici près de &lt;strong&gt;20 minutes sur PC&lt;/strong&gt; (ASUS Dual RX 7800XT O16G).&lt;/p&gt;
 
@@ -54,6 +53,11 @@ Avec seulement 30 images, le résultat est peu satisfaisant. Les paramètres par
   &lt;p&gt;Most of the time making a 3DGS is actually doing structure from motion. If you know the order of the camera images, do SLAM in real time, and get the gyro data — you can eliminate most of the SfM time.&lt;br /&gt;
 Training the splats is pretty fast. It’s everything before training that takes time. You can train a 16M splat to over 100k iterations in an hour or two on most hardware.&lt;/p&gt;
 &lt;/blockquote&gt;
+
+&lt;p&gt;Avec le Fuji, en mode vidéo cette fois-ci &lt;strong&gt;(&lt;a href=&quot;/scans/fuji.html&quot;&gt;scan&lt;/a&gt;)&lt;/strong&gt;. J’ai utilisé ffmpeg pour ne garder qu’une image par seconde avec la ligne de commande suivante :&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; room.MOV &lt;span class=&quot;nt&quot;&gt;-vf&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;fps=1&quot;&lt;/span&gt; imgs/frame_%05d.png
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
         <link>http://localhost:4000/2025/12/09/UAV-&-RL-&-3DGS.html</link>
