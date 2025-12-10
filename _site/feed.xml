@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 10 Dec 2025 16:13:05 +0100</pubDate>
-    <lastBuildDate>Wed, 10 Dec 2025 16:13:05 +0100</lastBuildDate>
+    <pubDate>Wed, 10 Dec 2025 16:32:19 +0100</pubDate>
+    <lastBuildDate>Wed, 10 Dec 2025 16:32:19 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -40,9 +40,18 @@
 &lt;p&gt;&lt;strong&gt;Retour d’expérience :&lt;/strong&gt;&lt;br /&gt;
 Avec seulement 30 images, le résultat est peu satisfaisant. Les paramètres par défaut de COLMAP et BRUSH ne semblent pas adaptés à ce cas, et les temps de calcul sont significativement élevés.&lt;/p&gt;
 
-&lt;p&gt;À titre de comparaison, Scaniverse traite une vidéo de 2 minutes en environ &lt;strong&gt;2 à 5 minutes sur smartphone&lt;/strong&gt;, alors que la même charge de travail nécessite ici près de &lt;strong&gt;20 minutes sur PC&lt;/strong&gt; (ASUS Dual RX 7800XT O16G).&lt;/p&gt;
+&lt;p&gt;À titre de comparaison, Scaniverse traite une vidéo de 2 minutes en environ 2 à 5 minutes sur smartphone, alors que la même charge de travail nécessite ici près de 20 minutes sur PC (ASUS Dual RX 7800XT O16G).&lt;/p&gt;
 
 &lt;p&gt;Pour réduire le temps de calcul côté reconstruction géométrique, il serait pertinent d’évaluer &lt;a href=&quot;https://github.com/colmap/glomap&quot;&gt;GLOMAP&lt;/a&gt; comme alternative ou accélérateur de COLMAP.&lt;/p&gt;
+
+&lt;p&gt;Il est possible que les capteurs embarqués sur le drone permettent de réduire les temps de calcul, hypothèse basée sur un &lt;a href=&quot;https://www.reddit.com/r/GaussianSplatting/comments/1mdjscn/how_is_the_scaniverse_app_even_possible/&quot;&gt;commentaire Reddit&lt;/a&gt; :&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Most of the time making a 3DGS is actually doing structure from motion. If you know the order of the camera images, do SLAM in real time, and get the gyro data — you can eliminate most of the SfM time.&lt;br /&gt;
+Training the splats is pretty fast. It’s everything before training that takes time. You can train a 16M splat to over 100k iterations in an hour or two on most hardware.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;En tout cas, il va falloir optimiser pour rendre le processus plus rapide.&lt;/p&gt;
 </description>
         <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
         <link>http://localhost:4000/2025/12/09/UAV-&-RL-&-3DGS.html</link>

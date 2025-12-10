@@ -89,9 +89,18 @@
 <p><strong>Retour d’expérience :</strong><br />
 Avec seulement 30 images, le résultat est peu satisfaisant. Les paramètres par défaut de COLMAP et BRUSH ne semblent pas adaptés à ce cas, et les temps de calcul sont significativement élevés.</p>
 
-<p>À titre de comparaison, Scaniverse traite une vidéo de 2 minutes en environ <strong>2 à 5 minutes sur smartphone</strong>, alors que la même charge de travail nécessite ici près de <strong>20 minutes sur PC</strong> (ASUS Dual RX 7800XT O16G).</p>
+<p>À titre de comparaison, Scaniverse traite une vidéo de 2 minutes en environ 2 à 5 minutes sur smartphone, alors que la même charge de travail nécessite ici près de 20 minutes sur PC (ASUS Dual RX 7800XT O16G).</p>
 
 <p>Pour réduire le temps de calcul côté reconstruction géométrique, il serait pertinent d’évaluer <a href="https://github.com/colmap/glomap">GLOMAP</a> comme alternative ou accélérateur de COLMAP.</p>
+
+<p>Il est possible que les capteurs embarqués sur le drone permettent de réduire les temps de calcul, hypothèse basée sur un <a href="https://www.reddit.com/r/GaussianSplatting/comments/1mdjscn/how_is_the_scaniverse_app_even_possible/">commentaire Reddit</a> :</p>
+
+<blockquote>
+  <p>Most of the time making a 3DGS is actually doing structure from motion. If you know the order of the camera images, do SLAM in real time, and get the gyro data — you can eliminate most of the SfM time.<br />
+Training the splats is pretty fast. It’s everything before training that takes time. You can train a 16M splat to over 100k iterations in an hour or two on most hardware.</p>
+</blockquote>
+
+<p>En tout cas, il va falloir optimiser pour rendre le processus plus rapide.</p>
 
   </div>
 
