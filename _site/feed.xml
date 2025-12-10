@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 10 Dec 2025 01:57:59 +0100</pubDate>
-    <lastBuildDate>Wed, 10 Dec 2025 01:57:59 +0100</lastBuildDate>
+    <pubDate>Wed, 10 Dec 2025 12:16:52 +0100</pubDate>
+    <lastBuildDate>Wed, 10 Dec 2025 12:16:52 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -15,9 +15,14 @@
         <description>&lt;h2 id=&quot;objectif&quot;&gt;Objectif&lt;/h2&gt;
 &lt;p&gt;Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruction 3D basée sur le &lt;strong&gt;3D Gaussian Splatting&lt;/strong&gt;. En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.&lt;/p&gt;
 
+&lt;p&gt;&lt;img src=&quot;/images/prometheus.gif&quot; alt=&quot;image&quot; width=&quot;auto&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Pour avoir un equivalent il me faudrait un drone comme le Antigravity A1, trop cher.&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;h3 id=&quot;pipeline&quot;&gt;Pipeline&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/UAV.png&quot; alt=&quot;image&quot; width=&quot;500&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/UAV.png&quot; alt=&quot;image&quot; width=&quot;auto&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;premiers-pas-avec-3dgs&quot;&gt;Premiers pas avec 3DGS&lt;/h2&gt;
 
