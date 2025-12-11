@@ -6,56 +6,96 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 Dec 2025 10:27:12 +0100</pubDate>
-    <lastBuildDate>Thu, 11 Dec 2025 10:27:12 +0100</lastBuildDate>
+    <pubDate>Thu, 11 Dec 2025 12:46:55 +0100</pubDate>
+    <lastBuildDate>Thu, 11 Dec 2025 12:46:55 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
         <title>Optimisation de Trajectoire UAV via RL pour le 3D Gaussian Splatting</title>
-        <description>&lt;h2 id=&quot;objectif&quot;&gt;Objectif&lt;/h2&gt;
+        <description>&lt;h2 id=&quot;objectif-du-projet&quot;&gt;Objectif du projet&lt;/h2&gt;
 &lt;p&gt;Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruction 3D basée sur le &lt;strong&gt;3D Gaussian Splatting&lt;/strong&gt;. En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Objectif :&lt;/strong&gt; Apprendre.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/prometheus.gif&quot; alt=&quot;image&quot; width=&quot;auto&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
 &lt;blockquote&gt;
   &lt;p&gt;Je fixe une caméra Insta360 sur un drone et le tour est joué, probablement.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h3 id=&quot;pipeline&quot;&gt;Pipeline&lt;/h3&gt;
+&lt;h3 id=&quot;architecture-du-pipeline&quot;&gt;Architecture du Pipeline&lt;/h3&gt;
+
+&lt;p&gt;Pour atteindre cette autonomie, le système repose sur une boucle fermée entre la perception et l’action. Voici l’architecture globale envisagée (premier jet) :&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/UAV.png&quot; alt=&quot;image&quot; width=&quot;auto&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;premiers-pas-avec-3dgs&quot;&gt;Premiers pas avec 3DGS&lt;/h2&gt;
-
-&lt;h3 id=&quot;test-avec-téléphone&quot;&gt;Test avec téléphone&lt;/h3&gt;
-
-&lt;p&gt;Visualisation 3D d’un &lt;strong&gt;&lt;a href=&quot;/scans/panda-roux.html&quot;&gt;panda roux&lt;/a&gt;&lt;/strong&gt;, reconstruite à partir de données &lt;strong&gt;Scaniverse&lt;/strong&gt; et exporté avec &lt;strong&gt;SuperSplat&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Double-cliquez sur le modèle pour une manipulation plus intuitive et un meilleur contrôle de la vue.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;test-avec-un-xt-2--23-mm-f2--colmap--brush&quot;&gt;Test avec un XT-2 + 23 mm f/2 — COLMAP &amp;amp; BRUSH&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/zig.png&quot; alt=&quot;image&quot; width=&quot;auto&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Avec seulement 30 images, le résultat est peu satisfaisant. Les paramètres par défaut de &lt;strong&gt;COLMAP&lt;/strong&gt; et &lt;strong&gt;BRUSH&lt;/strong&gt; ne semblent pas adaptés à ce cas, et les temps de calcul sont significativement élevés.&lt;/p&gt;
-
-&lt;p&gt;À titre de comparaison, &lt;strong&gt;Scaniverse&lt;/strong&gt; traite une vidéo de 2 minutes en environ &lt;strong&gt;2 à 5 minutes sur smartphone&lt;/strong&gt;, alors que la même charge de travail nécessite ici près de &lt;strong&gt;20 minutes sur PC&lt;/strong&gt; (ASUS Dual RX 7800XT O16G).&lt;/p&gt;
-
-&lt;p&gt;Pour réduire le temps de calcul côté reconstruction géométrique, il serait pertinent d’évaluer :&lt;/p&gt;
 &lt;ol&gt;
-  &lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/colmap/glomap&quot;&gt;GLOMAP&lt;/a&gt;&lt;/strong&gt; : alternative ou accélérateur de COLMAP.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/NVlabs/CF-3DGS&quot;&gt;CF-3DGS&lt;/a&gt;&lt;/strong&gt; : approche alternative permettant de contourner COLMAP.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Acquisition :&lt;/strong&gt; Le drone capture des images et des données inertielles.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Estimation &amp;amp; Reconstruction :&lt;/strong&gt; Le modèle 3DGS est initialisé sommairement, puis raffiné.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Analyse d’incertitude :&lt;/strong&gt; Question ouverte à explorer.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Décision (RL) :&lt;/strong&gt; L’agent reçoit cet état et calcule la prochaine meilleure position pour combler les lacunes.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;Il est possible que les capteurs embarqués sur le drone permettent de réduire les temps de calcul, hypothèse basée sur un &lt;a href=&quot;https://www.reddit.com/r/GaussianSplatting/comments/1mdjscn/how_is_the_scaniverse_app_even_possible/&quot;&gt;commentaire Reddit&lt;/a&gt; :&lt;/p&gt;
+&lt;h2 id=&quot;état-des-lieux-et-premiers-benchmarks&quot;&gt;État des lieux et Premiers Benchmarks&lt;/h2&gt;
+
+&lt;p&gt;Avant d’intégrer la boucle de contrôle RL, il est crucial de valider la chaîne de reconstruction 3DGS et d’identifier les goulots d’étranglement temporels. J’ai réalisé plusieurs tests comparatifs.&lt;/p&gt;
+
+&lt;h3 id=&quot;1-test-avec-téléphone&quot;&gt;1. Test avec téléphone&lt;/h3&gt;
+
+&lt;p&gt;J’ai d’abord testé une approche “grand public” pour établir une baseline de qualité et de vitesse.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Sujet :&lt;/strong&gt; &lt;strong&gt;&lt;a href=&quot;/scans/panda-roux.html&quot;&gt;panda roux&lt;/a&gt;&lt;/strong&gt;,&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Outil :&lt;/strong&gt; Scaniverse et SuperSplat pour l’export.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;Most of the time making a 3DGS is actually doing structure from motion. If you know the order of the camera images, do SLAM in real time, and get the gyro data — you can eliminate most of the SfM time.&lt;br /&gt;
-Training the splats is pretty fast. It’s everything before training that takes time. You can train a 16M splat to over 100k iterations in an hour or two on most hardware.&lt;/p&gt;
+  &lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Avec le Fuji, en mode vidéo cette fois-ci &lt;strong&gt;(&lt;a href=&quot;/scans/fuji.html&quot;&gt;scan&lt;/a&gt;)&lt;/strong&gt;. J’ai utilisé ffmpeg pour ne garder qu’une image par seconde. En effet, utiliser le mode &lt;a href=&quot;https://colmap.github.io/tutorial.html#:~:text=Sequential%20Matching%3A&quot;&gt;&lt;strong&gt;Sequential Matching&lt;/strong&gt;&lt;/a&gt; accélère grandement les calculs puisqu’il s’agit d’une vidéo.&lt;/p&gt;
+&lt;h3 id=&quot;2-le-test-haute-fidélité--fujifilm-xt-2--colmap&quot;&gt;2. Le test haute fidélité : Fujifilm XT-2 + COLMAP&lt;/h3&gt;
+
+&lt;p&gt;Pour se rapprocher des conditions d’un drone porteur d’une optique de qualité, j’ai utilisé un Fuji XT-2 (23mm f/2) et traité les images sur PC.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/zig.png&quot; alt=&quot;Visualisation Zig&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Le constat :&lt;/strong&gt;
+Avec seulement 30 images traitées via le pipeline classique (&lt;strong&gt;COLMAP&lt;/strong&gt; pour le Structure-from-Motion + &lt;strong&gt;BRUSH&lt;/strong&gt;), les résultats sont mitigés et surtout très lents.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Scaniverse :&lt;/strong&gt; 2 min de vidéo ~2 à 5 min de traitement (Smartphone).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Pipeline PC :&lt;/strong&gt; 30 images ~20 min de traitement (RX 7800XT).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Cette lourdeur de calcul est un obstacle majeur pour du &lt;em&gt;Real-Time RL&lt;/em&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;pistes-doptimisation--contourner-le-sfm&quot;&gt;Pistes d’optimisation : Contourner le SfM&lt;/h2&gt;
+
+&lt;p&gt;L’étape la plus coûteuse n’est pas l’entraînement des gaussiennes, mais le calcul de la pose des caméras (Structure from Motion - SfM). Comme le soulignait une discussion pertinente sur &lt;a href=&quot;https://www.reddit.com/r/GaussianSplatting/comments/1mdjscn/how_is_the_scaniverse_app_even_possible/&quot;&gt;Reddit&lt;/a&gt; :&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“La plupart du temps, créer un 3DGS revient à faire du Structure from Motion. Si vous connaissez l’ordre des images, faites du SLAM en temps réel et récupérez les données du gyroscope, vous pouvez éliminer la majeure partie du temps de SfM. […] L’entraînement des splats est rapide. C’est tout ce qui précède qui prend du temps.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;Hypothèse de travail :&lt;/strong&gt;
+Le drone disposant de capteurs embarqués précis (IMU, GPS, Odométrie), nous pouvons nous passer du calcul photogrammétrique pur de COLMAP.&lt;/p&gt;
+
+&lt;h3 id=&quot;solutions-techniques-envisagées&quot;&gt;Solutions techniques envisagées&lt;/h3&gt;
+
+&lt;p&gt;Pour réduire le temps de calcul côté reconstruction géométrique, je vais évaluer :&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/colmap/glomap&quot;&gt;GLOMAP&lt;/a&gt;&lt;/strong&gt; : Une alternative moderne et plus efficace à COLMAP.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/NVlabs/CF-3DGS&quot;&gt;CF-3DGS&lt;/a&gt;&lt;/strong&gt; : Une approche utilisant la continuité temporelle des flux vidéo pour contourner COLMAP.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;validation-avec-flux-vidéo-sequential-matching&quot;&gt;Validation avec flux vidéo (Sequential Matching)&lt;/h3&gt;
+
+&lt;p&gt;En appliquant cette logique sur une vidéo du Fuji XT-2 (&lt;a href=&quot;/scans/fuji.html&quot;&gt;voir le scan&lt;/a&gt;), j’ai utilisé &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ffmpeg&lt;/code&gt; pour extraire 1 image par seconde :&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; input_video.mp4 &lt;span class=&quot;nt&quot;&gt;-vf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fps&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 out%d.png
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
         <link>http://localhost:4000/2025/12/09/UAV-&-RL-&-3DGS.html</link>
