@@ -62,7 +62,7 @@
 
   <div class="post-content" itemprop="articleBody">
     <h2 id="objectif-du-projet">Objectif du projet</h2>
-<p>Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruction 3D basée sur le <strong>3D Gaussian Splatting</strong>. En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.</p>
+<p>Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruction 3D basée sur le 3D Gaussian Splatting (3DGS). En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.</p>
 
 <p><strong>Objectif :</strong> Apprendre.</p>
 
@@ -98,7 +98,7 @@
 </ul>
 
 <blockquote>
-  <p><strong>Note :</strong> Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.</p>
+  <p>Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.</p>
 </blockquote>
 
 <h3 id="2-le-test-haute-fidélité--fujifilm-xt-2--colmap">2. Le test haute fidélité : Fujifilm XT-2 + COLMAP</h3>
@@ -121,7 +121,7 @@ Avec seulement 30 images traitées via le pipeline classique (<strong>COLMAP</st
 
 <h2 id="pistes-doptimisation--contourner-le-sfm">Pistes d’optimisation : Contourner le SfM</h2>
 
-<p>L’étape la plus coûteuse n’est pas l’entraînement des gaussiennes, mais le calcul de la pose des caméras (Structure from Motion - SfM). Comme le soulignait une discussion pertinente sur <a href="https://www.reddit.com/r/GaussianSplatting/comments/1mdjscn/how_is_the_scaniverse_app_even_possible/">Reddit</a> :</p>
+<p>L’étape la plus coûteuse n’est pas l’entraînement des gaussiennes, mais le calcul de la pose des caméras (Structure from Motion - SfM). Comme le soulignait une discussion pertinente sur <a href="https://www.reddit.com/r/GaussianSplatting/comments/1mdjscn/how_is_the_scaniverse_app_even_possible/"><strong>Reddit</strong></a> :</p>
 
 <blockquote>
   <p>“La plupart du temps, créer un 3DGS revient à faire du Structure from Motion. Si vous connaissez l’ordre des images, faites du SLAM en temps réel et récupérez les données du gyroscope, vous pouvez éliminer la majeure partie du temps de SfM. […] L’entraînement des splats est rapide. C’est tout ce qui précède qui prend du temps.”</p>
@@ -141,10 +141,7 @@ Le drone disposant de capteurs embarqués précis (IMU, GPS, Odométrie), nous p
 
 <h3 id="validation-avec-flux-vidéo-sequential-matching">Validation avec flux vidéo (Sequential Matching)</h3>
 
-<p>En appliquant cette logique sur une vidéo du Fuji XT-2 (<a href="/scans/fuji.html">voir le scan</a>), j’ai utilisé <code class="language-plaintext highlighter-rouge">ffmpeg</code> pour extraire 1 image par seconde :</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg <span class="nt">-i</span> input_video.mp4 <span class="nt">-vf</span> <span class="nv">fps</span><span class="o">=</span>1 out%d.png
-</code></pre></div></div>
+<p>En appliquant cette logique sur une vidéo du Fuji XT-2 (<a href="/scans/fuji.html"><strong>voir le scan</strong></a>), j’ai utilisé ffmpeg pour extraire 1 image par seconde de la vidéo mais il serait intéressant de tester la différence de rendu en fonction du nombre d’images extraites.</p>
 
 <p>L’utilisation du mode Sequential Matching de COLMAP a considérablement accéléré les calculs, confirmant que l’exploitation de la cohérence temporelle (vidéo vs photos en vrac) est la clé pour notre application.</p>
 

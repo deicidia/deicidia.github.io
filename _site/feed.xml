@@ -6,14 +6,14 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 Dec 2025 14:15:33 +0100</pubDate>
-    <lastBuildDate>Thu, 11 Dec 2025 14:15:33 +0100</lastBuildDate>
+    <pubDate>Thu, 11 Dec 2025 14:35:39 +0100</pubDate>
+    <lastBuildDate>Thu, 11 Dec 2025 14:35:39 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
         <title>Optimisation de Trajectoire UAV via RL pour le 3D Gaussian Splatting</title>
         <description>&lt;h2 id=&quot;objectif-du-projet&quot;&gt;Objectif du projet&lt;/h2&gt;
-&lt;p&gt;Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruction 3D basée sur le &lt;strong&gt;3D Gaussian Splatting&lt;/strong&gt;. En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.&lt;/p&gt;
+&lt;p&gt;Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruction 3D basée sur le 3D Gaussian Splatting (3DGS). En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Objectif :&lt;/strong&gt; Apprendre.&lt;/p&gt;
 
@@ -49,7 +49,7 @@
 &lt;/ul&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.&lt;/p&gt;
+  &lt;p&gt;Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h3 id=&quot;2-le-test-haute-fidélité--fujifilm-xt-2--colmap&quot;&gt;2. Le test haute fidélité : Fujifilm XT-2 + COLMAP&lt;/h3&gt;
@@ -72,7 +72,7 @@ Avec seulement 30 images traitées via le pipeline classique (&lt;strong&gt;COLM
 
 &lt;h2 id=&quot;pistes-doptimisation--contourner-le-sfm&quot;&gt;Pistes d’optimisation : Contourner le SfM&lt;/h2&gt;
 
-&lt;p&gt;L’étape la plus coûteuse n’est pas l’entraînement des gaussiennes, mais le calcul de la pose des caméras (Structure from Motion - SfM). Comme le soulignait une discussion pertinente sur &lt;a href=&quot;https://www.reddit.com/r/GaussianSplatting/comments/1mdjscn/how_is_the_scaniverse_app_even_possible/&quot;&gt;Reddit&lt;/a&gt; :&lt;/p&gt;
+&lt;p&gt;L’étape la plus coûteuse n’est pas l’entraînement des gaussiennes, mais le calcul de la pose des caméras (Structure from Motion - SfM). Comme le soulignait une discussion pertinente sur &lt;a href=&quot;https://www.reddit.com/r/GaussianSplatting/comments/1mdjscn/how_is_the_scaniverse_app_even_possible/&quot;&gt;&lt;strong&gt;Reddit&lt;/strong&gt;&lt;/a&gt; :&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;“La plupart du temps, créer un 3DGS revient à faire du Structure from Motion. Si vous connaissez l’ordre des images, faites du SLAM en temps réel et récupérez les données du gyroscope, vous pouvez éliminer la majeure partie du temps de SfM. […] L’entraînement des splats est rapide. C’est tout ce qui précède qui prend du temps.”&lt;/p&gt;
@@ -92,10 +92,7 @@ Le drone disposant de capteurs embarqués précis (IMU, GPS, Odométrie), nous p
 
 &lt;h3 id=&quot;validation-avec-flux-vidéo-sequential-matching&quot;&gt;Validation avec flux vidéo (Sequential Matching)&lt;/h3&gt;
 
-&lt;p&gt;En appliquant cette logique sur une vidéo du Fuji XT-2 (&lt;a href=&quot;/scans/fuji.html&quot;&gt;voir le scan&lt;/a&gt;), j’ai utilisé &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ffmpeg&lt;/code&gt; pour extraire 1 image par seconde :&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; input_video.mp4 &lt;span class=&quot;nt&quot;&gt;-vf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fps&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 out%d.png
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;En appliquant cette logique sur une vidéo du Fuji XT-2 (&lt;a href=&quot;/scans/fuji.html&quot;&gt;&lt;strong&gt;voir le scan&lt;/strong&gt;&lt;/a&gt;), j’ai utilisé ffmpeg pour extraire 1 image par seconde de la vidéo mais il serait intéressant de tester la différence de rendu en fonction du nombre d’images extraites.&lt;/p&gt;
 
 &lt;p&gt;L’utilisation du mode Sequential Matching de COLMAP a considérablement accéléré les calculs, confirmant que l’exploitation de la cohérence temporelle (vidéo vs photos en vrac) est la clé pour notre application.&lt;/p&gt;
 </description>
