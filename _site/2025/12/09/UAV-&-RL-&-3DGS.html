@@ -104,10 +104,7 @@
 Training the splats is pretty fast. It’s everything before training that takes time. You can train a 16M splat to over 100k iterations in an hour or two on most hardware.</p>
 </blockquote>
 
-<p>Avec le Fuji, en mode vidéo cette fois-ci <strong>(<a href="/scans/fuji.html">scan</a>)</strong>. J’ai utilisé ffmpeg pour ne garder qu’une image par seconde avec la ligne de commande suivante :</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg <span class="nt">-i</span> room.MOV <span class="nt">-vf</span> <span class="s2">"fps=1"</span> imgs/frame_%05d.png
-</code></pre></div></div>
+<p>Avec le Fuji, en mode vidéo cette fois-ci <strong>(<a href="/scans/fuji.html">scan</a>)</strong>. J’ai utilisé ffmpeg pour ne garder qu’une image par seconde. En effet, utiliser le mode <a href="https://colmap.github.io/tutorial.html#:~:text=Sequential%20Matching%3A"><strong>Sequential Matching</strong></a> accélère grandement les calculs puisqu’il s’agit d’une vidéo.</p>
 
   </div>
 

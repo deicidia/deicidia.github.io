@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 Dec 2025 00:01:07 +0100</pubDate>
-    <lastBuildDate>Thu, 11 Dec 2025 00:01:07 +0100</lastBuildDate>
+    <pubDate>Thu, 11 Dec 2025 10:27:12 +0100</pubDate>
+    <lastBuildDate>Thu, 11 Dec 2025 10:27:12 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -55,10 +55,7 @@
 Training the splats is pretty fast. It’s everything before training that takes time. You can train a 16M splat to over 100k iterations in an hour or two on most hardware.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Avec le Fuji, en mode vidéo cette fois-ci &lt;strong&gt;(&lt;a href=&quot;/scans/fuji.html&quot;&gt;scan&lt;/a&gt;)&lt;/strong&gt;. J’ai utilisé ffmpeg pour ne garder qu’une image par seconde avec la ligne de commande suivante :&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; room.MOV &lt;span class=&quot;nt&quot;&gt;-vf&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;fps=1&quot;&lt;/span&gt; imgs/frame_%05d.png
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Avec le Fuji, en mode vidéo cette fois-ci &lt;strong&gt;(&lt;a href=&quot;/scans/fuji.html&quot;&gt;scan&lt;/a&gt;)&lt;/strong&gt;. J’ai utilisé ffmpeg pour ne garder qu’une image par seconde. En effet, utiliser le mode &lt;a href=&quot;https://colmap.github.io/tutorial.html#:~:text=Sequential%20Matching%3A&quot;&gt;&lt;strong&gt;Sequential Matching&lt;/strong&gt;&lt;/a&gt; accélère grandement les calculs puisqu’il s’agit d’une vidéo.&lt;/p&gt;
 </description>
         <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
         <link>http://localhost:4000/2025/12/09/UAV-&-RL-&-3DGS.html</link>
