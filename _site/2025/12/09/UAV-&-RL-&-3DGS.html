@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Optimisation de Trajectoire UAV via RL pour le 3D Gaussian Splatting</title>
-  <meta name="description" content="Objectif du projetLe projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruc...">
+  <meta name="description" content="Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement (RL) afin d’améliorer la qualité d’une reconstruction 3D basée...">
 
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://localhost:4000/2025/12/09/UAV-&-RL-&-3DGS.html">
@@ -61,17 +61,16 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <h2 id="objectif-du-projet">Objectif du projet</h2>
-<p>Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruction 3D basée sur le 3D Gaussian Splatting (3DGS). En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.</p>
+    <p>Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement (RL) afin d’améliorer la qualité d’une reconstruction 3D basée sur le 3D Gaussian Splatting (3DGS). En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.</p>
 
-<p><strong>Objectif :</strong> Apprendre.</p>
+<p><strong>Objectif :</strong> Scanner une pièce avec un drone autonome, et apprendre.</p>
 
 <p><img src="/images/prometheus.gif" alt="image" width="auto" height="auto" style="display: block; margin: 0 auto;" /></p>
 <blockquote>
   <p>Je fixe une caméra Insta360 sur un drone et le tour est joué, probablement.</p>
 </blockquote>
 
-<h3 id="architecture-du-pipeline">Architecture du Pipeline</h3>
+<h2 id="architecture-du-pipeline">Architecture du Pipeline</h2>
 
 <p>Pour atteindre cette autonomie, le système repose sur une boucle fermée entre la perception et l’action. Voici l’architecture globale envisagée (premier jet) :</p>
 
@@ -88,7 +87,7 @@
 
 <p>Avant d’intégrer la boucle de contrôle RL, il est crucial de valider la chaîne de reconstruction 3DGS et d’identifier les goulots d’étranglement temporels. J’ai réalisé plusieurs tests comparatifs.</p>
 
-<h3 id="1-test-avec-téléphone">1. Test avec téléphone</h3>
+<h3 id="test-avec-téléphone">Test avec téléphone</h3>
 
 <p>J’ai d’abord testé une approche “grand public” pour établir une baseline de qualité et de vitesse.</p>
 
@@ -97,25 +96,28 @@
   <li><strong>Outil :</strong> Scaniverse et SuperSplat pour l’export.</li>
 </ul>
 
-<blockquote>
-  <p>Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.</p>
-</blockquote>
+<p>Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.</p>
 
-<h3 id="2-le-test-haute-fidélité--fujifilm-xt-2--colmap">2. Le test haute fidélité : Fujifilm XT-2 + COLMAP</h3>
+<h3 id="test-haute-fidélité--fujifilm-xt-2--colmap">Test haute fidélité : Fujifilm XT-2 + COLMAP</h3>
 
 <p>Pour se rapprocher des conditions d’un drone porteur d’une optique de qualité, j’ai utilisé un Fuji XT-2 (23mm f/2) et traité les images sur PC.</p>
 
 <p><img src="/images/zig.png" alt="Visualisation Zig" /></p>
 
-<p><strong>Le constat :</strong>
-Avec seulement 30 images traitées via le pipeline classique (<strong>COLMAP</strong> pour le Structure-from-Motion + <strong>BRUSH</strong>), les résultats sont mitigés et surtout très lents.</p>
+<h4 id="première-expérience">Première expérience</h4>
+<p>Avec seulement 30 images traitées via le pipeline classique (<strong>COLMAP</strong> pour le Structure-from-Motion + <strong>BRUSH</strong>), les résultats sont mitigés et surtout très lents.</p>
 
 <ul>
-  <li><strong>Scaniverse :</strong> 2 min de vidéo ~2 à 5 min de traitement (Smartphone).</li>
+  <li><strong>Scaniverse :</strong> 2 min de vidéo ~5 à 10 min de traitement (Smartphone).</li>
   <li><strong>Pipeline PC :</strong> 30 images ~20 min de traitement (RX 7800XT).</li>
 </ul>
 
-<p>Cette lourdeur de calcul est un obstacle majeur pour du <em>Real-Time RL</em>.</p>
+<p>Cette lourdeur de calcul est un obstacle majeur pour du <em>Real-Time RL</em> mais est due au mode Exhaustive Matching de COLMAP qui compare toutes les images entre elles.</p>
+
+<h4 id="deuxième-expérience">Deuxième expérience</h4>
+<p>J’ai testé dans un second temps avec une vidéo du Fuji XT-2 (<a href="/scans/fuji.html"><strong>voir le scan</strong></a>). J’ai utilisé ffmpeg pour extraire 1 image par seconde de la vidéo mais il serait intéressant de tester la différence de rendu en fonction du nombre d’images extraites.</p>
+
+<p>L’utilisation du mode Sequential Matching de COLMAP a considérablement accéléré les calculs, confirmant que l’exploitation de la cohérence temporelle (vidéo vs photos en vrac) est la clé pour notre application.</p>
 
 <hr />
 
@@ -139,11 +141,6 @@ Le drone disposant de capteurs embarqués précis (IMU, GPS, Odométrie), nous p
   <li><strong><a href="https://github.com/NVlabs/CF-3DGS">CF-3DGS</a></strong> : Une approche utilisant la continuité temporelle des flux vidéo pour contourner COLMAP.</li>
 </ol>
 
-<h3 id="validation-avec-flux-vidéo-sequential-matching">Validation avec flux vidéo (Sequential Matching)</h3>
-
-<p>En appliquant cette logique sur une vidéo du Fuji XT-2 (<a href="/scans/fuji.html"><strong>voir le scan</strong></a>), j’ai utilisé ffmpeg pour extraire 1 image par seconde de la vidéo mais il serait intéressant de tester la différence de rendu en fonction du nombre d’images extraites.</p>
-
-<p>L’utilisation du mode Sequential Matching de COLMAP a considérablement accéléré les calculs, confirmant que l’exploitation de la cohérence temporelle (vidéo vs photos en vrac) est la clé pour notre application.</p>
 
   </div>
 

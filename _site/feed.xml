@@ -6,23 +6,22 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 Dec 2025 14:35:39 +0100</pubDate>
-    <lastBuildDate>Thu, 11 Dec 2025 14:35:39 +0100</lastBuildDate>
+    <pubDate>Fri, 12 Dec 2025 17:54:24 +0100</pubDate>
+    <lastBuildDate>Fri, 12 Dec 2025 17:54:24 +0100</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
         <title>Optimisation de Trajectoire UAV via RL pour le 3D Gaussian Splatting</title>
-        <description>&lt;h2 id=&quot;objectif-du-projet&quot;&gt;Objectif du projet&lt;/h2&gt;
-&lt;p&gt;Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement afin d’améliorer la qualité d’une reconstruction 3D basée sur le 3D Gaussian Splatting (3DGS). En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.&lt;/p&gt;
+        <description>&lt;p&gt;Le projet vise à optimiser la trajectoire de vol d’un drone par Apprentissage par Renforcement (RL) afin d’améliorer la qualité d’une reconstruction 3D basée sur le 3D Gaussian Splatting (3DGS). En exploitant un signal d’incertitude fourni par le modèle, le drone apprend à cibler les zones mal reconstruites. L’objectif est d’augmenter la couverture informative tout en minimisant le temps de vol.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Objectif :&lt;/strong&gt; Apprendre.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Objectif :&lt;/strong&gt; Scanner une pièce avec un drone autonome, et apprendre.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/prometheus.gif&quot; alt=&quot;image&quot; width=&quot;auto&quot; height=&quot;auto&quot; style=&quot;display: block; margin: 0 auto;&quot; /&gt;&lt;/p&gt;
 &lt;blockquote&gt;
   &lt;p&gt;Je fixe une caméra Insta360 sur un drone et le tour est joué, probablement.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h3 id=&quot;architecture-du-pipeline&quot;&gt;Architecture du Pipeline&lt;/h3&gt;
+&lt;h2 id=&quot;architecture-du-pipeline&quot;&gt;Architecture du Pipeline&lt;/h2&gt;
 
 &lt;p&gt;Pour atteindre cette autonomie, le système repose sur une boucle fermée entre la perception et l’action. Voici l’architecture globale envisagée (premier jet) :&lt;/p&gt;
 
@@ -39,7 +38,7 @@
 
 &lt;p&gt;Avant d’intégrer la boucle de contrôle RL, il est crucial de valider la chaîne de reconstruction 3DGS et d’identifier les goulots d’étranglement temporels. J’ai réalisé plusieurs tests comparatifs.&lt;/p&gt;
 
-&lt;h3 id=&quot;1-test-avec-téléphone&quot;&gt;1. Test avec téléphone&lt;/h3&gt;
+&lt;h3 id=&quot;test-avec-téléphone&quot;&gt;Test avec téléphone&lt;/h3&gt;
 
 &lt;p&gt;J’ai d’abord testé une approche “grand public” pour établir une baseline de qualité et de vitesse.&lt;/p&gt;
 
@@ -48,25 +47,28 @@
   &lt;li&gt;&lt;strong&gt;Outil :&lt;/strong&gt; Scaniverse et SuperSplat pour l’export.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.&lt;/p&gt;
 
-&lt;h3 id=&quot;2-le-test-haute-fidélité--fujifilm-xt-2--colmap&quot;&gt;2. Le test haute fidélité : Fujifilm XT-2 + COLMAP&lt;/h3&gt;
+&lt;h3 id=&quot;test-haute-fidélité--fujifilm-xt-2--colmap&quot;&gt;Test haute fidélité : Fujifilm XT-2 + COLMAP&lt;/h3&gt;
 
 &lt;p&gt;Pour se rapprocher des conditions d’un drone porteur d’une optique de qualité, j’ai utilisé un Fuji XT-2 (23mm f/2) et traité les images sur PC.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/zig.png&quot; alt=&quot;Visualisation Zig&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Le constat :&lt;/strong&gt;
-Avec seulement 30 images traitées via le pipeline classique (&lt;strong&gt;COLMAP&lt;/strong&gt; pour le Structure-from-Motion + &lt;strong&gt;BRUSH&lt;/strong&gt;), les résultats sont mitigés et surtout très lents.&lt;/p&gt;
+&lt;h4 id=&quot;première-expérience&quot;&gt;Première expérience&lt;/h4&gt;
+&lt;p&gt;Avec seulement 30 images traitées via le pipeline classique (&lt;strong&gt;COLMAP&lt;/strong&gt; pour le Structure-from-Motion + &lt;strong&gt;BRUSH&lt;/strong&gt;), les résultats sont mitigés et surtout très lents.&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Scaniverse :&lt;/strong&gt; 2 min de vidéo ~2 à 5 min de traitement (Smartphone).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Scaniverse :&lt;/strong&gt; 2 min de vidéo ~5 à 10 min de traitement (Smartphone).&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;Pipeline PC :&lt;/strong&gt; 30 images ~20 min de traitement (RX 7800XT).&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Cette lourdeur de calcul est un obstacle majeur pour du &lt;em&gt;Real-Time RL&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Cette lourdeur de calcul est un obstacle majeur pour du &lt;em&gt;Real-Time RL&lt;/em&gt; mais est due au mode Exhaustive Matching de COLMAP qui compare toutes les images entre elles.&lt;/p&gt;
+
+&lt;h4 id=&quot;deuxième-expérience&quot;&gt;Deuxième expérience&lt;/h4&gt;
+&lt;p&gt;J’ai testé dans un second temps avec une vidéo du Fuji XT-2 (&lt;a href=&quot;/scans/fuji.html&quot;&gt;&lt;strong&gt;voir le scan&lt;/strong&gt;&lt;/a&gt;). J’ai utilisé ffmpeg pour extraire 1 image par seconde de la vidéo mais il serait intéressant de tester la différence de rendu en fonction du nombre d’images extraites.&lt;/p&gt;
+
+&lt;p&gt;L’utilisation du mode Sequential Matching de COLMAP a considérablement accéléré les calculs, confirmant que l’exploitation de la cohérence temporelle (vidéo vs photos en vrac) est la clé pour notre application.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -90,11 +92,6 @@ Le drone disposant de capteurs embarqués précis (IMU, GPS, Odométrie), nous p
   &lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/NVlabs/CF-3DGS&quot;&gt;CF-3DGS&lt;/a&gt;&lt;/strong&gt; : Une approche utilisant la continuité temporelle des flux vidéo pour contourner COLMAP.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&quot;validation-avec-flux-vidéo-sequential-matching&quot;&gt;Validation avec flux vidéo (Sequential Matching)&lt;/h3&gt;
-
-&lt;p&gt;En appliquant cette logique sur une vidéo du Fuji XT-2 (&lt;a href=&quot;/scans/fuji.html&quot;&gt;&lt;strong&gt;voir le scan&lt;/strong&gt;&lt;/a&gt;), j’ai utilisé ffmpeg pour extraire 1 image par seconde de la vidéo mais il serait intéressant de tester la différence de rendu en fonction du nombre d’images extraites.&lt;/p&gt;
-
-&lt;p&gt;L’utilisation du mode Sequential Matching de COLMAP a considérablement accéléré les calculs, confirmant que l’exploitation de la cohérence temporelle (vidéo vs photos en vrac) est la clé pour notre application.&lt;/p&gt;
 </description>
         <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
         <link>http://localhost:4000/2025/12/09/UAV-&-RL-&-3DGS.html</link>
