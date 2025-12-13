@@ -92,8 +92,8 @@
 <p>J’ai d’abord testé une approche “grand public” pour établir une baseline de qualité et de vitesse.</p>
 
 <ul>
-  <li><strong>Sujet :</strong> <strong><a href="/scans/panda-roux.html">panda roux</a></strong>,</li>
-  <li><strong>Outil :</strong> Scaniverse et SuperSplat pour l’export.</li>
+  <li><strong>Sujet :</strong> <a href="/scans/panda-roux.html"><strong>Panda roux</strong></a>,</li>
+  <li><strong>Outil :</strong> <a href="https://scaniverse.com/"><strong>Scaniverse</strong></a> et <a href="https://developer.playcanvas.com/user-manual/"><strong>SuperSplat</strong></a> pour l’export.</li>
 </ul>
 
 <p>Sur la page du scan, double-cliquez sur le modèle pour une manipulation plus intuitive.</p>
@@ -105,7 +105,7 @@
 <p><img src="/images/zig.png" alt="Visualisation Zig" /></p>
 
 <h4 id="première-expérience">Première expérience</h4>
-<p>Avec seulement 30 images traitées via le pipeline classique (<strong>COLMAP</strong> pour le Structure-from-Motion + <strong>BRUSH</strong>), les résultats sont mitigés et surtout très lents.</p>
+<p>Avec seulement 30 images traitées via le pipeline classique (<a href="https://colmap.github.io/index.html"><strong>COLMAP</strong></a> pour le Structure-from-Motion + <a href="https://github.com/ArthurBrussee/brush"><strong>BRUSH</strong></a>), les résultats sont mitigés et surtout très lents.</p>
 
 <ul>
   <li><strong>Scaniverse :</strong> 2 min de vidéo ~5 à 10 min de traitement (Smartphone).</li>
@@ -117,7 +117,9 @@
 <h4 id="deuxième-expérience">Deuxième expérience</h4>
 <p>J’ai testé dans un second temps avec une vidéo du Fuji XT-2 (<a href="/scans/fuji.html"><strong>voir le scan</strong></a>). J’ai utilisé ffmpeg pour extraire 1 image par seconde de la vidéo mais il serait intéressant de tester la différence de rendu en fonction du nombre d’images extraites.</p>
 
-<p>L’utilisation du mode Sequential Matching de COLMAP a considérablement accéléré les calculs, confirmant que l’exploitation de la cohérence temporelle (vidéo vs photos en vrac) est la clé pour notre application.</p>
+<p>L’utilisation du mode Sequential Matching de COLMAP a considérablement accéléré les calculs, confirmant que l’exploitation de la cohérence temporelle (vidéo vs photos en vrac) est la clé pour notre application. J’ai aussi fait un scan de mon chat, c’est cadeau <a href="/scans/zigoto.html"><strong>voir le scan</strong></a>.</p>
+
+<p>Un problème notable est le fait que l’optique du XT2 n’est pas stabilisée, ce qui entraine des images de moins bonne qualité (flou de bougé). De plus le 23mm (équivalent ~35mm plein format) est en limite basse des recommandations habituelles pour la photogrammétrie d’objets (<a href="https://developer.playcanvas.com/user-manual/gaussian-splatting/creating/taking-photos/#:~:text=35%2D85mm%20equivalent%20focal%20length">PlayCanvas</a> conseille 35-85mm eq.), bien qu’acceptable pour des scènes. Une focale plus longue et une ouverture entre f/8 et f/11 assureraient une meilleure netteté uniforme.</p>
 
 <hr />
 
@@ -129,8 +131,7 @@
   <p>“La plupart du temps, créer un 3DGS revient à faire du Structure from Motion. Si vous connaissez l’ordre des images, faites du SLAM en temps réel et récupérez les données du gyroscope, vous pouvez éliminer la majeure partie du temps de SfM. […] L’entraînement des splats est rapide. C’est tout ce qui précède qui prend du temps.”</p>
 </blockquote>
 
-<p><strong>Hypothèse de travail :</strong>
-Le drone disposant de capteurs embarqués précis (IMU, GPS, Odométrie), nous pouvons nous passer du calcul photogrammétrique pur de COLMAP.</p>
+<p>Le drone disposant de capteurs embarqués précis (IMU, GPS, Odométrie), nous pouvons utiliser ces données pour initialiser les poses ou utiliser le mode <a href="https://colmap.github.io/tutorial.html#:~:text=de/colmap/.-,Spatial%20Matching,-%3A%20This%20matching%20mode"><strong>Spatial Matching</strong></a> de COLMAP pour accélérer drastiquement l’étape de <em>Matching</em>, voire contourner le SfM complet en utilisant un SLAM visuel embarqué.</p>
 
 <h3 id="solutions-techniques-envisagées">Solutions techniques envisagées</h3>
 
