@@ -11,7 +11,6 @@ date: 2025-12-08
 3. [Blog axé sur l'optimisation SIMD](https://bitmath.blogspot.com/)
 4. [Cours de probabilités et de statistiques](https://dlsun.github.io/probability/box-models.html#exm:committee-chair)
 5. [Dictionnaire d'algorithmes](https://xlinux.nist.gov/dads/)
-6. [Optimisation d'un kernel CUDA (matmul)](https://www.aleksagordic.com/blog/matmul)
 
 ---
 
@@ -63,4 +62,4 @@ date: 2025-12-08
 ### CUDA
 1. [CUDA Ontology](https://jamesakl.com/posts/cuda-ontology/)
 2. [Glossaire CUDA](https://modal.com/gpu-glossary/device-hardware/cuda-device-architecture)
-3. [Optimisation de kernels](https://www.aleksagordic.com/blog/matmul)
+3. [Optimisation d'un kernel CUDA (matmul)](https://www.aleksagordic.com/blog/matmul)
