@@ -8,15 +8,20 @@
 # Site settings
 title: Nathan Thoumine
 email: thoum.nathan@gmail.com
+author: Nathan Thoumine
 description: > # this means to ignore newlines until "baseurl:"
-  Blog.
+  Blog personnel de Nathan Thoumine. Ingénieur IA Embarquée & Robotique.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://deicidia.github.io" # the base hostname & protocol for your site
+url: "https://deicidia.github.io" # the base hostname & protocol for your site
 twitter_username: 
 github_username:  deicidia
+lang: fr
 
 # Build settings
 markdown: kramdown
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
 
 # Collections
 collections:
