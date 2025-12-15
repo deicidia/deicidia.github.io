@@ -276,7 +276,7 @@
       title: "Séance Full Body",
       time: "1H00",
       desc: "Une approche complète ciblant l'ensemble des groupes musculaires en une seule séance. Idéal pour maximiser la fréquence d'entraînement ou pour les emplois du temps chargés (2-3 sessions/semaine).",
-      chart: [9, 8, 9, 6, 7, 5], // Legs, Back, Chest, Abs, Shoulders, Arms
+      chart: [8, 7, 6, 8, 9, 6], // Pecs, Shoulders, Arms, Back, Legs, Abs
       warmup: [
         { name: "Cardio Léger (Rameur/Elliptique)", info: "3 min" },
         { name: "Rotations Articulaires", info: "1 min" },
@@ -301,7 +301,7 @@
         title: "PUSH",
         time: "55 Min",
         desc: "Focalisé sur les mouvements de poussée pour développer les pectoraux, les épaules et les triceps. Une combinaison d'exercices polyarticulaires lourds et d'isolation pour un volume optimal.",
-        chart: [2, 0, 9, 2, 8, 7], // Legs, Back, Chest, Abs, Shoulders, Arms
+        chart: [10, 9, 8, 0, 0, 2], // Pecs, Shoulders, Arms, Back, Legs, Abs
         warmup: ["Élastiques Pectoraux", "2 séries chauffe Développé (40%/60%)"],
         exercises: [
           { name: "Développé Incliné (Haltères/Barre)", muscle: "Pecs", sets: 3, reps: "8-12", rest: 105, note: "Banc à 30°" },
@@ -316,7 +316,7 @@
         title: "PULL",
         time: "50 Min",
         desc: "Dédié à la chaîne postérieure : dos, trapèzes et biceps. L'objectif est de construire un dos large et épais tout en renforçant la flexion du bras.",
-        chart: [0, 10, 0, 0, 2, 8],
+        chart: [0, 2, 9, 10, 0, 0], // Pecs, Shoulders, Arms, Back, Legs, Abs
         warmup: ["Tirage Poitrine léger (2 séries)", "Repos court échauffement"],
         exercises: [
           { name: "Tirage Vertical (Lat Pulldown)", muscle: "Dos", sets: 3, reps: "8-12", rest: 120, note: "Grand dorsal" },
@@ -330,7 +330,7 @@
         title: "LEG",
         time: "1H05",
         desc: "Séance intense ciblant le bas du corps (quadriceps, ischios, fessiers, mollets). Préparez-vous à un gros volume de travail pour des jambes puissantes et athlétiques.",
-        chart: [10, 1, 0, 1, 0, 0],
+        chart: [0, 0, 0, 0, 10, 3], // Pecs, Shoulders, Arms, Back, Legs, Abs
         warmup: ["5 min Vélo", "Mobilité Hanches", "Montée en gamme Squat"],
         exercises: [
           { name: "Squat / Presse à Cuisses", muscle: "Jambes", sets: 3, reps: "6-12", rest: 150, note: "Lourd et contrôlé" },
@@ -345,7 +345,7 @@
         title: "HIT",
         time: "45 Min",
         desc: "Séance hybride rappelant le haut du corps. Un mix stratégique Dos/Pecs/Bras pour maximiser l'hypertrophie et combler les points faibles en fin de semaine.",
-        chart: [2, 7, 7, 2, 6, 6],
+        chart: [7, 7, 8, 7, 0, 0], // Pecs, Shoulders, Arms, Back, Legs, Abs
         warmup: ["Mobilisation Épaules", "Tirage léger"],
         exercises: [
           { name: "Tirage Vertical", muscle: "Dos", sets: 3, reps: "8-12", rest: 90, note: "Largeur" },
@@ -633,7 +633,7 @@
       chartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
-          labels: ['Jambes', 'Dos', 'Pecs', 'Abdos', 'Épaules', 'Bras'],
+          labels: ['Pecs', 'Épaules', 'Bras', 'Dos', 'Jambes', 'Abdos'],
           datasets: [{
             label: 'Intensité',
             data: dataValues,
