@@ -74,16 +74,20 @@ permalink: /workout/
     }
 
     .program-selector-btn.active {
-      background-color: #1e293b;
-      /* Slate-800 */
-      color: white;
-      border-color: #1e293b;
+      background-color: #1e293b !important;
+      color: white !important;
+      border-color: #1e293b !important;
     }
 
     .program-selector-btn.inactive {
       background-color: white;
       color: #64748b;
       border-color: #e2e8f0;
+    }
+
+    .program-selector-btn.inactive:hover {
+      background-color: white;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
 
     /* Checkbox styling override */
@@ -117,11 +121,11 @@ permalink: /workout/
         <div class="flex bg-slate-100 p-1 rounded-xl w-full md:w-auto">
           <button onclick="switchProgram('fullbody')" id="btn-prog-fullbody"
             class="program-selector-btn active flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
-            Full Body (1H)
+            Full Body
           </button>
           <button onclick="switchProgram('split')" id="btn-prog-split"
-            class="program-selector-btn inactive flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all hover:bg-white hover:shadow-sm">
-            Split (4 Jours)
+            class="program-selector-btn inactive flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all">
+            Split
           </button>
         </div>
       </div>
@@ -142,8 +146,13 @@ permalink: /workout/
       <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <div class="flex justify-between items-start mb-2">
           <h2 id="view-title" class="text-xl font-bold text-slate-800">Titre</h2>
-          <span id="view-badge"
-            class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase">Badge</span>
+          <div class="flex gap-2">
+            <span id="view-time"
+              class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase flex items-center gap-1">⏱️
+              <span id="view-time-val">--</span></span>
+            <span id="view-badge"
+              class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase">Badge</span>
+          </div>
         </div>
         <p id="view-desc" class="text-slate-500 mb-6 text-sm leading-relaxed">Description...</p>
 
@@ -269,6 +278,7 @@ permalink: /workout/
     // 1. Full Body Data
     const fullBodyData = {
       title: "Séance Full Body",
+      time: "1H00",
       desc: "Sollicitation globale du corps. Idéal si vous ne pouvez vous entraîner que 2 à 3 fois par semaine.",
       chart: [9, 8, 9, 6, 7, 5], // Legs, Back, Chest, Abs, Shoulders, Arms
       warmup: [
@@ -293,6 +303,7 @@ permalink: /workout/
     const splitProgram = {
       day1: {
         title: "Jour 1: Pectoraux, Épaules & Triceps",
+        time: "55 Min",
         desc: "Séance de poussée (Push). Gros volume sur l'avant du corps.",
         chart: [2, 0, 9, 2, 8, 7], // Legs, Back, Chest, Abs, Shoulders, Arms
         warmup: ["Élastiques Pectoraux", "2 séries chauffe Développé (40%/60%)"],
@@ -307,6 +318,7 @@ permalink: /workout/
       },
       day2: {
         title: "Jour 2: Dos & Biceps",
+        time: "50 Min",
         desc: "Séance de tirage (Pull). Largeur et épaisseur.",
         chart: [0, 10, 0, 0, 2, 8],
         warmup: ["Tirage Poitrine léger (2 séries)", "Repos court échauffement"],
@@ -320,6 +332,7 @@ permalink: /workout/
       },
       day3: {
         title: "Jour 3: Jambes (Leg Day)",
+        time: "1H05",
         desc: "Séance complète bas du corps. Intensité maximale.",
         chart: [10, 1, 0, 1, 0, 0],
         warmup: ["5 min Vélo", "Mobilité Hanches", "Montée en gamme Squat"],
@@ -334,6 +347,7 @@ permalink: /workout/
       },
       day4: {
         title: "Jour 4: Rappel Haut du Corps",
+        time: "45 Min",
         desc: "Volume supplémentaire pour le haut du corps.",
         chart: [2, 7, 7, 2, 6, 6],
         warmup: ["Mobilisation Épaules", "Tirage léger"],
@@ -451,6 +465,7 @@ permalink: /workout/
     function renderView(data) {
       // Text Content
       document.getElementById('view-title').textContent = data.title;
+      document.getElementById('view-time-val').textContent = data.time;
       document.getElementById('view-desc').textContent = data.desc;
       document.getElementById('view-badge').textContent = state.program === 'fullbody' ? 'Global' : 'Focalisé';
 
