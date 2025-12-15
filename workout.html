@@ -9,7 +9,7 @@ permalink: /workout/
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Programme Entraînement 4 Jours</title>
+  <title>Coach Sportif - Full Body & Split</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js -->
@@ -17,14 +17,12 @@ permalink: /workout/
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Chosen Palette: Slate (Background), Blue-Ribbon (Primary), Amber (Action) -->
-
+  <!-- Theme: Slate / Blue / Emerald -->
   <style>
     body {
       font-family: 'Inter', sans-serif;
     }
 
-    /* Chart Container Rules */
     .chart-container {
       position: relative;
       width: 100%;
@@ -37,6 +35,7 @@ permalink: /workout/
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
+      height: 6px;
     }
 
     ::-webkit-scrollbar-track {
@@ -52,443 +51,556 @@ permalink: /workout/
       background: #94a3b8;
     }
 
-    .btn-day.active {
-      background-color: #2563eb;
-      /* blue-600 */
-      color: white;
-      border-color: #2563eb;
-    }
-
-    .btn-day.inactive {
-      background-color: white;
-      color: #475569;
-      border-color: #e2e8f0;
-    }
-
-    .btn-day.inactive:hover {
-      border-color: #2563eb;
-      color: #2563eb;
-    }
-
     /* Animations */
     @keyframes pulse-ring {
       0% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
       }
 
       70% {
         transform: scale(1);
-        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
       }
 
       100% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
       }
     }
 
     .timer-active {
       animation: pulse-ring 2s infinite;
     }
+
+    .program-selector-btn.active {
+      background-color: #1e293b;
+      /* Slate-800 */
+      color: white;
+      border-color: #1e293b;
+    }
+
+    .program-selector-btn.inactive {
+      background-color: white;
+      color: #64748b;
+      border-color: #e2e8f0;
+    }
+
+    /* Checkbox styling override */
+    .custom-checkbox:checked {
+      background-color: #2563eb;
+      border-color: #2563eb;
+    }
   </style>
-
   <!-- Application Structure Plan:
-        1. Top Navigation: Day selector (Day 1, 2, 3, 4).
-        2. Dashboard: Dynamic Radar Chart updating based on Day selection to show muscle focus.
-        3. Workout Content:
-           - Warmup Accordion (Collapsible).
-           - Main Workout Cards (with Sets/Reps checkboxes).
-           - "Add Abs" Toggle (Injects Ab workout at bottom).
-        4. Sticky Footer: Global Rest Timer.
+         1. Global Header: Program Selector (Full Body vs Split).
+         2. Context Manager: JS Logic switches data sources and rendering functions based on selection.
+         3. Dynamic Content Area: Renders either the "Single Page Full Body" flow or the "4-Day Tabbed" flow.
+         4. Unified Footer: Global Timer and Progress bar working for both modes.
     -->
-
   <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
 
-<body class="bg-slate-50 text-slate-800 pb-24">
+<body class="bg-slate-50 text-slate-800 pb-32">
 
-  <!-- Header & Navigation -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-    <div class="max-w-4xl mx-auto px-4 py-4">
-      <div class="flex justify-between items-center mb-4">
-        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Programme <span class="text-blue-600">4
-            Jours</span></h1>
-        <div class="text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-full uppercase">Hypertrophie</div>
+  <!-- GLOBAL HEADER & PROGRAM SELECTOR -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-4">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Mon <span class="text-blue-600">Coach</span>
+          </h1>
+          <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Application d'entraînement unifiée</p>
+        </div>
+
+        <!-- Main Program Switcher -->
+        <div class="flex bg-slate-100 p-1 rounded-xl w-full md:w-auto">
+          <button onclick="switchProgram('fullbody')" id="btn-prog-fullbody"
+            class="program-selector-btn active flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+            Full Body (1H)
+          </button>
+          <button onclick="switchProgram('split')" id="btn-prog-split"
+            class="program-selector-btn inactive flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all hover:bg-white hover:shadow-sm">
+            Split (4 Jours)
+          </button>
+        </div>
       </div>
 
-      <!-- Day Selector -->
-      <div class="flex overflow-x-auto gap-2 pb-2 custom-scroll no-scrollbar" id="day-nav">
-        <!-- Generated via JS -->
+      <!-- Sub-Navigation (Dynamic) -->
+      <div id="sub-nav-container" class="mt-4 pt-2 border-t border-slate-100 hidden">
+        <!-- Injected via JS based on program -->
       </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 py-6 space-y-8">
+  <!-- MAIN CONTENT AREA -->
+  <main class="max-w-5xl mx-auto px-4 py-6 space-y-8 animate-fade-in">
 
-    <!-- Section 1: Context & Visualization -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-      <!-- Dynamic Info -->
+    <!-- DASHBOARD SECTION (Charts & Info) -->
+    <section id="dashboard-section" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Dynamic Info Card -->
       <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-        <h2 id="day-title" class="text-xl font-bold text-slate-800 mb-2">Sélectionnez un jour</h2>
-        <p id="day-desc" class="text-slate-500 mb-4 text-sm leading-relaxed">...</p>
+        <div class="flex justify-between items-start mb-2">
+          <h2 id="view-title" class="text-xl font-bold text-slate-800">Titre</h2>
+          <span id="view-badge"
+            class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase">Badge</span>
+        </div>
+        <p id="view-desc" class="text-slate-500 mb-6 text-sm leading-relaxed">Description...</p>
 
-        <div class="flex gap-4 text-sm">
-          <div class="bg-slate-50 px-4 py-2 rounded-lg border border-slate-100">
-            <span class="block text-xs text-slate-400 uppercase font-bold">Durée Est.</span>
-            <span class="font-bold text-slate-700">~65 Min</span>
+        <!-- Warmup Toggle (Visible only for Split) -->
+        <div id="warmup-accordion" class="hidden bg-orange-50 border border-orange-100 rounded-xl overflow-hidden mt-4">
+          <div class="p-3 cursor-pointer flex justify-between items-center hover:bg-orange-100 transition-colors"
+            onclick="toggleElement('warmup-content')">
+            <div class="flex items-center gap-2">
+              <span class="text-orange-600 font-bold">🔥 Échauffement Requis</span>
+            </div>
+            <span class="text-orange-400 text-xs font-bold">VOIR ▼</span>
           </div>
-          <div class="bg-slate-50 px-4 py-2 rounded-lg border border-slate-100">
-            <span class="block text-xs text-slate-400 uppercase font-bold">Intensité</span>
-            <span class="font-bold text-orange-500">Élevée</span>
+          <div id="warmup-content" class="px-4 pb-4 hidden border-t border-orange-100 pt-2">
+            <ul id="warmup-list-split" class="list-disc list-inside text-sm text-orange-800 space-y-1"></ul>
           </div>
         </div>
       </div>
 
-      <!-- Focus Chart -->
+      <!-- Chart Card -->
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
-        <h3 class="text-xs font-bold text-slate-400 uppercase mb-2 w-full text-center">Focus Musculaire du Jour</h3>
+        <h3 class="text-xs font-bold text-slate-400 uppercase mb-2 w-full text-center">Focus Musculaire</h3>
         <div class="chart-container">
-          <canvas id="muscleRadar"></canvas>
+          <canvas id="mainChart"></canvas>
         </div>
       </div>
     </section>
 
-    <!-- Section 2: Workout Flow -->
-    <section id="workout-content" class="space-y-6">
-      <!-- Warmup -->
-      <div class="bg-orange-50 border border-orange-100 rounded-xl overflow-hidden">
-        <div class="p-4 cursor-pointer flex justify-between items-center" onclick="toggleWarmup()">
-          <div class="flex items-center gap-3">
-            <span class="bg-orange-200 text-orange-700 p-2 rounded-lg text-lg">🔥</span>
-            <h3 class="font-bold text-orange-900">Échauffement (Warm-Up)</h3>
-          </div>
-          <span class="text-orange-400 text-sm">▼</span>
+    <!-- WORKOUT CONTENT SECTION -->
+    <section id="workout-container" class="space-y-6">
+      <!-- Full Body specific list (Warmup phase) -->
+      <div id="fullbody-warmup-section" class="hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="bg-emerald-100 text-emerald-600 p-2 rounded-lg font-bold">01</div>
+          <h3 class="text-xl font-bold text-slate-800">Échauffement Actif</h3>
         </div>
-        <div id="warmup-body" class="px-4 pb-4 hidden">
-          <ul id="warmup-list" class="list-disc list-inside text-sm text-orange-800 space-y-1 ml-2">
-            <!-- JS injected -->
+        <div id="fb-warmup-list"
+          class="bg-white rounded-xl shadow-sm border border-slate-100 divide-y divide-slate-100"></div>
+      </div>
+
+      <!-- Main Exercises List (Used by both) -->
+      <div id="main-exercise-header" class="hidden flex items-center gap-3 mb-4">
+        <div class="bg-blue-100 text-blue-600 p-2 rounded-lg font-bold">02</div>
+        <h3 class="text-xl font-bold text-slate-800">Séance</h3>
+      </div>
+
+      <div id="exercise-list" class="space-y-4">
+        <!-- Cards injected here -->
+      </div>
+
+      <!-- Full Body Cool Down -->
+      <div id="fullbody-cooldown" class="hidden mt-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="bg-purple-100 text-purple-600 p-2 rounded-lg font-bold">03</div>
+          <h3 class="text-xl font-bold text-slate-800">Retour au Calme</h3>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 text-sm text-slate-600">
+          <ul class="list-disc list-inside space-y-2">
+            <li>Suspension à la barre (30s)</li>
+            <li>Étirements dynamiques légers</li>
+            <li>Respiration abdominale (2 min)</li>
           </ul>
         </div>
       </div>
 
-      <!-- Exercises List -->
-      <div id="exercise-list" class="space-y-4">
-        <!-- JS injected cards -->
-      </div>
-
-      <!-- Abs Injector -->
-      <div id="abs-section-placeholder" class="pt-6 border-t border-slate-200">
+      <!-- Abs Section (Split Only) -->
+      <div id="abs-injector" class="hidden pt-6 border-t border-slate-200">
         <button onclick="toggleAbs()" id="btn-toggle-abs"
           class="w-full py-4 border-2 border-dashed border-slate-300 rounded-xl text-slate-500 font-bold hover:border-blue-400 hover:text-blue-500 transition-all flex items-center justify-center gap-2">
-          <span>+</span> Ajouter la séance Abdos (Optionnel)
+          <span>+</span> Ajouter Circuit Abdos (Optionnel)
         </button>
-      </div>
-
-      <div id="abs-content" class="hidden space-y-4 animate-fade-in">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold text-slate-800 border-l-4 border-purple-500 pl-3">Circuit Abdominaux</h3>
-          <button onclick="toggleAbs()" class="text-xs text-red-400 hover:text-red-600">Retirer ✕</button>
-        </div>
-        <div id="abs-list" class="space-y-4">
-          <!-- JS injected abs -->
+        <div id="abs-content" class="hidden space-y-4 mt-4">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-lg font-bold text-slate-800 border-l-4 border-purple-500 pl-3">Circuit Abdominaux</h3>
+            <button onclick="toggleAbs()" class="text-xs text-red-400 hover:text-red-600 font-bold">RETIRER ✕</button>
+          </div>
+          <div id="abs-list" class="space-y-4"></div>
         </div>
       </div>
-
     </section>
+
   </main>
 
-  <!-- Floating Timer & Progress -->
+  <!-- UNIFIED FOOTER (Timer & Progress) -->
   <div
-    class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 z-50">
-    <div class="max-w-4xl mx-auto flex justify-between items-center">
+    class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.1)] p-4 z-50">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row gap-4 justify-between items-center">
 
-      <div class="flex flex-col w-1/3">
+      <!-- Progress -->
+      <div class="w-full sm:w-1/3">
         <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
-          <span>Progression</span>
+          <span>Progression Séance</span>
           <span id="progress-pct">0%</span>
         </div>
-        <div class="w-full bg-slate-100 rounded-full h-2">
-          <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%">
+        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+          <div id="progress-bar" class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: 0%">
           </div>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
+      <!-- Timer Controls -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
         <div id="timer-display"
-          class="hidden bg-slate-900 text-white font-mono text-xl px-4 py-2 rounded-lg font-bold w-24 text-center">00:00
-        </div>
-        <div id="timer-controls" class="flex gap-2">
-          <span class="text-xs text-slate-400 font-bold uppercase self-center hidden sm:block mr-2">Repos rapide:</span>
-          <button onclick="startTimer(60)"
-            class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded font-bold text-sm transition-colors">60s</button>
-          <button onclick="startTimer(90)"
-            class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded font-bold text-sm transition-colors">90s</button>
-          <button onclick="startTimer(120)"
-            class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded font-bold text-sm transition-colors">120s</button>
+          class="hidden bg-slate-800 text-white font-mono text-xl px-4 py-2 rounded-lg font-bold min-w-[90px] text-center shadow-lg transform -translate-y-1">
+          00:00</div>
+
+        <div class="flex gap-2 overflow-x-auto pb-1 sm:pb-0">
+          <button onclick="startGlobalTimer(60)"
+            class="whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-3 py-2 rounded-lg font-bold text-sm transition-colors">60s</button>
+          <button onclick="startGlobalTimer(90)"
+            class="whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-3 py-2 rounded-lg font-bold text-sm transition-colors">90s</button>
+          <button onclick="startGlobalTimer(120)"
+            class="whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-3 py-2 rounded-lg font-bold text-sm transition-colors">120s</button>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Logic -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    // --- DATA STRUCTURE ---
-    const program = {
+    // --- DATA SOURCE ---
+
+    // 1. Full Body Data
+    const fullBodyData = {
+      title: "Séance Full Body",
+      desc: "Sollicitation globale du corps. Idéal si vous ne pouvez vous entraîner que 2 à 3 fois par semaine.",
+      chart: [9, 8, 9, 6, 7, 5], // Legs, Back, Chest, Abs, Shoulders, Arms
+      warmup: [
+        { name: "Cardio Léger (Rameur/Elliptique)", info: "3 min" },
+        { name: "Rotations Articulaires", info: "1 min" },
+        { name: "Squats Poids du Corps", info: "15 reps" },
+        { name: "Pompes (genoux ou classiques)", info: "10 reps" },
+        { name: "Dislocations d'épaules", info: "10 reps" }
+      ],
+      exercises: [
+        { name: "Goblet Squat / Presse", muscle: "Jambes", sets: 3, reps: "10-12", rest: 90, note: "Dos droit, poussez sur les talons." },
+        { name: "Développé Couché (Haltères/Barre)", muscle: "Pecs", sets: 3, reps: "10-12", rest: 90, note: "Contrôlez la descente." },
+        { name: "Tirage Vertical (Lat Pulldown)", muscle: "Dos", sets: 3, reps: "10-12", rest: 60, note: "Amenez la barre à la poitrine." },
+        { name: "Soulevé de Terre Jambes Tendues", muscle: "Ischios", sets: 3, reps: "12-15", rest: 60, note: "Dos plat, fesses en arrière." },
+        { name: "Développé Militaire Assis", muscle: "Épaules", sets: 3, reps: "12-15", rest: 60, note: "Pas de cambrure excessive." },
+        { name: "Rowing Unilatéral", muscle: "Dos", sets: 3, reps: "12-15", rest: 60, note: "Tirage coude vers hanche." },
+        { name: "Planche (Gainage)", muscle: "Abdos", sets: 3, reps: "45s", rest: 45, note: "Corps aligné." }
+      ]
+    };
+
+    // 2. Split Data
+    const splitProgram = {
       day1: {
-        title: "Day 1: Chest, Shoulders & Triceps",
-        desc: "Focus sur la poussée (Push). Gros mouvements polyarticulaires suivis d'isolation.",
-        chartData: [9, 2, 0, 0, 8, 7], // Chest, Back, Legs, Abs, Shoulders, Arms
-        warmup: [
-          "Étirements dynamiques / Bandes élastiques pour pectoraux",
-          "2 séries de chauffe au Développé Haltères (40% puis 60% de la charge de travail)"
-        ],
+        title: "Jour 1: Pectoraux, Épaules & Triceps",
+        desc: "Séance de poussée (Push). Gros volume sur l'avant du corps.",
+        chart: [2, 0, 9, 2, 8, 7], // Legs, Back, Chest, Abs, Shoulders, Arms
+        warmup: ["Élastiques Pectoraux", "2 séries chauffe Développé (40%/60%)"],
         exercises: [
-          { name: "Incline Barbell/Dumbbell Press (30°)", sets: 3, reps: "8-12", rest: 105, note: "Banc incliné 30°" }, // 1.5-2 min avg -> 105s
-          { name: "Cable Pec Fly", sets: 3, reps: "8-15", rest: 90, note: "Écarté à la poulie" },
-          { name: "Chest Press Machine", sets: 2, reps: "8-15", rest: 90, note: "Machine convergente si possible" },
-          { name: "Lateral Raises (Cable pref.)", sets: 3, reps: "8-15", rest: 90, note: "Élévations latérales" },
-          { name: "Triceps Rope Pulldown", sets: 3, reps: "8-15", rest: 90, note: "Extensions triceps corde" },
-          { name: "Overhead Triceps Extension (1-arm)", sets: 2, reps: "8-15", rest: 90, note: "Extension nuque unilatérale" }
+          { name: "Développé Incliné (Haltères/Barre)", muscle: "Pecs", sets: 3, reps: "8-12", rest: 105, note: "Banc à 30°" },
+          { name: "Écartés Poulie (Cable Fly)", muscle: "Pecs", sets: 3, reps: "8-15", rest: 90, note: "Focus contraction" },
+          { name: "Chest Press Machine", muscle: "Pecs", sets: 2, reps: "8-15", rest: 90, note: "Finisher pecs" },
+          { name: "Élévations Latérales", muscle: "Épaules", sets: 3, reps: "8-15", rest: 90, note: "Contrôle strict" },
+          { name: "Extensions Triceps Corde", muscle: "Bras", sets: 3, reps: "8-15", rest: 90, note: "Coudes fixes" },
+          { name: "Extension Nuque Unilatérale", muscle: "Bras", sets: 2, reps: "8-15", rest: 90, note: "Étirement triceps" }
         ]
       },
       day2: {
-        title: "Day 2: Back & Biceps",
-        desc: "Focus sur le tirage (Pull). Largeur et épaisseur du dos.",
-        chartData: [0, 10, 0, 0, 3, 8],
-        warmup: [
-          "Lat Pulldown Machine: 2-3 séries de chauffe à 30-50% de la charge",
-          "Repos court (20-30 sec) entre les séries de chauffe"
-        ],
+        title: "Jour 2: Dos & Biceps",
+        desc: "Séance de tirage (Pull). Largeur et épaisseur.",
+        chart: [0, 10, 0, 0, 2, 8],
+        warmup: ["Tirage Poitrine léger (2 séries)", "Repos court échauffement"],
         exercises: [
-          { name: "Lat Pulldown Machine", sets: 3, reps: "8-12", rest: 120, note: "Tirage vertical poitrine" },
-          { name: "Dumbbell Row OR Machine Row", sets: 3, reps: "8-12", rest: 90, note: "Rowing haltère ou machine" },
-          { name: "Narrow-Grip Cable Row", sets: 2, reps: "8-15", rest: 90, note: "Tirage horizontal prise serrée" },
-          { name: "Incline Bicep Curls", sets: 3, reps: "8-12", rest: 90, note: "Curl incliné haltères" },
-          { name: "Preacher Curls", sets: 3, reps: "8-15", rest: 90, note: "Curl pupitre (Larry Scott)" }
+          { name: "Tirage Vertical (Lat Pulldown)", muscle: "Dos", sets: 3, reps: "8-12", rest: 120, note: "Grand dorsal" },
+          { name: "Rowing (Haltère/Machine)", muscle: "Dos", sets: 3, reps: "8-12", rest: 90, note: "Épaisseur" },
+          { name: "Tirage Horizontal Serré", muscle: "Dos", sets: 2, reps: "8-15", rest: 90, note: "Bas du dos/Trapèzes" },
+          { name: "Curl Incliné", muscle: "Bras", sets: 3, reps: "8-12", rest: 90, note: "Biceps chef long" },
+          { name: "Curl Pupitre (Larry Scott)", muscle: "Bras", sets: 3, reps: "8-15", rest: 90, note: "Isolation Biceps" }
         ]
       },
       day3: {
-        title: "Day 3: Legs & Lower Body",
-        desc: "Séance complète bas du corps. Quadriceps, Ischios et Mollets.",
-        chartData: [0, 1, 10, 2, 0, 0],
-        warmup: [
-          "5 min vélo (léger)",
-          "2 min étirements dynamiques",
-          "1-2 séries de chauffe du premier exercice"
-        ],
+        title: "Jour 3: Jambes (Leg Day)",
+        desc: "Séance complète bas du corps. Intensité maximale.",
+        chart: [10, 1, 0, 1, 0, 0],
+        warmup: ["5 min Vélo", "Mobilité Hanches", "Montée en gamme Squat"],
         exercises: [
-          { name: "Squats / Leg Press / Hack Squat", sets: 3, reps: "6-12", rest: 150, note: "Repos 2-3 min. Lourd." },
-          { name: "Stiff-Leg Deadlift (DB/Barbell)", sets: 2, reps: "6-12", rest: 105, note: "Jambes tendues. Focus excentrique lent." },
-          { name: "Walking Lunges", sets: 2, reps: "6-10 /jambe", rest: 90, note: "Fentes marchées" },
-          { name: "Hamstring Curls (Machine)", sets: 3, reps: "8-15", rest: 90, note: "Leg Curl ischios" },
-          { name: "Leg Extension", sets: 3, reps: "8-15", rest: 90, note: "Extension quadriceps" },
-          { name: "Calf Raises (Optionable)", sets: 3, reps: "10-20", rest: 90, note: "Mollets. 2 séries à l'échec min." }
+          { name: "Squat / Presse à Cuisses", muscle: "Jambes", sets: 3, reps: "6-12", rest: 150, note: "Lourd et contrôlé" },
+          { name: "Soulevé Terre Jambes Tendues", muscle: "Ischios", sets: 2, reps: "6-12", rest: 105, note: "Focus chaîne postérieure" },
+          { name: "Fentes Marchées", muscle: "Jambes", sets: 2, reps: "20 pas", rest: 90, note: "Unilatéral" },
+          { name: "Leg Curl Machine", muscle: "Ischios", sets: 3, reps: "8-15", rest: 90, note: "Flexion genou" },
+          { name: "Leg Extension", muscle: "Quads", sets: 3, reps: "8-15", rest: 90, note: "Finisher Quadriceps" },
+          { name: "Mollets Debout/Assis", muscle: "Mollets", sets: 3, reps: "15-20", rest: 60, note: "Optionnel" }
         ]
       },
       day4: {
-        title: "Day 4: Upper Body Focus",
-        desc: "Rappel Haut du corps. Mélange Dos/Pecs/Bras pour le volume.",
-        chartData: [7, 7, 0, 0, 5, 6],
-        warmup: [
-          "Lat Pulldown (Optionnel): 2-3 séries chauffe légères",
-          "Mobilisation épaules"
-        ],
+        title: "Jour 4: Rappel Haut du Corps",
+        desc: "Volume supplémentaire pour le haut du corps.",
+        chart: [2, 7, 7, 2, 6, 6],
+        warmup: ["Mobilisation Épaules", "Tirage léger"],
         exercises: [
-          { name: "Lat Pulldown", sets: 3, reps: "8-12", rest: 90, note: "Tirage Vertical" },
-          { name: "Narrow-Grip Cable Row", sets: 2, reps: "8-15", rest: 90, note: "Tirage Horizontal serré" },
-          { name: "Chest Press (Machine/Free Weights)", sets: 3, reps: "8-12", rest: 90, note: "Développé (Machine ou Libre)" },
-          { name: "Pec Fly (Cable/Machine)", sets: 2, reps: "8-12", rest: 90, note: "Écarté" },
-          { name: "Triceps Rope Pulldown", sets: 3, reps: "8-15", rest: 90, note: "Extension Corde" },
-          { name: "Rear Delt Machine Fly", sets: 3, reps: "10-20", rest: 90, note: "Oiseau machine (Deltoïde post.)" } // 2 sets failure
+          { name: "Tirage Vertical", muscle: "Dos", sets: 3, reps: "8-12", rest: 90, note: "Largeur" },
+          { name: "Tirage Horizontal", muscle: "Dos", sets: 2, reps: "8-15", rest: 90, note: "Épaisseur" },
+          { name: "Développé Machine/Libre", muscle: "Pecs", sets: 3, reps: "8-12", rest: 90, note: "Masse globale" },
+          { name: "Pec Fly", muscle: "Pecs", sets: 2, reps: "10-15", rest: 90, note: "Isolation" },
+          { name: "Triceps Corde", muscle: "Bras", sets: 3, reps: "10-15", rest: 90, note: "Volume bras" },
+          { name: "Oiseau Machine (Rear Delt)", muscle: "Épaules", sets: 3, reps: "15-20", rest: 90, note: "Arrière d'épaule" }
         ]
       },
-      abs: {
-        exercises: [
-          { name: "Leg Raises", sets: 4, reps: "8-20", rest: 50, note: "Relevés de jambes. Repos 45-60s." },
-          { name: "Cable Crunches / Decline Crunches", sets: 4, reps: "8-20", rest: 50, note: "Crunch poulie ou décliné" }
-        ]
-      }
+      abs: [
+        { name: "Relevés de Jambes", muscle: "Abdos", sets: 4, reps: "8-20", rest: 45, note: "Bassin décollé" },
+        { name: "Crunch Poulie / Décliné", muscle: "Abdos", sets: 4, reps: "8-20", rest: 45, note: "Contraction volontaire" }
+      ]
     };
 
-    let currentDay = 'day1';
-    let absActive = false;
-    let setsCompleted = 0;
-    let totalSets = 0;
-    let timerInterval = null;
+    // --- STATE ---
+    let state = {
+      program: 'fullbody', // 'fullbody' or 'split'
+      splitDay: 'day1',    // 'day1', 'day2', 'day3', 'day4'
+      absEnabled: false,
+      totalSets: 0,
+      setsDone: 0,
+      timerId: null
+    };
+
     let chartInstance = null;
 
-    // --- INITIALIZATION ---
+    // --- INIT ---
     document.addEventListener('DOMContentLoaded', () => {
-      renderDaySelector();
-      loadDay('day1');
+      switchProgram('fullbody'); // Default load
     });
 
-    // --- RENDERING ---
+    // --- CORE FUNCTIONS ---
 
-    function renderDaySelector() {
-      const container = document.getElementById('day-nav');
-      const days = [
-        { id: 'day1', label: 'Jour 1', sub: 'Pecs/Épaules' },
-        { id: 'day2', label: 'Jour 2', sub: 'Dos/Biceps' },
-        { id: 'day3', label: 'Jour 3', sub: 'Jambes' },
-        { id: 'day4', label: 'Jour 4', sub: 'Haut Focus' },
-      ];
+    function switchProgram(progType) {
+      state.program = progType;
+      state.absEnabled = false; // Reset abs
+      state.setsDone = 0; // Reset progress visual (simple version)
 
-      container.innerHTML = days.map(d => `
-                <button onclick="loadDay('${d.id}')" id="btn-${d.id}" class="btn-day inactive border rounded-lg px-4 py-2 min-w-[100px] text-left transition-all">
-                    <span class="block text-sm font-bold">${d.label}</span>
-                    <span class="block text-xs opacity-80">${d.sub}</span>
-                </button>
-            `).join('');
+      // UI Toggle
+      const btnFB = document.getElementById('btn-prog-fullbody');
+      const btnSP = document.getElementById('btn-prog-split');
+      const subNav = document.getElementById('sub-nav-container');
+
+      if (progType === 'fullbody') {
+        btnFB.classList.replace('inactive', 'active');
+        btnSP.classList.replace('active', 'inactive');
+        subNav.classList.add('hidden');
+
+        renderView(fullBodyData);
+
+        // Specific Full Body UI elements
+        document.getElementById('fullbody-warmup-section').classList.remove('hidden');
+        document.getElementById('fullbody-cooldown').classList.remove('hidden');
+        document.getElementById('warmup-accordion').classList.add('hidden'); // Split specific
+        document.getElementById('abs-injector').classList.add('hidden'); // Split specific
+        document.getElementById('main-exercise-header').classList.remove('hidden');
+
+      } else {
+        // SPLIT
+        btnSP.classList.replace('inactive', 'active');
+        btnFB.classList.replace('active', 'inactive');
+        subNav.classList.remove('hidden');
+
+        renderSplitNav();
+        loadSplitDay(state.splitDay);
+
+        // Specific Split UI elements
+        document.getElementById('fullbody-warmup-section').classList.add('hidden');
+        document.getElementById('fullbody-cooldown').classList.add('hidden');
+        document.getElementById('warmup-accordion').classList.remove('hidden');
+        document.getElementById('abs-injector').classList.remove('hidden');
+        document.getElementById('main-exercise-header').classList.add('hidden'); // No separate header needed in split layout
+      }
     }
 
-    function loadDay(dayId) {
-      currentDay = dayId;
-      const data = program[dayId];
-      absActive = false; // Reset abs on day switch
+    function renderSplitNav() {
+      const days = [
+        { id: 'day1', label: 'J1: Pecs/Épaules' },
+        { id: 'day2', label: 'J2: Dos/Biceps' },
+        { id: 'day3', label: 'J3: Jambes' },
+        { id: 'day4', label: 'J4: Haut Corps' }
+      ];
 
-      // 1. Update UI Active State
-      document.querySelectorAll('.btn-day').forEach(b => {
-        b.classList.remove('active');
-        b.classList.add('inactive');
+      const html = days.map(d => `
+                <button onclick="loadSplitDay('${d.id}')" id="nav-${d.id}" class="split-nav-btn text-xs font-bold px-3 py-1.5 rounded-full border transition-colors mr-2 mb-2 ${state.splitDay === d.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-500 border-slate-200 hover:border-blue-400'}">
+                    ${d.label}
+                </button>
+            `).join('');
+
+      document.getElementById('sub-nav-container').innerHTML = html;
+    }
+
+    function loadSplitDay(dayId) {
+      state.splitDay = dayId;
+      state.absEnabled = false; // Reset abs when changing days
+
+      // Update Nav Styles
+      document.querySelectorAll('.split-nav-btn').forEach(btn => {
+        btn.className = 'split-nav-btn text-xs font-bold px-3 py-1.5 rounded-full border transition-colors mr-2 mb-2 bg-white text-slate-500 border-slate-200 hover:border-blue-400';
       });
-      const activeBtn = document.getElementById(`btn-${dayId}`);
-      activeBtn.classList.remove('inactive');
-      activeBtn.classList.add('active');
+      document.getElementById(`nav-${dayId}`).className = 'split-nav-btn text-xs font-bold px-3 py-1.5 rounded-full border transition-colors mr-2 mb-2 bg-blue-600 text-white border-blue-600';
 
-      // 2. Update Header Info
-      document.getElementById('day-title').innerText = data.title;
-      document.getElementById('day-desc').innerText = data.desc;
-
-      // 3. Update Chart
-      updateChart(data.chartData);
-
-      // 4. Render Warmup
-      document.getElementById('warmup-list').innerHTML = data.warmup.map(w => `<li>${w}</li>`).join('');
-      document.getElementById('warmup-body').classList.add('hidden'); // Reset collapsed state
-
-      // 5. Render Exercises
-      renderExerciseList(data.exercises, 'exercise-list');
-
-      // 6. Reset Abs UI
+      // Hide Abs UI
       document.getElementById('abs-content').classList.add('hidden');
       document.getElementById('btn-toggle-abs').classList.remove('hidden');
       document.getElementById('abs-list').innerHTML = '';
 
-      // 7. Recalculate Totals
+      renderView(splitProgram[dayId]);
+    }
+
+    function renderView(data) {
+      // Text Content
+      document.getElementById('view-title').textContent = data.title;
+      document.getElementById('view-desc').textContent = data.desc;
+      document.getElementById('view-badge').textContent = state.program === 'fullbody' ? 'Global' : 'Focalisé';
+
+      // Chart
+      updateChart(data.chart);
+
+      // Exercises
+      const exContainer = document.getElementById('exercise-list');
+      exContainer.innerHTML = '';
+
+      data.exercises.forEach(ex => {
+        exContainer.innerHTML += createExerciseCard(ex);
+      });
+
+      // Specific Warmup Rendering
+      if (state.program === 'fullbody') {
+        const fbWarmup = document.getElementById('fb-warmup-list');
+        fbWarmup.innerHTML = fullBodyData.warmup.map(w => `
+                     <div class="p-3 flex items-center justify-between hover:bg-slate-50">
+                        <div>
+                            <span class="font-bold text-slate-700 text-sm">${w.name}</span>
+                            <span class="block text-xs text-slate-400">${w.info}</span>
+                        </div>
+                        <input type="checkbox" onchange="checkSet(this)" class="custom-checkbox w-5 h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                    </div>
+                `).join('');
+      } else {
+        const splitWarmup = document.getElementById('warmup-list-split');
+        splitWarmup.innerHTML = data.warmup.map(w => `<li>${w}</li>`).join('');
+        document.getElementById('warmup-content').classList.add('hidden'); // Reset accordion
+      }
+
       calculateTotals();
     }
 
-    function renderExerciseList(exercises, containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = exercises.map((ex, idx) => {
-        // Generate set checkboxes
-        let setsHtml = '';
-        for (let i = 1; i <= ex.sets; i++) {
-          setsHtml += `
-                        <input type="checkbox" onchange="checkSet(this)" 
-                        class="appearance-none w-8 h-8 rounded border-2 border-slate-300 checked:bg-blue-600 checked:border-blue-600 transition-colors cursor-pointer relative 
-                        before:content-['${i}'] before:absolute before:inset-0 before:flex before:items-center before:justify-center before:text-slate-400 before:font-bold checked:before:text-white">
-                    `;
-        }
+    function createExerciseCard(ex) {
+      let boxes = '';
+      for (let i = 1; i <= ex.sets; i++) {
+        boxes += `
+                <div class="relative">
+                    <input type="checkbox" onchange="checkSet(this)" class="custom-checkbox peer appearance-none w-10 h-10 border-2 border-slate-200 rounded-lg checked:bg-blue-600 checked:border-blue-600 transition-all cursor-pointer z-10 relative">
+                    <span class="absolute inset-0 flex items-center justify-center text-slate-300 font-bold pointer-events-none peer-checked:text-white">${i}</span>
+                </div>`;
+      }
 
-        return `
-                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <h3 class="font-bold text-slate-800 text-lg">${ex.name}</h3>
-                            <p class="text-xs text-slate-500">${ex.note}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="block font-bold text-slate-700">${ex.sets} x ${ex.reps}</span>
-                            <button onclick="startTimer(${ex.rest})" class="text-xs font-bold text-orange-500 hover:text-orange-600 bg-orange-50 px-2 py-1 rounded mt-1 transition-colors">
-                                ⏱️ Repos ${ex.rest}s
-                            </button>
-                        </div>
+      return `
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 transition-all hover:shadow-md">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px] font-bold uppercase mb-1 tracking-wide">${ex.muscle}</span>
+                        <h4 class="font-bold text-slate-800 text-lg leading-tight">${ex.name}</h4>
+                        <p class="text-xs text-slate-400 mt-1 italic">💡 ${ex.note}</p>
                     </div>
-                    <div class="flex items-center gap-2 mt-2">
-                        ${setsHtml}
+                    <div class="text-right pl-2">
+                        <span class="block font-bold text-slate-700 text-lg">${ex.sets} x ${ex.reps}</span>
+                        <button onclick="startGlobalTimer(${ex.rest})" class="mt-2 inline-flex items-center gap-1 text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded hover:bg-orange-100 transition-colors">
+                            ⏱️ ${ex.rest}s
+                        </button>
                     </div>
                 </div>
-                `;
-      }).join('');
+                <div class="flex flex-wrap gap-2 mt-2 pt-2 border-t border-slate-50">
+                    ${boxes}
+                </div>
+            </div>
+            `;
     }
 
-    // --- ABS LOGIC ---
+    // --- ABS & EXTRAS ---
     function toggleAbs() {
-      const absContainer = document.getElementById('abs-content');
-      const toggleBtn = document.getElementById('btn-toggle-abs');
+      const container = document.getElementById('abs-content');
+      const list = document.getElementById('abs-list');
+      const btn = document.getElementById('btn-toggle-abs');
 
-      if (!absActive) {
-        // Show Abs
-        absActive = true;
-        renderExerciseList(program.abs.exercises, 'abs-list');
-        absContainer.classList.remove('hidden');
-        toggleBtn.classList.add('hidden');
-        // Scroll to abs
-        setTimeout(() => absContainer.scrollIntoView({ behavior: 'smooth' }), 100);
+      if (!state.absEnabled) {
+        // Enable
+        state.absEnabled = true;
+        list.innerHTML = '';
+        splitProgram.abs.forEach(ex => {
+          list.innerHTML += createExerciseCard(ex);
+        });
+        container.classList.remove('hidden');
+        btn.classList.add('hidden');
+
+        // Scroll
+        setTimeout(() => {
+          container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       } else {
-        // Hide Abs
-        absActive = false;
-        absContainer.classList.add('hidden');
-        toggleBtn.classList.remove('hidden');
-        document.getElementById('abs-list').innerHTML = '';
+        // Disable
+        state.absEnabled = false;
+        container.classList.add('hidden');
+        btn.classList.remove('hidden');
+        list.innerHTML = '';
       }
       calculateTotals();
     }
 
-    // --- PROGRESS LOGIC ---
-    function calculateTotals() {
-      // Count all checkboxes in main list
-      const mainSets = program[currentDay].exercises.reduce((acc, ex) => acc + ex.sets, 0);
-      const absSets = absActive ? program.abs.exercises.reduce((acc, ex) => acc + ex.sets, 0) : 0;
-      totalSets = mainSets + absSets;
+    function toggleElement(id) {
+      document.getElementById(id).classList.toggle('hidden');
+    }
 
-      // Recount checked boxes
-      const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
-      setsCompleted = checked;
+    // --- PROGRESS & TIMER ---
+
+    function calculateTotals() {
+      // Count Checkboxes in DOM
+      const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+      state.totalSets = allCheckboxes.length;
+
+      const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+      state.setsDone = checkedBoxes.length;
+
       updateProgressBar();
     }
 
-    function checkSet(checkbox) {
-      if (checkbox.checked) setsCompleted++;
-      else setsCompleted--;
-      updateProgressBar();
+    function checkSet(el) {
+      // Visual bounce if needed, handled by CSS mostly
+      calculateTotals();
     }
 
     function updateProgressBar() {
-      const pct = totalSets === 0 ? 0 : Math.round((setsCompleted / totalSets) * 100);
+      const pct = state.totalSets === 0 ? 0 : Math.round((state.setsDone / state.totalSets) * 100);
       document.getElementById('progress-bar').style.width = `${pct}%`;
       document.getElementById('progress-pct').innerText = `${pct}%`;
+
+      if (pct === 100 && state.totalSets > 0) {
+        document.getElementById('progress-pct').classList.add('text-emerald-500');
+      }
     }
 
-    // --- UI UTILS ---
-    function toggleWarmup() {
-      document.getElementById('warmup-body').classList.toggle('hidden');
-    }
-
-    // --- TIMER LOGIC ---
-    function startTimer(seconds) {
-      clearInterval(timerInterval);
+    function startGlobalTimer(seconds) {
+      clearInterval(state.timerId);
       const display = document.getElementById('timer-display');
-      const displayContainer = document.querySelector('.fixed');
 
-      display.classList.remove('hidden', 'bg-emerald-500', 'bg-slate-900');
-      display.classList.add('bg-slate-900', 'timer-active');
-      displayContainer.classList.add('border-orange-400'); // Visual feedback on container
+      display.classList.remove('hidden', 'bg-emerald-500');
+      display.classList.add('bg-slate-800', 'timer-active');
 
-      let left = seconds;
-      display.innerText = formatTime(left);
+      let timeLeft = seconds;
+      display.innerText = formatTime(timeLeft);
 
-      timerInterval = setInterval(() => {
-        left--;
-        display.innerText = formatTime(left);
+      state.timerId = setInterval(() => {
+        timeLeft--;
+        display.innerText = formatTime(timeLeft);
 
-        if (left <= 0) {
-          clearInterval(timerInterval);
-          timerFinished();
+        if (timeLeft <= 0) {
+          clearInterval(state.timerId);
+          display.innerText = "GO!";
+          display.classList.remove('bg-slate-800', 'timer-active');
+          display.classList.add('bg-emerald-500');
+
+          setTimeout(() => display.classList.add('hidden'), 3000);
         }
       }, 1000);
     }
@@ -499,25 +611,9 @@ permalink: /workout/
       return `${m}:${sec < 10 ? '0' : ''}${sec}`;
     }
 
-    function timerFinished() {
-      const display = document.getElementById('timer-display');
-      const displayContainer = document.querySelector('.fixed');
-      display.classList.remove('bg-slate-900', 'timer-active');
-      display.classList.add('bg-emerald-500'); // Green
-      display.innerText = "GO!";
-      displayContainer.classList.remove('border-orange-400');
-
-      // Auto hide after 3s
-      setTimeout(() => {
-        if (display.innerText === "GO!") {
-          display.classList.add('hidden');
-        }
-      }, 3000);
-    }
-
-    // --- CHART LOGIC ---
+    // --- CHART ---
     function updateChart(dataValues) {
-      const ctx = document.getElementById('muscleRadar').getContext('2d');
+      const ctx = document.getElementById('mainChart').getContext('2d');
 
       if (chartInstance) {
         chartInstance.destroy();
@@ -526,14 +622,13 @@ permalink: /workout/
       chartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
-          labels: ['Pecs', 'Dos', 'Jambes', 'Abdos', 'Épaules', 'Bras'],
+          labels: ['Jambes', 'Dos', 'Pecs', 'Abdos', 'Épaules', 'Bras'],
           datasets: [{
-            label: 'Focus Intensité',
+            label: 'Intensité',
             data: dataValues,
-            backgroundColor: 'rgba(37, 99, 235, 0.2)', // Blue-600 transparent
-            borderColor: 'rgba(37, 99, 235, 1)',
-            pointBackgroundColor: 'rgba(37, 99, 235, 1)',
-            pointBorderColor: '#fff',
+            backgroundColor: 'rgba(37, 99, 235, 0.2)',
+            borderColor: '#2563eb',
+            pointBackgroundColor: '#2563eb',
             borderWidth: 2
           }]
         },
@@ -542,19 +637,17 @@ permalink: /workout/
           maintainAspectRatio: false,
           scales: {
             r: {
-              beginAtZero: true,
+              min: 0,
               max: 10,
-              ticks: { display: false }, // Hide numbers for cleaner look
+              ticks: { display: false },
               pointLabels: {
-                font: { size: 11, weight: 'bold' },
+                font: { size: 11, family: 'Inter' },
                 color: '#64748b'
               },
               grid: { color: '#f1f5f9' }
             }
           },
-          plugins: {
-            legend: { display: false }
-          }
+          plugins: { legend: { display: false } }
         }
       });
     }
