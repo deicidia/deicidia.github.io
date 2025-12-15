@@ -1,0 +1,564 @@
+---
+layout: null
+title: Entraînement
+permalink: /workout/
+---
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programme Entraînement 4 Jours</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Chosen Palette: Slate (Background), Blue-Ribbon (Primary), Amber (Action) -->
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Chart Container Rules */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      height: 300px;
+      max-height: 350px;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .btn-day.active {
+      background-color: #2563eb;
+      /* blue-600 */
+      color: white;
+      border-color: #2563eb;
+    }
+
+    .btn-day.inactive {
+      background-color: white;
+      color: #475569;
+      border-color: #e2e8f0;
+    }
+
+    .btn-day.inactive:hover {
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+
+    /* Animations */
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+      }
+    }
+
+    .timer-active {
+      animation: pulse-ring 2s infinite;
+    }
+  </style>
+
+  <!-- Application Structure Plan:
+        1. Top Navigation: Day selector (Day 1, 2, 3, 4).
+        2. Dashboard: Dynamic Radar Chart updating based on Day selection to show muscle focus.
+        3. Workout Content:
+           - Warmup Accordion (Collapsible).
+           - Main Workout Cards (with Sets/Reps checkboxes).
+           - "Add Abs" Toggle (Injects Ab workout at bottom).
+        4. Sticky Footer: Global Rest Timer.
+    -->
+
+  <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+
+<body class="bg-slate-50 text-slate-800 pb-24">
+
+  <!-- Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-4">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Programme <span class="text-blue-600">4
+            Jours</span></h1>
+        <div class="text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-full uppercase">Hypertrophie</div>
+      </div>
+
+      <!-- Day Selector -->
+      <div class="flex overflow-x-auto gap-2 pb-2 custom-scroll no-scrollbar" id="day-nav">
+        <!-- Generated via JS -->
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 py-6 space-y-8">
+
+    <!-- Section 1: Context & Visualization -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
+      <!-- Dynamic Info -->
+      <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <h2 id="day-title" class="text-xl font-bold text-slate-800 mb-2">Sélectionnez un jour</h2>
+        <p id="day-desc" class="text-slate-500 mb-4 text-sm leading-relaxed">...</p>
+
+        <div class="flex gap-4 text-sm">
+          <div class="bg-slate-50 px-4 py-2 rounded-lg border border-slate-100">
+            <span class="block text-xs text-slate-400 uppercase font-bold">Durée Est.</span>
+            <span class="font-bold text-slate-700">~65 Min</span>
+          </div>
+          <div class="bg-slate-50 px-4 py-2 rounded-lg border border-slate-100">
+            <span class="block text-xs text-slate-400 uppercase font-bold">Intensité</span>
+            <span class="font-bold text-orange-500">Élevée</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Focus Chart -->
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
+        <h3 class="text-xs font-bold text-slate-400 uppercase mb-2 w-full text-center">Focus Musculaire du Jour</h3>
+        <div class="chart-container">
+          <canvas id="muscleRadar"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Workout Flow -->
+    <section id="workout-content" class="space-y-6">
+      <!-- Warmup -->
+      <div class="bg-orange-50 border border-orange-100 rounded-xl overflow-hidden">
+        <div class="p-4 cursor-pointer flex justify-between items-center" onclick="toggleWarmup()">
+          <div class="flex items-center gap-3">
+            <span class="bg-orange-200 text-orange-700 p-2 rounded-lg text-lg">🔥</span>
+            <h3 class="font-bold text-orange-900">Échauffement (Warm-Up)</h3>
+          </div>
+          <span class="text-orange-400 text-sm">▼</span>
+        </div>
+        <div id="warmup-body" class="px-4 pb-4 hidden">
+          <ul id="warmup-list" class="list-disc list-inside text-sm text-orange-800 space-y-1 ml-2">
+            <!-- JS injected -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Exercises List -->
+      <div id="exercise-list" class="space-y-4">
+        <!-- JS injected cards -->
+      </div>
+
+      <!-- Abs Injector -->
+      <div id="abs-section-placeholder" class="pt-6 border-t border-slate-200">
+        <button onclick="toggleAbs()" id="btn-toggle-abs"
+          class="w-full py-4 border-2 border-dashed border-slate-300 rounded-xl text-slate-500 font-bold hover:border-blue-400 hover:text-blue-500 transition-all flex items-center justify-center gap-2">
+          <span>+</span> Ajouter la séance Abdos (Optionnel)
+        </button>
+      </div>
+
+      <div id="abs-content" class="hidden space-y-4 animate-fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-800 border-l-4 border-purple-500 pl-3">Circuit Abdominaux</h3>
+          <button onclick="toggleAbs()" class="text-xs text-red-400 hover:text-red-600">Retirer ✕</button>
+        </div>
+        <div id="abs-list" class="space-y-4">
+          <!-- JS injected abs -->
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Floating Timer & Progress -->
+  <div
+    class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 z-50">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+
+      <div class="flex flex-col w-1/3">
+        <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+          <span>Progression</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-2">
+          <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div id="timer-display"
+          class="hidden bg-slate-900 text-white font-mono text-xl px-4 py-2 rounded-lg font-bold w-24 text-center">00:00
+        </div>
+        <div id="timer-controls" class="flex gap-2">
+          <span class="text-xs text-slate-400 font-bold uppercase self-center hidden sm:block mr-2">Repos rapide:</span>
+          <button onclick="startTimer(60)"
+            class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded font-bold text-sm transition-colors">60s</button>
+          <button onclick="startTimer(90)"
+            class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded font-bold text-sm transition-colors">90s</button>
+          <button onclick="startTimer(120)"
+            class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded font-bold text-sm transition-colors">120s</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Logic -->
+  <script>
+    // --- DATA STRUCTURE ---
+    const program = {
+      day1: {
+        title: "Day 1: Chest, Shoulders & Triceps",
+        desc: "Focus sur la poussée (Push). Gros mouvements polyarticulaires suivis d'isolation.",
+        chartData: [9, 2, 0, 0, 8, 7], // Chest, Back, Legs, Abs, Shoulders, Arms
+        warmup: [
+          "Étirements dynamiques / Bandes élastiques pour pectoraux",
+          "2 séries de chauffe au Développé Haltères (40% puis 60% de la charge de travail)"
+        ],
+        exercises: [
+          { name: "Incline Barbell/Dumbbell Press (30°)", sets: 3, reps: "8-12", rest: 105, note: "Banc incliné 30°" }, // 1.5-2 min avg -> 105s
+          { name: "Cable Pec Fly", sets: 3, reps: "8-15", rest: 90, note: "Écarté à la poulie" },
+          { name: "Chest Press Machine", sets: 2, reps: "8-15", rest: 90, note: "Machine convergente si possible" },
+          { name: "Lateral Raises (Cable pref.)", sets: 3, reps: "8-15", rest: 90, note: "Élévations latérales" },
+          { name: "Triceps Rope Pulldown", sets: 3, reps: "8-15", rest: 90, note: "Extensions triceps corde" },
+          { name: "Overhead Triceps Extension (1-arm)", sets: 2, reps: "8-15", rest: 90, note: "Extension nuque unilatérale" }
+        ]
+      },
+      day2: {
+        title: "Day 2: Back & Biceps",
+        desc: "Focus sur le tirage (Pull). Largeur et épaisseur du dos.",
+        chartData: [0, 10, 0, 0, 3, 8],
+        warmup: [
+          "Lat Pulldown Machine: 2-3 séries de chauffe à 30-50% de la charge",
+          "Repos court (20-30 sec) entre les séries de chauffe"
+        ],
+        exercises: [
+          { name: "Lat Pulldown Machine", sets: 3, reps: "8-12", rest: 120, note: "Tirage vertical poitrine" },
+          { name: "Dumbbell Row OR Machine Row", sets: 3, reps: "8-12", rest: 90, note: "Rowing haltère ou machine" },
+          { name: "Narrow-Grip Cable Row", sets: 2, reps: "8-15", rest: 90, note: "Tirage horizontal prise serrée" },
+          { name: "Incline Bicep Curls", sets: 3, reps: "8-12", rest: 90, note: "Curl incliné haltères" },
+          { name: "Preacher Curls", sets: 3, reps: "8-15", rest: 90, note: "Curl pupitre (Larry Scott)" }
+        ]
+      },
+      day3: {
+        title: "Day 3: Legs & Lower Body",
+        desc: "Séance complète bas du corps. Quadriceps, Ischios et Mollets.",
+        chartData: [0, 1, 10, 2, 0, 0],
+        warmup: [
+          "5 min vélo (léger)",
+          "2 min étirements dynamiques",
+          "1-2 séries de chauffe du premier exercice"
+        ],
+        exercises: [
+          { name: "Squats / Leg Press / Hack Squat", sets: 3, reps: "6-12", rest: 150, note: "Repos 2-3 min. Lourd." },
+          { name: "Stiff-Leg Deadlift (DB/Barbell)", sets: 2, reps: "6-12", rest: 105, note: "Jambes tendues. Focus excentrique lent." },
+          { name: "Walking Lunges", sets: 2, reps: "6-10 /jambe", rest: 90, note: "Fentes marchées" },
+          { name: "Hamstring Curls (Machine)", sets: 3, reps: "8-15", rest: 90, note: "Leg Curl ischios" },
+          { name: "Leg Extension", sets: 3, reps: "8-15", rest: 90, note: "Extension quadriceps" },
+          { name: "Calf Raises (Optionable)", sets: 3, reps: "10-20", rest: 90, note: "Mollets. 2 séries à l'échec min." }
+        ]
+      },
+      day4: {
+        title: "Day 4: Upper Body Focus",
+        desc: "Rappel Haut du corps. Mélange Dos/Pecs/Bras pour le volume.",
+        chartData: [7, 7, 0, 0, 5, 6],
+        warmup: [
+          "Lat Pulldown (Optionnel): 2-3 séries chauffe légères",
+          "Mobilisation épaules"
+        ],
+        exercises: [
+          { name: "Lat Pulldown", sets: 3, reps: "8-12", rest: 90, note: "Tirage Vertical" },
+          { name: "Narrow-Grip Cable Row", sets: 2, reps: "8-15", rest: 90, note: "Tirage Horizontal serré" },
+          { name: "Chest Press (Machine/Free Weights)", sets: 3, reps: "8-12", rest: 90, note: "Développé (Machine ou Libre)" },
+          { name: "Pec Fly (Cable/Machine)", sets: 2, reps: "8-12", rest: 90, note: "Écarté" },
+          { name: "Triceps Rope Pulldown", sets: 3, reps: "8-15", rest: 90, note: "Extension Corde" },
+          { name: "Rear Delt Machine Fly", sets: 3, reps: "10-20", rest: 90, note: "Oiseau machine (Deltoïde post.)" } // 2 sets failure
+        ]
+      },
+      abs: {
+        exercises: [
+          { name: "Leg Raises", sets: 4, reps: "8-20", rest: 50, note: "Relevés de jambes. Repos 45-60s." },
+          { name: "Cable Crunches / Decline Crunches", sets: 4, reps: "8-20", rest: 50, note: "Crunch poulie ou décliné" }
+        ]
+      }
+    };
+
+    let currentDay = 'day1';
+    let absActive = false;
+    let setsCompleted = 0;
+    let totalSets = 0;
+    let timerInterval = null;
+    let chartInstance = null;
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDaySelector();
+      loadDay('day1');
+    });
+
+    // --- RENDERING ---
+
+    function renderDaySelector() {
+      const container = document.getElementById('day-nav');
+      const days = [
+        { id: 'day1', label: 'Jour 1', sub: 'Pecs/Épaules' },
+        { id: 'day2', label: 'Jour 2', sub: 'Dos/Biceps' },
+        { id: 'day3', label: 'Jour 3', sub: 'Jambes' },
+        { id: 'day4', label: 'Jour 4', sub: 'Haut Focus' },
+      ];
+
+      container.innerHTML = days.map(d => `
+                <button onclick="loadDay('${d.id}')" id="btn-${d.id}" class="btn-day inactive border rounded-lg px-4 py-2 min-w-[100px] text-left transition-all">
+                    <span class="block text-sm font-bold">${d.label}</span>
+                    <span class="block text-xs opacity-80">${d.sub}</span>
+                </button>
+            `).join('');
+    }
+
+    function loadDay(dayId) {
+      currentDay = dayId;
+      const data = program[dayId];
+      absActive = false; // Reset abs on day switch
+
+      // 1. Update UI Active State
+      document.querySelectorAll('.btn-day').forEach(b => {
+        b.classList.remove('active');
+        b.classList.add('inactive');
+      });
+      const activeBtn = document.getElementById(`btn-${dayId}`);
+      activeBtn.classList.remove('inactive');
+      activeBtn.classList.add('active');
+
+      // 2. Update Header Info
+      document.getElementById('day-title').innerText = data.title;
+      document.getElementById('day-desc').innerText = data.desc;
+
+      // 3. Update Chart
+      updateChart(data.chartData);
+
+      // 4. Render Warmup
+      document.getElementById('warmup-list').innerHTML = data.warmup.map(w => `<li>${w}</li>`).join('');
+      document.getElementById('warmup-body').classList.add('hidden'); // Reset collapsed state
+
+      // 5. Render Exercises
+      renderExerciseList(data.exercises, 'exercise-list');
+
+      // 6. Reset Abs UI
+      document.getElementById('abs-content').classList.add('hidden');
+      document.getElementById('btn-toggle-abs').classList.remove('hidden');
+      document.getElementById('abs-list').innerHTML = '';
+
+      // 7. Recalculate Totals
+      calculateTotals();
+    }
+
+    function renderExerciseList(exercises, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = exercises.map((ex, idx) => {
+        // Generate set checkboxes
+        let setsHtml = '';
+        for (let i = 1; i <= ex.sets; i++) {
+          setsHtml += `
+                        <input type="checkbox" onchange="checkSet(this)" 
+                        class="appearance-none w-8 h-8 rounded border-2 border-slate-300 checked:bg-blue-600 checked:border-blue-600 transition-colors cursor-pointer relative 
+                        before:content-['${i}'] before:absolute before:inset-0 before:flex before:items-center before:justify-center before:text-slate-400 before:font-bold checked:before:text-white">
+                    `;
+        }
+
+        return `
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg">${ex.name}</h3>
+                            <p class="text-xs text-slate-500">${ex.note}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="block font-bold text-slate-700">${ex.sets} x ${ex.reps}</span>
+                            <button onclick="startTimer(${ex.rest})" class="text-xs font-bold text-orange-500 hover:text-orange-600 bg-orange-50 px-2 py-1 rounded mt-1 transition-colors">
+                                ⏱️ Repos ${ex.rest}s
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-2">
+                        ${setsHtml}
+                    </div>
+                </div>
+                `;
+      }).join('');
+    }
+
+    // --- ABS LOGIC ---
+    function toggleAbs() {
+      const absContainer = document.getElementById('abs-content');
+      const toggleBtn = document.getElementById('btn-toggle-abs');
+
+      if (!absActive) {
+        // Show Abs
+        absActive = true;
+        renderExerciseList(program.abs.exercises, 'abs-list');
+        absContainer.classList.remove('hidden');
+        toggleBtn.classList.add('hidden');
+        // Scroll to abs
+        setTimeout(() => absContainer.scrollIntoView({ behavior: 'smooth' }), 100);
+      } else {
+        // Hide Abs
+        absActive = false;
+        absContainer.classList.add('hidden');
+        toggleBtn.classList.remove('hidden');
+        document.getElementById('abs-list').innerHTML = '';
+      }
+      calculateTotals();
+    }
+
+    // --- PROGRESS LOGIC ---
+    function calculateTotals() {
+      // Count all checkboxes in main list
+      const mainSets = program[currentDay].exercises.reduce((acc, ex) => acc + ex.sets, 0);
+      const absSets = absActive ? program.abs.exercises.reduce((acc, ex) => acc + ex.sets, 0) : 0;
+      totalSets = mainSets + absSets;
+
+      // Recount checked boxes
+      const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+      setsCompleted = checked;
+      updateProgressBar();
+    }
+
+    function checkSet(checkbox) {
+      if (checkbox.checked) setsCompleted++;
+      else setsCompleted--;
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const pct = totalSets === 0 ? 0 : Math.round((setsCompleted / totalSets) * 100);
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+      document.getElementById('progress-pct').innerText = `${pct}%`;
+    }
+
+    // --- UI UTILS ---
+    function toggleWarmup() {
+      document.getElementById('warmup-body').classList.toggle('hidden');
+    }
+
+    // --- TIMER LOGIC ---
+    function startTimer(seconds) {
+      clearInterval(timerInterval);
+      const display = document.getElementById('timer-display');
+      const displayContainer = document.querySelector('.fixed');
+
+      display.classList.remove('hidden', 'bg-emerald-500', 'bg-slate-900');
+      display.classList.add('bg-slate-900', 'timer-active');
+      displayContainer.classList.add('border-orange-400'); // Visual feedback on container
+
+      let left = seconds;
+      display.innerText = formatTime(left);
+
+      timerInterval = setInterval(() => {
+        left--;
+        display.innerText = formatTime(left);
+
+        if (left <= 0) {
+          clearInterval(timerInterval);
+          timerFinished();
+        }
+      }, 1000);
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    function timerFinished() {
+      const display = document.getElementById('timer-display');
+      const displayContainer = document.querySelector('.fixed');
+      display.classList.remove('bg-slate-900', 'timer-active');
+      display.classList.add('bg-emerald-500'); // Green
+      display.innerText = "GO!";
+      displayContainer.classList.remove('border-orange-400');
+
+      // Auto hide after 3s
+      setTimeout(() => {
+        if (display.innerText === "GO!") {
+          display.classList.add('hidden');
+        }
+      }, 3000);
+    }
+
+    // --- CHART LOGIC ---
+    function updateChart(dataValues) {
+      const ctx = document.getElementById('muscleRadar').getContext('2d');
+
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Pecs', 'Dos', 'Jambes', 'Abdos', 'Épaules', 'Bras'],
+          datasets: [{
+            label: 'Focus Intensité',
+            data: dataValues,
+            backgroundColor: 'rgba(37, 99, 235, 0.2)', // Blue-600 transparent
+            borderColor: 'rgba(37, 99, 235, 1)',
+            pointBackgroundColor: 'rgba(37, 99, 235, 1)',
+            pointBorderColor: '#fff',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: 10,
+              ticks: { display: false }, // Hide numbers for cleaner look
+              pointLabels: {
+                font: { size: 11, weight: 'bold' },
+                color: '#64748b'
+              },
+              grid: { color: '#f1f5f9' }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
