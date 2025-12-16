@@ -6,6 +6,9 @@
   <!-- SEO Tag Plugin -->
   {% seo %}
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="{{ " /images/favicon.svg" | prepend: site.baseurl }}">
+
   <link rel="stylesheet" href="{{ " /css/main.css" | prepend: site.baseurl }}">
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ " /feed.xml" | prepend:

@@ -215,30 +215,28 @@ $shadow-hover: 0 0.125px 0px 0.375px $trans-faint-60;
   --shadow-hover: #{$shadow-hover};
 }
 
-// Dark mode (if you want to add it later)
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-base-00: #{$dark-base-00};
-    --color-base-05: #{$dark-base-05};
-    --color-base-10: #{$dark-base-10};
-    --color-base-20: #{$dark-base-20};
-    --color-base-30: #{$dark-base-30};
-    --color-base-40: #{$dark-base-40};
-    --color-base-50: #{$dark-base-50};
-    --color-base-60: #{$dark-base-60};
-    --color-base-70: #{$dark-base-70};
-    --color-base-80: #{$dark-base-80};
-    --color-base-90: #{$dark-base-90};
-    --color-base-100: #{$dark-base-100};
+// Dark mode variables — only applied when `.dark` class is present
+.dark {
+  --color-base-00: #{$dark-base-00};
+  --color-base-05: #{$dark-base-05};
+  --color-base-10: #{$dark-base-10};
+  --color-base-20: #{$dark-base-20};
+  --color-base-30: #{$dark-base-30};
+  --color-base-40: #{$dark-base-40};
+  --color-base-50: #{$dark-base-50};
+  --color-base-60: #{$dark-base-60};
+  --color-base-70: #{$dark-base-70};
+  --color-base-80: #{$dark-base-80};
+  --color-base-90: #{$dark-base-90};
+  --color-base-100: #{$dark-base-100};
 
-    --color-accent: #{$dark-accent};
-    --color-accent-hover: #{lighten($dark-accent, 10%)};
-    --color-accent-faint: #{rgba($dark-accent, 0.15)};
+  --color-accent: #{$dark-accent};
+  --color-accent-hover: #{lighten($dark-accent, 10%)};
+  --color-accent-faint: #{rgba($dark-accent, 0.15)};
 
-    --border-color: #{$dark-trans-faint-30};
-    --border-color-hover: #{$dark-trans-faint-40};
+  --border-color: #{$dark-trans-faint-30};
+  --border-color-hover: #{$dark-trans-faint-40};
 
-    --code-background: #{$dark-trans-faint-00};
-    --code-border: #{$dark-trans-faint-20};
-  }
+  --code-background: #{$dark-trans-faint-00};
+  --code-border: #{$dark-trans-faint-20};
 }
