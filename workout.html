@@ -189,11 +189,11 @@ permalink: /workout/
   <!-- MAIN CONTENT AREA -->
   <main class="max-w-5xl mx-auto px-4 py-6 space-y-8 animate-fade-in">
 
-    <!-- GUIDE SECTION (New) -->
+    <!-- GUIDE SECTION -->
     <section id="guide-section" class="hidden space-y-8">
       <div class="text-center max-w-2xl mx-auto mb-8">
         <h2 class="text-3xl font-bold text-slate-800 dark:text-white mb-2">Les Piliers de la Progression</h2>
-        <p class="text-slate-500 dark:text-slate-400">L'entraînement n'est que le stimulus. La croissance se produit
+        <p class="text-slate-500 dark:text-slate-400">L'entraînement n'est que le stimulus.La croissance se produit
           grâce à ce que vous faites les 23 autres heures.</p>
       </div>
 
@@ -460,6 +460,8 @@ permalink: /workout/
   <!-- JAVASCRIPT LOGIC -->
   <script>
     // --- DATA SOURCE ---
+    // NOTE: Replace the 'img' urls with your own GIFs or Images.
+    // Use https://giphy.com/ or local paths.
 
     // 1. Full Body Data
     const fullBodyData = {
@@ -468,20 +470,20 @@ permalink: /workout/
       desc: "Une approche complète ciblant l'ensemble des groupes musculaires en une seule séance. Idéal pour maximiser la fréquence d'entraînement ou pour les emplois du temps chargés (2-3 sessions/semaine).",
       chart: [8, 7, 6, 8, 9, 6], // Pecs, Shoulders, Arms, Back, Legs, Abs
       warmup: [
-        { name: "Cardio Léger (Rameur/Elliptique)", info: "3 min" },
+        { name: "Cardio Léger", info: "3 min" },
         { name: "Rotations Articulaires", info: "1 min" },
         { name: "Squats Poids du Corps", info: "15 reps" },
-        { name: "Pompes (genoux ou classiques)", info: "10 reps" },
+        { name: "Pompes", info: "10 reps" },
         { name: "Dislocations d'épaules", info: "10 reps" }
       ],
       exercises: [
-        { name: "Goblet Squat / Presse", muscle: "Jambes", sets: 3, reps: "10-12", rest: 90, note: "Dos droit, poussez sur les talons." },
-        { name: "Développé Couché (Haltères/Barre)", muscle: "Pecs", sets: 3, reps: "10-12", rest: 90, note: "Contrôlez la descente." },
-        { name: "Tirage Vertical (Lat Pulldown)", muscle: "Dos", sets: 3, reps: "10-12", rest: 60, note: "Amenez la barre à la poitrine." },
-        { name: "Soulevé de Terre Jambes Tendues", muscle: "Ischios", sets: 3, reps: "12-15", rest: 60, note: "Dos plat, fesses en arrière." },
-        { name: "Développé Militaire Assis", muscle: "Épaules", sets: 3, reps: "12-15", rest: 60, note: "Pas de cambrure excessive." },
-        { name: "Rowing Unilatéral", muscle: "Dos", sets: 3, reps: "12-15", rest: 60, note: "Tirage coude vers hanche." },
-        { name: "Planche (Gainage)", muscle: "Abdos", sets: 3, reps: "45s", rest: 45, note: "Corps aligné." }
+        { name: "Goblet Squat", muscle: "Jambes", sets: 3, reps: "10-12", rest: 90, note: "Dos droit, poussez sur les talons.", img: "/images/exercices/goblet-squat.gif" },
+        { name: "Développé Couché", muscle: "Pecs", sets: 3, reps: "10-12", rest: 90, note: "Contrôlez la descente.", img: "/images/exercices/dumbell-press.gif" },
+        { name: "Tirage Vertical", muscle: "Dos", sets: 3, reps: "10-12", rest: 60, note: "Amenez la barre à la poitrine.", img: "/images/exercices/lat-pulldown.gif" },
+        { name: "Soulevé de Terre Jambes Tendues", muscle: "Ischios", sets: 3, reps: "12-15", rest: 60, note: "Dos plat, fesses en arrière.", img: "/images/exercices/straight-leg-deadlift.gif" },
+        { name: "Développé Militaire Assis", muscle: "Épaules", sets: 3, reps: "12-15", rest: 60, note: "Pas de cambrure excessive.", img: "/images/exercices/military-press.gif" },
+        { name: "Rowing Unilatéral", muscle: "Dos", sets: 3, reps: "12-15", rest: 60, note: "Tirage coude vers hanche.", img: "/images/exercices/single-arm-dumbbell-row.gif" },
+        { name: "Planche (Gainage)", muscle: "Abdos", sets: 3, reps: "45s", rest: 45, note: "Corps aligné.", img: "/images/exercices/plank.gif" }
       ]
     };
 
@@ -490,65 +492,65 @@ permalink: /workout/
       day1: {
         title: "PUSH",
         time: "55 Min",
-        desc: "Focalisé sur les mouvements de poussée pour développer les pectoraux, les épaules et les triceps. Une combinaison d'exercices polyarticulaires lourds et d'isolation pour un volume optimal.",
-        chart: [10, 9, 8, 0, 0, 2], // Pecs, Shoulders, Arms, Back, Legs, Abs
+        desc: "Focalisé sur les mouvements de poussée pour développer les pectoraux, les épaules et les triceps.",
+        chart: [10, 9, 8, 0, 0, 2],
         warmup: ["Élastiques Pectoraux", "2 séries chauffe Développé (40%/60%)"],
         exercises: [
-          { name: "Développé Incliné (Haltères/Barre)", muscle: "Pecs", sets: 3, reps: "8-12", rest: 105, note: "Banc à 30°" },
-          { name: "Écartés Poulie (Cable Fly)", muscle: "Pecs", sets: 3, reps: "8-15", rest: 90, note: "Focus contraction" },
-          { name: "Chest Press Machine", muscle: "Pecs", sets: 2, reps: "8-15", rest: 90, note: "Finisher pecs" },
-          { name: "Élévations Latérales", muscle: "Épaules", sets: 3, reps: "8-15", rest: 90, note: "Contrôle strict" },
-          { name: "Extensions Triceps Corde", muscle: "Bras", sets: 3, reps: "8-15", rest: 90, note: "Coudes fixes" },
-          { name: "Extension Nuque Unilatérale", muscle: "Bras", sets: 2, reps: "8-15", rest: 90, note: "Étirement triceps" }
+          { name: "Développé Incliné", muscle: "Pecs", sets: 3, reps: "8-12", rest: 105, note: "Banc à 30°", img: "/images/exercices/barbell-incline-bench-press.gif" },
+          { name: "Écartés Poulie", muscle: "Pecs", sets: 3, reps: "8-15", rest: 90, note: "Focus contraction", img: "/images/exercices/cable-standing-crossover.gif" },
+          { name: "Chest Press Machine", muscle: "Pecs", sets: 2, reps: "8-15", rest: 90, note: "Finisher pecs", img: "/images/exercices/chest-press-machine.gif" },
+          { name: "Élévations Latérales", muscle: "Épaules", sets: 3, reps: "8-15", rest: 90, note: "Contrôle strict", img: "/images/exercices/cable-one-arm-lateral-raise.gif" },
+          { name: "Extensions Triceps Corde", muscle: "Bras", sets: 3, reps: "8-15", rest: 90, note: "Coudes fixes", img: "/images/exercices/ez-bar-tricep-pushdown.gif" },
+          { name: "Extension Nuque Unilatérale", muscle: "Bras", sets: 2, reps: "8-15", rest: 90, note: "Étirement triceps", img: "/images/exercices/overhead-cable-tricep-extension.gif" }
         ]
       },
       day2: {
         title: "PULL",
         time: "50 Min",
-        desc: "Dédié à la chaîne postérieure : dos, trapèzes et biceps. L'objectif est de construire un dos large et épais tout en renforçant la flexion du bras.",
-        chart: [0, 2, 9, 10, 0, 0], // Pecs, Shoulders, Arms, Back, Legs, Abs
+        desc: "Dédié à la chaîne postérieure : dos, trapèzes et biceps.",
+        chart: [0, 2, 9, 10, 0, 0],
         warmup: ["Tirage Poitrine léger (2 séries)", "Repos court échauffement"],
         exercises: [
-          { name: "Tirage Vertical (Lat Pulldown)", muscle: "Dos", sets: 3, reps: "8-12", rest: 120, note: "Grand dorsal" },
-          { name: "Rowing (Haltère/Machine)", muscle: "Dos", sets: 3, reps: "8-12", rest: 90, note: "Épaisseur" },
-          { name: "Tirage Horizontal Serré", muscle: "Dos", sets: 2, reps: "8-15", rest: 90, note: "Bas du dos/Trapèzes" },
-          { name: "Curl Incliné", muscle: "Bras", sets: 3, reps: "8-12", rest: 90, note: "Biceps chef long" },
-          { name: "Curl Pupitre (Larry Scott)", muscle: "Bras", sets: 3, reps: "8-15", rest: 90, note: "Isolation Biceps" }
+          { name: "Tirage Vertical", muscle: "Dos", sets: 3, reps: "8-12", rest: 120, note: "Grand dorsal", img: "" },
+          { name: "Rowing", muscle: "Dos", sets: 3, reps: "8-12", rest: 90, note: "Épaisseur", img: "" },
+          { name: "Tirage Horizontal Serré", muscle: "Dos", sets: 2, reps: "8-15", rest: 90, note: "Bas du dos/Trapèzes", img: "" },
+          { name: "Curl Incliné", muscle: "Bras", sets: 3, reps: "8-12", rest: 90, note: "Biceps chef long", img: "" },
+          { name: "Curl Pupitre", muscle: "Bras", sets: 3, reps: "8-15", rest: 90, note: "Isolation Biceps", img: "" }
         ]
       },
       day3: {
         title: "LEG",
         time: "1H05",
-        desc: "Séance intense ciblant le bas du corps (quadriceps, ischios, fessiers, mollets). Préparez-vous à un gros volume de travail pour des jambes puissantes et athlétiques.",
-        chart: [0, 0, 0, 0, 10, 3], // Pecs, Shoulders, Arms, Back, Legs, Abs
+        desc: "Séance intense ciblant le bas du corps.",
+        chart: [0, 0, 0, 0, 10, 3],
         warmup: ["5 min Vélo", "Mobilité Hanches", "Montée en gamme Squat"],
         exercises: [
-          { name: "Squat / Presse à Cuisses", muscle: "Jambes", sets: 3, reps: "6-12", rest: 150, note: "Lourd et contrôlé" },
-          { name: "Soulevé Terre Jambes Tendues", muscle: "Ischios", sets: 2, reps: "6-12", rest: 105, note: "Focus chaîne postérieure" },
-          { name: "Fentes Marchées", muscle: "Jambes", sets: 2, reps: "20 pas", rest: 90, note: "Unilatéral" },
-          { name: "Leg Curl Machine", muscle: "Ischios", sets: 3, reps: "8-15", rest: 90, note: "Flexion genou" },
-          { name: "Leg Extension", muscle: "Quads", sets: 3, reps: "8-15", rest: 90, note: "Finisher Quadriceps" },
-          { name: "Mollets Debout/Assis", muscle: "Mollets", sets: 3, reps: "15-20", rest: 60, note: "Optionnel" }
+          { name: "Squat / Presse", muscle: "Jambes", sets: 3, reps: "6-12", rest: 150, note: "Lourd et contrôlé", img: "" },
+          { name: "Soulevé Terre Jambes Tendues", muscle: "Ischios", sets: 2, reps: "6-12", rest: 105, note: "Focus chaîne postérieure", img: "" },
+          { name: "Fentes Marchées", muscle: "Jambes", sets: 2, reps: "20 pas", rest: 90, note: "Unilatéral", img: "" },
+          { name: "Leg Curl Machine", muscle: "Ischios", sets: 3, reps: "8-15", rest: 90, note: "Flexion genou", img: "" },
+          { name: "Leg Extension", muscle: "Quads", sets: 3, reps: "8-15", rest: 90, note: "Finisher Quadriceps", img: "" },
+          { name: "Mollets Debout/Assis", muscle: "Mollets", sets: 3, reps: "15-20", rest: 60, note: "Optionnel", img: "" }
         ]
       },
       day4: {
         title: "HIT",
         time: "45 Min",
-        desc: "Séance hybride rappelant le haut du corps. Un mix stratégique Dos/Pecs/Bras pour maximiser l'hypertrophie et combler les points faibles en fin de semaine.",
-        chart: [7, 7, 8, 7, 0, 0], // Pecs, Shoulders, Arms, Back, Legs, Abs
+        desc: "Séance hybride rappelant le haut du corps.",
+        chart: [7, 7, 8, 7, 0, 0],
         warmup: ["Mobilisation Épaules", "Tirage léger"],
         exercises: [
-          { name: "Tirage Vertical", muscle: "Dos", sets: 3, reps: "8-12", rest: 90, note: "Largeur" },
-          { name: "Tirage Horizontal", muscle: "Dos", sets: 2, reps: "8-15", rest: 90, note: "Épaisseur" },
-          { name: "Développé Machine/Libre", muscle: "Pecs", sets: 3, reps: "8-12", rest: 90, note: "Masse globale" },
-          { name: "Pec Fly", muscle: "Pecs", sets: 2, reps: "10-15", rest: 90, note: "Isolation" },
-          { name: "Triceps Corde", muscle: "Bras", sets: 3, reps: "10-15", rest: 90, note: "Volume bras" },
-          { name: "Oiseau Machine (Rear Delt)", muscle: "Épaules", sets: 3, reps: "15-20", rest: 90, note: "Arrière d'épaule" }
+          { name: "Tirage Vertical", muscle: "Dos", sets: 3, reps: "8-12", rest: 90, note: "Largeur", img: "" },
+          { name: "Tirage Horizontal", muscle: "Dos", sets: 2, reps: "8-15", rest: 90, note: "Épaisseur", img: "" },
+          { name: "Développé Machine", muscle: "Pecs", sets: 3, reps: "8-12", rest: 90, note: "Masse globale", img: "" },
+          { name: "Pec Fly", muscle: "Pecs", sets: 2, reps: "10-15", rest: 90, note: "Isolation", img: "" },
+          { name: "Triceps Corde", muscle: "Bras", sets: 3, reps: "10-15", rest: 90, note: "Volume bras", img: "" },
+          { name: "Oiseau Machine", muscle: "Épaules", sets: 3, reps: "15-20", rest: 90, note: "Arrière d'épaule", img: "" }
         ]
       },
       abs: [
-        { name: "Relevés de Jambes", muscle: "Abdos", sets: 4, reps: "8-20", rest: 45, note: "Bassin décollé" },
-        { name: "Crunch Poulie / Décliné", muscle: "Abdos", sets: 4, reps: "8-20", rest: 45, note: "Contraction volontaire" }
+        { name: "Relevés de Jambes", muscle: "Abdos", sets: 4, reps: "8-20", rest: 45, note: "Bassin décollé", img: "" },
+        { name: "Crunch Poulie", muscle: "Abdos", sets: 4, reps: "8-20", rest: 45, note: "Contraction volontaire", img: "" }
       ]
     };
 
@@ -724,8 +726,10 @@ permalink: /workout/
       const exContainer = document.getElementById('exercise-list');
       exContainer.innerHTML = '';
 
-      data.exercises.forEach(ex => {
-        exContainer.innerHTML += createExerciseCard(ex);
+      data.exercises.forEach((ex, idx) => {
+        // Use a unique ID for the toggle
+        const uniqueId = `ex-${state.program}-${state.splitDay}-${idx}`;
+        exContainer.innerHTML += createExerciseCard(ex, uniqueId);
       });
 
       // Specific Warmup Rendering
@@ -749,7 +753,8 @@ permalink: /workout/
       calculateTotals();
     }
 
-    function createExerciseCard(ex) {
+    // UPDATED FUNCTION TO HANDLE GIFS
+    function createExerciseCard(ex, uniqueId) {
       let boxes = '';
       for (let i = 1; i <= ex.sets; i++) {
         boxes += `
@@ -759,12 +764,31 @@ permalink: /workout/
                 </div>`;
       }
 
+      // Determine if we have an image link
+      // For this template, we always show the button, but in reality you check if ex.img exists
+      const hasImage = ex.img ? true : false;
+      const imgSection = hasImage ? `
+        <div id="gif-${uniqueId}" class="hidden mt-3 border border-slate-200 dark:border-slate-600 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-900/50">
+             <div class="relative w-full h-48 sm:h-64 flex items-center justify-center bg-slate-100 dark:bg-slate-800">
+                  <img src="${ex.img}" alt="${ex.name}" class="max-w-full max-h-full object-contain" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=GIF+Manquant';">
+             </div>
+             <div class="p-2 text-center text-xs text-slate-400">Démo: ${ex.name}</div>
+        </div>
+      ` : '';
+
       return `
             <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all hover:shadow-md animate-fade-in">
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <span class="inline-block px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-1 tracking-wide">${ex.muscle}</span>
-                        <h4 class="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight">${ex.name}</h4>
+                        <h4 class="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight flex items-center gap-2">
+                           ${ex.name}
+                           <button onclick="toggleGif('${uniqueId}')" class="text-blue-500 hover:text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 p-1.5 rounded-full transition-colors" title="Voir Démo">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                           </button>
+                        </h4>
                         <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 italic">💡 ${ex.note}</p>
                     </div>
                     <div class="text-right pl-2">
@@ -774,11 +798,21 @@ permalink: /workout/
                         </button>
                     </div>
                 </div>
+                
+                ${imgSection}
+
                 <div class="flex flex-wrap gap-2 mt-2 pt-2 border-t border-slate-50 dark:border-slate-700">
                     ${boxes}
                 </div>
             </div>
             `;
+    }
+
+    function toggleGif(id) {
+      const el = document.getElementById(`gif-${id}`);
+      if (el) {
+        el.classList.toggle('hidden');
+      }
     }
 
     // --- ABS & EXTRAS ---
@@ -791,8 +825,10 @@ permalink: /workout/
         // Enable
         state.absEnabled = true;
         list.innerHTML = '';
-        splitProgram.abs.forEach(ex => {
-          list.innerHTML += createExerciseCard(ex);
+        splitProgram.abs.forEach((ex, idx) => {
+          // Unique ID for Abs too
+          const uniqueId = `abs-${idx}`;
+          list.innerHTML += createExerciseCard(ex, uniqueId);
         });
         container.classList.remove('hidden');
         btn.classList.add('hidden');
