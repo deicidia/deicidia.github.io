@@ -1,0 +1,670 @@
+---
+layout: null
+---
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Toile de la Pensée - Exploration Philosophique</title>
+
+  <!-- Scripts React et Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: white;
+    }
+
+    .font-serif {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #cbd5e1;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: scale(1.3);
+        opacity: 0;
+      }
+    }
+
+    .pulse-effect {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    /* On utilise le bloc raw de Liquid pour que Jekyll ne touche pas aux accolades de React. */
+    {% raw %}
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    const IconSearch = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>;
+    const IconFilter = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" /></svg>;
+    const IconBook = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" /></svg>;
+    const IconX = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12" /></svg>;
+    const IconRefresh = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.83 6.72 2.24L21 8" /><path d="M21 3v5h-5" /></svg>;
+    const IconArrow = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>;
+    const IconWikipedia = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 12V4l-5 5-5-5v8" /><path d="M13 18l5-5-5-5-5 5 5 5z" /></svg>;
+
+    const SimpleMarkdownRenderer = ({ content }) => {
+      if (!content) return null;
+      return (
+        <div className="space-y-6 text-sm text-slate-700 leading-relaxed">
+          {content.split('\n').map((line, idx) => {
+            if (line.startsWith('### ')) return <h4 key={idx} className="font-serif font-black text-indigo-900 mt-10 mb-6 text-lg border-b-2 border-indigo-100 pb-3 uppercase tracking-widest">{line.replace('### ', '')}</h4>;
+            if (line.startsWith('- ')) {
+              const formatted = line.replace('- ', '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-indigo-900 font-extrabold">$1</strong>');
+              return (
+                <div key={idx} className="flex gap-4 pl-2 items-start">
+                  <span className="text-indigo-400 mt-1.5 flex-shrink-0">◆</span>
+                  <span className="flex-1" dangerouslySetInnerHTML={{ __html: formatted }} />
+                </div>
+              );
+            }
+            if (line.startsWith('**') && line.endsWith('**')) return <p key={idx} className="font-bold text-slate-800 bg-indigo-50/50 p-4 rounded-2xl border-l-4 border-indigo-400 my-4">{line.replace(/\*\*/g, '')}</p>;
+            if (line.trim() === '') return <div key={idx} className="h-2" />;
+            return <p key={idx} className="text-justify" dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-bold">$1</strong>') }} />;
+          })}
+        </div>
+      );
+    };
+
+    const initialNodes = [
+      {
+        id: 'socrate', label: 'Socrate', color: '#eab308', period: -470, dateStr: 'Vème av. JC', category: 'Antiquité',
+        quote: "Tout ce que je sais, c'est que je ne sais rien.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Socrate",
+        concepts: `### Résumé de la pensée
+Socrate est considéré comme le père de la philosophie morale. Contrairement aux Sophistes qui vendaient leur savoir, il prétendait ne rien savoir. Sa méthode repose sur le dialogue pour amener son interlocuteur à découvrir ses propres contradictions.
+
+### Concepts Clés
+- **La Maïeutique** : L'art d'"accoucher" les esprits. Socrate pensait que la vérité résidait déjà en nous et qu'il fallait simplement aider à la faire sortir.
+- **L'Ironie Socratique** : Feindre l'ignorance pour poser des questions qui ébranlent les certitudes dogmatiques de l'adversaire.
+- **Intellectualisme Moral** : La thèse selon laquelle "nul n'est méchant volontairement". Le mal n'est qu'une forme d'ignorance du Bien.`
+      },
+      {
+        id: 'platon', label: 'Platon', color: '#eab308', period: -427, dateStr: 'IVème av. JC', category: 'Antiquité',
+        quote: "L'essentiel est invisible pour les yeux.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Platon",
+        concepts: `### Résumé de la pensée
+Disciple de Socrate, Platon a bâti un système complexe séparant le monde sensible (les apparences) du monde intelligible (la réalité des Idées). Il est le premier à avoir théorisé la structure d'une société idéale.
+
+### Concepts Clés
+- **Théorie des Formes** : Ce que nous voyons n'est qu'une copie imparfaite d'un archétype parfait situé dans le monde des Idées.
+- **L'Allégorie de la Caverne** : Image montrant le philosophe quittant l'illusion des ombres pour contempler la lumière de la vérité.
+- **La République** : Un projet politique où la cité est dirigée par des "Philosophes-Rois", car ils sont les seuls à connaître le Bien véritable.`
+      },
+      {
+        id: 'aristote', label: 'Aristote', color: '#eab308', period: -384, dateStr: 'IVème av. JC', category: 'Antiquité',
+        quote: "L'homme est un animal politique.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Aristote",
+        concepts: `### Résumé de la pensée
+Élève de Platon, Aristote a pourtant pris le contrepied de son maître en affirmant que l'essence des choses se trouve dans les choses elles-mêmes (immanence). Il a fondé la logique, la biologie et une éthique basée sur l'expérience.
+
+### Concepts Clés
+- **Hylémorphisme** : Tout être est composé de Matière et de Forme. Il n'y a pas de monde des Idées séparé.
+- **Syllogisme** : Structure du raisonnement logique (Tous les hommes sont mortels, Socrate est un homme, donc Socrate est mortel).
+- **L'Éthique de la Vertu** : La recherche du bonheur par le "juste milieu" entre deux extrêmes (ex: le courage entre la lâcheté et la témérité).`
+      },
+      {
+        id: 'epicure', label: 'Épicure', color: '#eab308', period: -341, dateStr: 'IVème av. JC', category: 'Antiquité',
+        quote: "La mort n'est rien pour nous.",
+        wikipedia: "https://fr.wikipedia.org/wiki/%C3%89picure",
+        concepts: `### Résumé de la pensée
+Épicure prône une philosophie du bonheur centrée sur l'absence de douleur physique et de trouble de l'âme. Contrairement aux idées reçues, son "hédonisme" est sobre et raisonné.
+
+### Concepts Clés
+- **Ataraxie** : La paix intérieure absolue, obtenue en éliminant les peurs irrationnelles (mort, dieux) et les désirs vains.
+- **Atomisme** : L'univers est composé d'atomes et de vide. La mort n'est qu'une dispersion des atomes de l'âme, il n'y a donc rien à craindre.
+- **Le Tétrapharmakos** : Le remède quadruple contre les souffrances de l'existence.`
+      },
+      {
+        id: 'laotseu', label: 'Lao Tseu', color: '#14b8a6', period: -571, dateStr: 'VIème av. JC', category: 'Orientale',
+        quote: "Le voyage de mille lieues commence par un pas.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Lao_Tseu",
+        concepts: `### Résumé de la pensée
+Fondateur mythique du Taoïsme, Lao Tseu propose une sagesse de l'harmonie avec le flux naturel de l'univers (le Tao). Il valorise la souplesse, le silence et la simplicité.
+
+### Concepts Clés
+- **Le Tao** : Le principe indicible qui est à l'origine de toute chose et qui régit l'univers.
+- **Wu Wei (Non-Agir)** : L'art d'agir en suivant le cours naturel des événements, sans forcer et sans effort inutile.
+- **Le Vide Fertile** : L'idée que l'utilité d'un vase vient de son vide, incitant à cultiver un esprit libre de préjugés.`
+      },
+      {
+        id: 'confucius', label: 'Confucius', color: '#14b8a6', period: -551, dateStr: 'VIème av. JC', category: 'Orientale',
+        quote: "Exige beaucoup de toi-même.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Confucius",
+        concepts: `### Résumé de la pensée
+Confucius a centré sa philosophie sur l'éthique sociale, le respect des traditions et l'ordre politique. Sa sagesse vise l'harmonie de la communauté par la vertu individuelle.
+
+### Concepts Clés
+- **Ren (L'Humanité)** : La vertu de bienveillance et d'empathie envers autrui.
+- **Li (Le Rite)** : L'importance des codes de conduite et de la piété filiale pour stabiliser la société.
+- **La Rectitude des Noms** : L'idée que pour que la société fonctionne, chacun doit agir en accord avec son titre (père, fils, prince).`
+      },
+      {
+        id: 'nagarjuna', label: 'Nagarjuna', color: '#14b8a6', period: 150, dateStr: 'IIème siècle', category: 'Orientale',
+        quote: "Tout est vide de nature propre.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Nagarjuna",
+        concepts: `### Résumé de la pensée
+Philosophe bouddhiste majeur, il a développé la doctrine de la vacuité. Sa méthode dialectique vise à détruire toutes les vues dogmatiques pour atteindre l'éveil.
+
+### Concepts Clés
+- **Sunyata (Vacuité)** : Rien n'existe de manière indépendante ou intrinsèque. Tout est dépendant d'autres causes (interdépendance).
+- **La Voie du Milieu** : Une position qui évite à la fois le nihilisme (rien n'existe) et l'éternalisme (les essences existent).
+- **Les Deux Vérités** : Distinction entre la vérité relative (pratique) et la vérité ultime (vacuité).`
+      },
+      {
+        id: 'augustin', label: 'Augustin', color: '#6366f1', period: 354, dateStr: 'IV-Vème', category: 'Scolastique',
+        quote: "Le mal est une absence de bien.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Augustin_d%27Hippone",
+        concepts: `### Résumé de la pensée
+Penseur charnière entre l'Antiquité et le Moyen-Âge, il a opéré une synthèse entre le néoplatonisme et le christianisme. Il a profondément influencé la psychologie et la théologie occidentale.
+
+### Concepts Clés
+- **Théorie de l'Illumination** : La raison humaine a besoin de la lumière divine pour accéder aux vérités éternelles.
+- **Privatio Boni** : Le mal n'a pas de réalité propre ; il est seulement une absence de Bien, comme l'ombre est une absence de lumière.
+- **La Cité de Dieu** : Une vision de l'histoire opposant la communauté spirituelle à la communauté terrestre.`
+      },
+      {
+        id: 'avicenne', label: 'Avicenne', color: '#ec4899', period: 980, dateStr: 'X-XIème', category: 'Islamique',
+        quote: "L'intellect guide l'âme.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Avicenne",
+        concepts: `### Résumé de la pensée
+Figure majeure de l'âge d'or islamique, il a réconcilié Aristote avec la théologie musulmane. Sa métaphysique de l'être a nourri toute la scolastique médiévale.
+
+### Concepts Clés
+- **L'Homme volant** : Expérience de pensée prouvant que l'âme a conscience d'elle-même indépendamment du corps et des sens.
+- **Nécessaire vs Possible** : Dieu est le seul "Être Nécessaire" par lui-même, tout le reste n'est que "possible" ou contingent.
+- **Émanation** : Processus par lequel l'univers découle logiquement de l'unité divine.`
+      },
+      {
+        id: 'alghazali', label: 'Al-Ghazali', color: '#ec4899', period: 1058, dateStr: 'XI-XIIème', category: 'Islamique',
+        quote: "La foi est certitude.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Al-Ghaz%C3%A2l%C3%AE",
+        concepts: `### Résumé de la pensée
+D'abord grand rationaliste, il a fini par critiquer les limites de la philosophie grecque pour se tourner vers le mysticisme (soufisme). Il a recentré la pensée islamique sur l'expérience spirituelle.
+
+### Concepts Clés
+- **Critique de la Causalité** : Il n'y a pas de lien nécessaire entre cause et effet ; c'est seulement une habitude que Dieu maintient par sa volonté.
+- **Intuition Spirituelle** : La certitude absolue ne vient pas de la logique mais d'une lumière jetée par Dieu dans le cœur de l'homme.
+- **L'Incohérence des Philosophes** : Son œuvre majeure réfutant les thèses métaphysiques d'Avicenne.`
+      },
+      {
+        id: 'averroes', label: 'Averroès', color: '#ec4899', period: 1126, dateStr: 'XIIème', category: 'Islamique',
+        quote: "L'ignorance mène à la haine.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Averro%C3%A8s",
+        concepts: `### Résumé de la pensée
+Le "Grand Commentateur" d'Aristote. Il a défendu la liberté de philosopher et l'idée que la religion et la philosophie mènent à la même vérité, bien que par des langages différents.
+
+### Concepts Clés
+- **Harmonie Foi-Raison** : La vérité ne contredit pas la vérité. Si la révélation semble contredire la raison, il faut interpréter le texte de manière allégorique.
+- **Unicité de l'Intellect** : Théorie controversée suggérant que l'intellect est une puissance partagée par toute l'humanité.
+- **Double Vérité** (Interprétation latine) : L'idée (souvent attribuée à tort) qu'une chose peut être vraie en philosophie mais fausse en théologie.`
+      },
+      {
+        id: 'aquin', label: 'Thomas d\'Aquin', color: '#6366f1', period: 1225, dateStr: 'XIIIème', category: 'Scolastique',
+        quote: "La grâce parfait la nature.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Thomas_d%27Aquin",
+        concepts: `### Résumé de la pensée
+Le plus grand théologien médiéval. Il a construit un système colossal (le thomisme) qui intègre la logique d'Aristote au dogme chrétien. Pour lui, la raison est un outil au service de la foi.
+
+### Concepts Clés
+- **Les Cinq Voies (Quinque Viae)** : Cinq preuves rationnelles de l'existence de Dieu partant de l'observation du monde sensible.
+- **Loi Naturelle** : La participation de la raison humaine à l'ordre éternel établi par Dieu.
+- **Hylémorphisme Chrétien** : L'âme est la forme unique du corps humain, affirmant l'unité de la personne.`
+      },
+      {
+        id: 'descartes', label: 'Descartes', color: '#3b82f6', period: 1596, dateStr: 'XVIIème', category: 'Modernité',
+        quote: "Je pense, donc je suis.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Ren%C3%A9_Descartes",
+        concepts: `### Résumé de la pensée
+Père de la modernité, il a cherché à fonder la science sur des bases inébranlables en utilisant le doute radical. Il a séparé radicalement l'esprit et la matière.
+
+### Concepts Clés
+- **Le Cogito** : L'intuition première et certaine que l'acte de douter prouve l'existence du sujet pensant.
+- **Doute Méthodique** : Rejet de tout ce qui n'est pas "clair et distinct" pour atteindre une vérité absolue.
+- **Dualisme** : La distinction entre la substance pensante (esprit) et la substance étendue (corps/matière).`
+      },
+      {
+        id: 'spinoza', label: 'Spinoza', color: '#3b82f6', period: 1632, dateStr: 'XVIIème', category: 'Modernité',
+        quote: "Dieu ou la Nature.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Baruch_Spinoza",
+        concepts: `### Résumé de la pensée
+Il a poussé le rationalisme à son extrême en affirmant qu'il n'existe qu'une seule substance (Monisme). Dieu n'est pas un créateur extérieur, mais l'univers lui-même.
+
+### Concepts Clés
+- **Deus sive Natura** : "Dieu, c'est-à-dire la Nature". Tout ce qui existe est un mode ou une expression de Dieu.
+- **Conatus** : La puissance de persévérer dans son être. C'est l'essence même de l'individu.
+- **Béatitude par la Connaissance** : Se libérer des passions tristes en comprenant la nécessité rationnelle de toute chose.`
+      },
+      {
+        id: 'locke', label: 'Locke', color: '#3b82f6', period: 1633, dateStr: 'XVIIème', category: 'Modernité',
+        quote: "L'esprit est une page blanche.",
+        wikipedia: "https://fr.wikipedia.org/wiki/John_Locke",
+        concepts: `### Résumé de la pensée
+Père de l'empirisme et du libéralisme politique. Il rejette les idées innées de Descartes et affirme que tout savoir vient de l'expérience sensorielle.
+
+### Concepts Clés
+- **Tabula Rasa** : L'esprit est une "table rase" à la naissance ; les idées s'y gravent via les sens.
+- **Droits Naturels** : La vie, la liberté et la propriété sont des droits inaliénables que l'État doit protéger.
+- **Contrat Social** : Le gouvernement repose sur le consentement des citoyens et peut être renversé s'il devient tyrannique.`
+      },
+      {
+        id: 'hume', label: 'Hume', color: '#3b82f6', period: 1711, dateStr: 'XVIIIème', category: 'Modernité',
+        quote: "La raison est esclave des passions.",
+        wikipedia: "https://fr.wikipedia.org/wiki/David_Hume",
+        concepts: `### Résumé de la pensée
+Empiriste radical et sceptique, il a remis en question les fondements de la métaphysique et de la causalité. Pour lui, nos croyances sont basées sur l'habitude plutôt que sur la logique.
+
+### Concepts Clés
+- **Critique de la Causalité** : Nous ne voyons jamais la cause, seulement une succession répétée d'événements. C'est l'esprit qui projette le lien.
+- **Scepticisme sur le Moi** : Le "Moi" n'est qu'un flux incessant de perceptions sans substance fixe.
+- **Émotivisme Moral** : La morale ne vient pas de la raison, mais de nos sentiments de plaisir ou de peine.`
+      },
+      {
+        id: 'kant', label: 'Kant', color: '#3b82f6', period: 1724, dateStr: 'XVIIIème', category: 'Modernité',
+        quote: "Le devoir pour le devoir.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Emmanuel_Kant",
+        concepts: `### Résumé de la pensée
+Il a opéré une "révolution copernicienne" en affirmant que c'est l'esprit qui structure le monde que nous percevons. Il a fondé une morale universelle basée sur la raison pure.
+
+### Concepts Clés
+- **Révolution Copernicienne** : La connaissance ne se règle pas sur les objets ; ce sont les objets qui se règlent sur notre mode de perception (temps, espace).
+- **Impératif Catégorique** : "Agis comme si la maxime de ton action devait être érigée en loi universelle".
+- **Phénomène vs Noumène** : Nous connaissons le monde tel qu'il nous apparaît (phénomène), pas tel qu'il est "en soi" (noumène).`
+      },
+      {
+        id: 'hegel', label: 'Hegel', color: '#f43f5e', period: 1770, dateStr: 'XIXème', category: 'Contemporaine',
+        quote: "Le réel est rationnel.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Georg_Wilhelm_Friedrich_Hegel",
+        concepts: `### Résumé de la pensée
+Penseur du système absolu, il voit l'histoire comme le déploiement progressif de l'Esprit (Geist) vers la liberté. Sa méthode dialectique a influencé toute la pensée politique moderne.
+
+### Concepts Clés
+- **La Dialectique** : Le processus de développement par contradiction (Thèse, Antithèse, Synthèse).
+- **L'Esprit Universel** : L'idée que la raison se réalise à travers les cultures et les États au fil du temps.
+- **La Fin de l'Histoire** : Le moment où l'Esprit parvient à une conscience totale de lui-même.`
+      },
+      {
+        id: 'marx', label: 'Marx', color: '#f43f5e', period: 1818, dateStr: 'XIXème', category: 'Contemporaine',
+        quote: "Transformer le monde.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Karl_Marx",
+        concepts: `### Résumé de la pensée
+Il a renversé la dialectique de Hegel pour fonder le matérialisme historique. Il analyse le monde à travers les rapports de production et la lutte des classes.
+
+### Concepts Clés
+- **Infrastructure et Superstructure** : L'économie (base matérielle) détermine la culture, la religion et le droit (superstructure).
+- **Lutte des classes** : Le moteur de l'histoire humaine résultant de la contradiction entre exploiteurs et exploités.
+- **Aliénation** : La perte de soi de l'ouvrier qui est dépossédé du fruit de son travail par le capital.`
+      },
+      {
+        id: 'nietzsche', label: 'Nietzsche', color: '#f43f5e', period: 1844, dateStr: 'XIXème', category: 'Contemporaine',
+        quote: "Dieu est mort.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Friedrich_Nietzsche",
+        concepts: `### Résumé de la pensée
+Philosophe du marteau, il a critiqué la morale chrétienne et le nihilisme occidental. Il appelle à une "transvaluation de toutes les valeurs" pour libérer la vie créatrice.
+
+### Concepts Clés
+- **La Volonté de Puissance** : La force vitale fondamentale qui cherche à croître et à se dépasser soi-même.
+- **Le Surhomme** : L'individu capable de créer ses propres valeurs au-delà du bien et du mal.
+- **Éternel Retour** : Un test éthique consisant à vivre chaque instant de telle sorte que l'on puisse vouloir le revivre une infinité de fois.`
+      },
+      {
+        id: 'heidegger', label: 'Heidegger', color: '#f43f5e', period: 1889, dateStr: 'XXème', category: 'Contemporaine',
+        quote: "L'être-au-monde.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Martin_Heidegger",
+        concepts: `### Résumé de la pensée
+Il a recentré la philosophie sur la question de l'Être, qu'il juge oubliée depuis Platon. Son analyse du Dasein a ouvert la voie à l'existentialisme moderne.
+
+### Concepts Clés
+- **Dasein (Être-là)** : L'existence humaine caractérisée par le fait d'être jeté dans le monde et d'avoir à s'y rapporter.
+- **L'Oubli de l'Être** : La tendance de la technique moderne à traiter tout ce qui existe comme un simple "stock" disponible.
+- **Être pour la mort** : La prise de conscience de notre finitude qui nous oblige à vivre une existence authentique.`
+      },
+      {
+        id: 'sartre', label: 'Sartre', color: '#f43f5e', period: 1905, dateStr: 'XXème', category: 'Contemporaine',
+        quote: "L'homme est condamné à être libre.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Jean-Paul_Sartre",
+        concepts: `### Résumé de la pensée
+Figure de proue de l'existentialisme, il affirme que l'homme n'a pas de nature prédéfinie. Nous sommes entièrement responsables de ce que nous faisons de notre vie.
+
+### Concepts Clés
+- **L'existence précède l'essence** : L'homme apparaît d'abord dans le monde, et il se définit ensuite par ses actes.
+- **Mauvaise Foi** : Le mensonge à soi-même consistant à prétendre qu'on n'est pas libre pour éviter la responsabilité.
+- **Engagement** : La nécessité pour l'intellectuel de prendre position dans les luttes politiques de son temps.`
+      },
+      {
+        id: 'beauvoir', label: 'Beauvoir', color: '#f43f5e', period: 1908, dateStr: 'XXème', category: 'Contemporaine',
+        quote: "On ne naît pas femme.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Simone_de_Beauvoir",
+        concepts: `### Résumé de la pensée
+Compagne de Sartre mais philosophe à part entière, elle a appliqué l'existentialisme à la condition féminine. Son œuvre est la pierre angulaire du féminisme moderne.
+
+### Concepts Clés
+- **Construction du genre** : "On ne naît pas femme, on le devient". La féminité est un rôle social imposé, pas un destin biologique.
+- **Transcendance vs Immanence** : L'homme est incité à se projeter vers l'avenir, tandis que la femme a été historiquement cantonnée au foyer.
+- **L'Altérité** : Analyse de la manière dont la femme a été définie comme "l'Autre" par rapport au sujet masculin.`
+      },
+      {
+        id: 'camus', label: 'Camus', color: '#f43f5e', period: 1913, dateStr: 'XXème', category: 'Contemporaine',
+        quote: "Il faut imaginer Sisyphe heureux.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Albert_Camus",
+        concepts: `### Résumé de la pensée
+Penseur de l'absurde, il explore le silence du monde face à la quête de sens de l'homme. Sa philosophie est une invitation à la révolte solaire et à la solidarité humaine.
+
+### Concepts Clés
+- **L'Absurde** : Le divorce entre l'aspiration humaine à la clarté et le chaos irrationnel de l'univers.
+- **La Révolte** : La seule réponse digne à l'absurde, consistant à maintenir la conscience de la tragédie sans s'y résigner.
+- **L'Homme Révolté** : Une critique des révolutions violentes au nom d'une "mesure" et d'une morale de la dignité.`
+      },
+      {
+        id: 'foucault', label: 'Foucault', color: '#f43f5e', period: 1926, dateStr: 'XXème', category: 'Contemporaine',
+        quote: "Pouvoir est Savoir.",
+        wikipedia: "https://fr.wikipedia.org/wiki/Michel_Foucault",
+        concepts: `### Résumé de la pensée
+Historien des systèmes de pensée, il a analysé comment le savoir et le pouvoir se conjuguent pour contrôler les corps et les populations. Il a étudié la folie, la prison et la sexualité.
+
+### Concepts Clés
+- **Biopolitique** : La manière dont l'État moderne gère la vie biologique des citoyens (santé, natalité, hygiène).
+- **Panoptisme** : Le modèle de la surveillance généralisée où l'individu finit par se surveiller lui-même.
+- **Épistémè** : Le socle de savoir inconscient qui définit ce qu'il est possible de penser à une époque donnée.`
+      }
+    ];
+
+    const initialLinks = [
+      { source: 'socrate', target: 'platon', type: 'Maître' }, { source: 'platon', target: 'aristote', type: 'Disciple' },
+      { source: 'platon', target: 'augustin', type: 'Synthèse' }, { source: 'aristote', target: 'epicure', type: 'Critique' },
+      { source: 'aristote', target: 'avicenne', type: 'Influences' }, { source: 'laotseu', target: 'confucius', type: 'Débat' },
+      { source: 'avicenne', target: 'alghazali', type: 'Critique' }, { source: 'alghazali', target: 'averroes', type: 'Réplique' },
+      { source: 'averroes', target: 'aquin', type: 'Influences' }, { source: 'descartes', target: 'augustin', type: 'Similitude' },
+      { source: 'descartes', target: 'spinoza', type: 'Dépasse' }, { source: 'descartes', target: 'locke', type: 'Critique' },
+      { source: 'locke', target: 'hume', type: 'Filiation' }, { source: 'hume', target: 'kant', type: 'Réveil' },
+      { source: 'kant', target: 'hegel', type: 'Dépasse' }, { source: 'kant', target: 'nietzsche', type: 'Critique' },
+      { source: 'hegel', target: 'marx', type: 'Renverse' }, { source: 'hegel', target: 'beauvoir', type: 'Réinterprète' },
+      { source: 'nietzsche', target: 'camus', type: 'Héritage' }, { source: 'nietzsche', target: 'foucault', type: 'Généalogie' },
+      { source: 'heidegger', target: 'sartre', type: 'Influences' }, { source: 'sartre', target: 'beauvoir', type: 'Alliance' },
+      { source: 'sartre', target: 'camus', type: 'Rupture' }, { source: 'marx', target: 'sartre', type: 'Synthèse' },
+      { source: 'epicure', target: 'hume', type: 'Atomes' }, { source: 'nagarjuna', target: 'spinoza', type: 'Parallèle' }
+    ];
+
+    function App() {
+      const [nodes, setNodes] = useState([]);
+      const [links] = useState(initialLinks);
+      const [selectedNode, setSelectedNode] = useState(null);
+      const [draggingNode, setDraggingNode] = useState(null);
+      const [zoom, setZoom] = useState(0.8);
+      const [pan, setPan] = useState({ x: 0, y: 0 });
+      const [isPanning, setIsPanning] = useState(false);
+      const [search, setSearch] = useState("");
+      const [activeCategory, setActiveCategory] = useState(null);
+      const [showModal, setShowModal] = useState(false);
+      const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+      const svgRef = useRef(null);
+      const containerRef = useRef(null);
+      const lastPos = useRef({ x: 0, y: 0 });
+      const categories = useMemo(() => Array.from(new Set(initialNodes.map(n => n.category))), []);
+
+      const center = useMemo(() => ({
+        x: dimensions.width / 2,
+        y: dimensions.height / 2
+      }), [dimensions]);
+
+      const init = () => {
+        setNodes(initialNodes.map((n) => ({
+          ...n,
+          x: center.x + (Math.random() - 0.5) * 400,
+          y: center.y + (Math.random() - 0.5) * 300,
+          vx: 0,
+          vy: 0
+        })));
+        setPan({ x: 0, y: 0 });
+      };
+
+      useEffect(() => {
+        const updateDimensions = () => {
+          if (containerRef.current) {
+            setDimensions({
+              width: containerRef.current.clientWidth,
+              height: containerRef.current.clientHeight
+            });
+          }
+        };
+        const observer = new ResizeObserver(updateDimensions);
+        if (containerRef.current) observer.observe(containerRef.current);
+        updateDimensions();
+        return () => observer.disconnect();
+      }, [selectedNode]);
+
+      useEffect(() => { init(); }, []);
+
+      useEffect(() => {
+        if (nodes.length === 0) return;
+        let frame;
+        const step = () => {
+          setNodes(prev => {
+            const next = prev.map(n => ({ ...n, vx: n.vx * 0.8, vy: n.vy * 0.8 }));
+            for (let i = 0; i < next.length; i++) {
+              for (let j = i + 1; j < next.length; j++) {
+                const dx = next[i].x - next[j].x, dy = next[i].y - next[j].y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+                const f = (d < 160) ? (160 - d) * 0.25 : 9000 / (d * d);
+                if (next[i].id !== draggingNode) { next[i].vx += (dx / d) * f; next[i].vy += (dy / d) * f; }
+                if (next[j].id !== draggingNode) { next[j].vx -= (dx / d) * f; next[j].vy -= (dy / d) * f; }
+              }
+            }
+            links.forEach(l => {
+              const s = next.find(n => n.id === l.source), t = next.find(n => n.id === l.target);
+              if (s && t) {
+                const dx = t.x - s.x, dy = t.y - s.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+                const f = (d - 190) * 0.05;
+                if (s.id !== draggingNode) { s.vx += (dx / d) * f; s.vy += (dy / d) * f; }
+                if (t.id !== draggingNode) { t.vx -= (dx / d) * f; t.vy -= (dy / d) * f; }
+              }
+            });
+            next.forEach(n => {
+              if (n.id !== draggingNode) {
+                n.vx += (center.x - n.x) * 0.005;
+                n.vy += (center.y - n.y) * 0.005;
+                n.x += n.vx;
+                n.y += n.vy;
+              }
+            });
+            return next;
+          });
+          frame = requestAnimationFrame(step);
+        };
+        frame = requestAnimationFrame(step);
+        return () => cancelAnimationFrame(frame);
+      }, [links, draggingNode, nodes.length, center]);
+
+      const handleMove = (e) => {
+        if (draggingNode && svgRef.current) {
+          const ctm = svgRef.current.getScreenCTM();
+          const nx = (e.clientX - ctm.e) / ctm.a, ny = (e.clientY - ctm.f) / ctm.d;
+          setNodes(prev => prev.map(n => n.id === draggingNode ? { ...n, x: nx, y: ny, vx: 0, vy: 0 } : n));
+        } else if (isPanning) {
+          setPan(prev => ({ x: prev.x + (e.clientX - lastPos.current.x) / zoom, y: prev.y + (e.clientY - lastPos.current.y) / zoom }));
+          lastPos.current = { x: e.clientX, y: e.clientY };
+        }
+      };
+
+      const filtered = nodes.map(n => ({
+        ...n,
+        isMatch: (search && n.label.toLowerCase().includes(search.toLowerCase())) || (activeCategory && n.category === activeCategory),
+        isDimmed: (search || activeCategory) && !((search && n.label.toLowerCase().includes(search.toLowerCase())) || (activeCategory && n.category === activeCategory))
+      }));
+
+      return (
+        <div className="flex flex-col h-screen bg-white text-slate-900 overflow-hidden">
+          <header className="bg-white border-b px-8 py-5 flex flex-col md:flex-row gap-4 justify-between items-center shadow-sm z-20">
+            <div className="flex items-center gap-4">
+              <div className="bg-slate-900 p-3 rounded-2xl text-white shadow-xl flex items-center justify-center">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M3 12h18M3 6h18M3 18h18" /></svg>
+              </div>
+              <div>
+                <h1 className="text-xl font-serif font-black leading-none">Toile de la Pensée</h1>
+                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-2">Encyclopédie Interactive</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"><IconSearch /></div>
+                <input type="text" placeholder="Chercher un nom..." className="pl-11 pr-6 py-3 bg-slate-50 rounded-2xl text-xs w-56 outline-none font-bold focus:ring-2 focus:ring-slate-100" value={search} onChange={e => setSearch(e.target.value)} />
+              </div>
+              <button onClick={init} className="p-3 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-100 transition-all"><IconRefresh /></button>
+            </div>
+          </header>
+
+          <div className="bg-slate-50 border-b px-8 py-3 flex flex-wrap items-center gap-x-5 gap-y-2 z-10">
+            <span className="text-[11px] font-black text-slate-400 uppercase flex items-center gap-2"><IconFilter /> Catégories :</span>
+            <button onClick={() => setActiveCategory(null)} className={`px-4 py-1.5 rounded-full text-[10px] font-black transition-all ${!activeCategory ? 'bg-slate-900 text-white' : 'bg-white text-slate-500'}`}>Toutes</button>
+            {categories.map(cat => (
+              <button key={cat} onClick={() => setActiveCategory(cat === activeCategory ? null : cat)} className={`px-4 py-1.5 rounded-full text-[10px] font-black transition-all ${activeCategory === cat ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50'}`}>{cat}</button>
+            ))}
+          </div>
+
+          <div className="flex-1 flex overflow-hidden">
+            <div ref={containerRef} className="flex-1 bg-white relative overflow-hidden transition-all duration-500">
+              <svg ref={svgRef} className="w-full h-full cursor-grab active:cursor-grabbing" onMouseMove={handleMove} onMouseUp={() => { setDraggingNode(null); setIsPanning(false); }} onMouseDown={e => { if (e.target.tagName === 'svg') setIsPanning(true); lastPos.current = { x: e.clientX, y: e.clientY }; }} onWheel={e => setZoom(z => Math.max(0.1, Math.min(3, z - e.deltaY * 0.001)))}>
+                <defs>
+                  {nodes.map(n => (
+                    <marker key={`m-${n.id}`} id={`m-${n.id}`} markerWidth="10" markerHeight="10" refX="24" refY="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill={n.color} fillOpacity="0.4" /></marker>
+                  ))}
+                </defs>
+                <g transform={`translate(${center.x + pan.x * zoom}, ${center.y + pan.y * zoom}) scale(${zoom}) translate(${-center.x}, ${-center.y})`}>
+                  {links.map((l, i) => {
+                    const s = filtered.find(n => n.id === l.source), t = filtered.find(n => n.id === l.target);
+                    if (!s || !t) return null;
+                    return <line key={i} x1={s.x} y1={s.y} x2={t.x} y2={t.y} stroke={s.color} strokeWidth={2.5} strokeOpacity={s.isDimmed || t.isDimmed ? 0.05 : 0.3} markerEnd={`url(#m-${s.id})`} />;
+                  })}
+                  {filtered.map(n => (
+                    <g key={n.id} transform={`translate(${n.x}, ${n.y})`} onMouseDown={e => { e.stopPropagation(); setDraggingNode(n.id); }} onClick={e => { e.stopPropagation(); setSelectedNode(n); }} className="cursor-pointer">
+                      {n.isMatch && <circle r={35} fill="none" stroke={n.color} strokeWidth="1" className="pulse-effect" />}
+                      <circle r={n.isMatch ? 28 : 22} fill="white" stroke={n.color} strokeWidth={selectedNode?.id === n.id ? 6 : 3} strokeOpacity={n.isDimmed ? 0.2 : 1} className="transition-all" />
+                      <text y="42" textAnchor="middle" className="text-[11px] font-black" fill={n.color} opacity={n.isDimmed ? 0.2 : 1}>{n.label}</text>
+                    </g>
+                  ))}
+                </g>
+              </svg>
+            </div>
+
+            {selectedNode && (
+              <aside className="w-[450px] bg-white border-l p-10 space-y-10 overflow-y-auto custom-scrollbar animate-in slide-in-from-right relative z-30 shadow-2xl">
+                <button onClick={() => setSelectedNode(null)} className="absolute top-6 right-6 text-slate-300 hover:text-slate-600 transition-colors"><IconX /></button>
+                <div className="text-center space-y-6">
+                  <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center text-white text-4xl font-serif shadow-xl transition-transform hover:rotate-6" style={{ backgroundColor: selectedNode.color }}>{selectedNode.label[0]}</div>
+                  <div className="space-y-2">
+                    <h2 className="text-3xl font-serif font-black leading-tight">{selectedNode.label}</h2>
+                    <span className="px-6 py-2 bg-indigo-50 text-indigo-500 rounded-full text-[11px] font-black uppercase tracking-widest inline-block">{selectedNode.category} • {selectedNode.dateStr}</span>
+                  </div>
+                </div>
+                <div className="p-10 bg-slate-50 rounded-[50px] italic text-center text-slate-700 text-lg border border-slate-100 shadow-inner">"{selectedNode.quote}"</div>
+
+                <div className="flex flex-col gap-4">
+                  <button onClick={() => setShowModal(true)} className="w-full py-5 px-8 bg-slate-900 text-white rounded-[32px] font-black text-xs hover:bg-indigo-600 transition-all flex items-center justify-center gap-4 uppercase tracking-widest shadow-xl">
+                    <IconBook /> Résumé & Concepts
+                  </button>
+
+                  {selectedNode.wikipedia && (
+                    <a
+                      href={selectedNode.wikipedia}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-5 px-8 bg-white text-slate-900 border-2 border-slate-100 rounded-[32px] font-black text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-4 uppercase tracking-widest shadow-sm"
+                    >
+                      <IconWikipedia /> Consulter Wikipédia
+                    </a>
+                  )}
+                </div>
+
+                <div className="space-y-6">
+                  <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] border-b-2 pb-4">Relations directes</h3>
+                  <div className="space-y-4">
+                    {links.filter(l => l.source === selectedNode.id || l.target === selectedNode.id).map((l, i) => {
+                      const other = initialNodes.find(n => n.id === (l.source === selectedNode.id ? l.target : l.source));
+                      return (
+                        <div key={i} onClick={() => setSelectedNode(other)} className="flex items-center gap-5 p-5 bg-slate-50/50 border rounded-[32px] hover:bg-white hover:shadow-xl cursor-pointer transition-all group">
+                          <div className="w-3 h-12 rounded-full" style={{ backgroundColor: other.color }}></div>
+                          <div className="flex-1">
+                            <p className="text-base font-black">{other.label}</p>
+                            <div className="flex items-center gap-2 text-[10px] text-slate-400 font-black uppercase tracking-tighter">
+                              <span>{l.type}</span> <IconArrow />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </aside>
+            )}
+          </div>
+
+          {showModal && selectedNode && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-8 bg-slate-900/40 backdrop-blur-xl">
+              <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[60px] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 border border-white/20">
+                <div className="p-10 border-b flex justify-between items-center sticky top-0 bg-white/90 backdrop-blur-md z-10">
+                  <div className="flex items-center gap-5">
+                    <div className="p-4 bg-slate-900 text-white rounded-3xl"><IconBook /></div>
+                    <div>
+                      <h3 className="font-serif font-black text-3xl">{selectedNode.label}</h3>
+                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.4em] mt-3">Archives de la Pensée Mondiale</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setShowModal(false)} className="p-4 hover:bg-slate-100 rounded-full text-slate-400"><IconX /></button>
+                </div>
+                <div className="flex-1 overflow-y-auto p-16 custom-scrollbar"><SimpleMarkdownRenderer content={selectedNode.concepts} /></div>
+                <div className="p-10 bg-white border-t flex justify-end">
+                  <button onClick={() => setShowModal(false)} className="px-16 py-4 bg-slate-900 text-white rounded-3xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-indigo-600 transition-all shadow-2xl">Fermer la fiche</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    {% endraw %}
+  </script>
+</body>
+
+</html>
