@@ -1,0 +1,41 @@
+{% comment %}
+Generates a table of contents from h2 and h3 headings in the content.
+Usage: {% include toc.html content=content %}
+{% endcomment %}
+
+{% assign toc = "" %}
+{% assign levels = "" %}
+
+{% assign headings = include.content | split: "<h" %}
+{% for heading in headings %}
+  {% if heading contains "id=" %}
+    {% assign closing_tag = heading | split: ">" | first %}
+    {% assign rest = heading | split: ">" | last %}
+    {% assign heading_content = rest | split: "</h" | first %}
+    
+    {% if closing_tag contains "2" %}
+      {% assign level = 2 %}
+    {% elsif closing_tag contains "3" %}
+      {% assign level = 3 %}
+    {% else %}
+      {% assign level = 0 %}
+    {% endif %}
+    
+    {% if level > 0 %}
+      {% assign heading_id = closing_tag | split: 'id="' | last | split: '"' | first %}
+      {% assign indent = "" %}
+      {% if level == 3 %}
+        {% assign indent = "  " %}
+      {% endif %}
+      {% capture toc %}{{ toc }}- {{ indent }}<a href="#{{ heading_id }}">{{ heading_content | strip_html }}</a>
+{% endcapture %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if toc != "" %}
+<div class="toc">
+  <div class="toc-title">Sommaire</div>
+  {{ toc | markdownify }}
+</div>
+{% endif %}
