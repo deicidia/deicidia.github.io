@@ -32,7 +32,7 @@ Dans un contexte de calcul haute performance (HPC), j'ai travaillé sur la porta
 | Langue | Niveau |
 | --- | --- |
 | **Français** | Natif |
-| **Anglais** | Bilingue |
+| **Anglais** | Professionnel |
 
 ### Centres d'intérêt
 
