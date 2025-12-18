@@ -756,9 +756,37 @@ permalink: /workout/
           display.classList.remove('bg-slate-800', 'timer-active');
           display.classList.add('bg-emerald-500');
           localStorage.removeItem('timerEndTime');
+          playNotification();
           setTimeout(() => display.classList.add('hidden'), 3000);
         }
       }, 1000);
+    }
+
+    function playNotification() {
+      // Beep Sound (Web Audio API)
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(880, audioContext.currentTime); // A5 note
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.5);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.5);
+      } catch (e) {
+        console.warn("Audio Context not supported or blocked:", e);
+      }
+
+      // Vibration
+      if ("vibrate" in navigator) {
+        navigator.vibrate([200, 100, 200]); // Vibrate 200ms, pause 100ms, vibrate 200ms
+      }
     }
 
     function restoreTimerFromStorage() {
@@ -783,6 +811,7 @@ permalink: /workout/
               display.classList.remove('bg-slate-800', 'timer-active');
               display.classList.add('bg-emerald-500');
               localStorage.removeItem('timerEndTime');
+              playNotification();
               setTimeout(() => display.classList.add('hidden'), 3000);
             }
           }, 1000);
