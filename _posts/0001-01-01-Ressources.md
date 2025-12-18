@@ -2,64 +2,88 @@
 layout: post
 title: Liste de ressources
 date: 2025-12-08
+tags: [optimisation, math, programming, competitive programming]
+categories: [ressources]
 ---
 
 ## Optimisation & Mathématiques
 
-1. [Introduction à l'optimisation](https://en.algorithmica.org/hpc/)
-2. [Blog de Groot Koerkamp](https://curiouscoding.nl/posts/)
-3. [Blog axé sur l'optimisation SIMD](https://bitmath.blogspot.com/)
-4. [Cours de probabilités et de statistiques](https://dlsun.github.io/probability/box-models.html#exm:committee-chair)
-5. [Dictionnaire d'algorithmes](https://xlinux.nist.gov/dads/)
+| Ressource | Description |
+| --- | --- |
+| [Algorithmica](https://en.algorithmica.org/hpc/) | Guide d'ingénierie de la performance et architectures modernes. `Site` |
+| [CuriousCoding](https://curiouscoding.nl/posts/) | Algos bioinformatiques et structures de données. `Site` |
+| [Bits, Math and Performance](https://bitmath.blogspot.com/) | Manipulation de bits (SIMD, AVX-512) et bas-niveau. `Site` |
+| [Introduction to Probability](https://dlsun.github.io/probability/box-models.html#exm:committee-chair) | Cours de probabilités et statistiques. `Site` |
+| [Dictionary of Algorithms](https://xlinux.nist.gov/dads/) | Référence NIST des algos et structures de données. `Site` |
 
 ---
 
 ## Competitive Programming
 
-1. [Competitive Programming Book (CP Book)](https://cpbook.net/details?cp=1)
-2. [Competitive Programming Handbook (CPH)](https://usaco.guide/CPH.pdf)
-3. [Algorithms (Jeff Erickson)](https://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf)
-4. [CP-Algorithms](https://cp-algorithms.com/)
-5. [TryAlgo (site français)](https://tryalgo.org/)
+| Ressource | Description |
+| --- | --- |
+| [Competitive Programmer's Handbook](https://usaco.guide/CPH.pdf) | Guide exhaustif d'algorithmes pour la compétition. `PDF` |
+| [Algorithms (Jeff Erickson)](https://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf) | Cours théorique rigoureux sur l'algorithmique. `PDF` |
+| [Algorithms for Competitive Programming](https://cp-algorithms.com/) | Implémentations d'algorithmes classiques. `Site` |
+| [TryAlgo](https://tryalgo.org/) | Bibliothèque Python pour l'algo (Français). `Site` |
+| [A&DS](https://www.youtube.com/playlist?list=PLrS21S1jm43igE57Ye_edwds_iL7ZOAG4) | Cours d'algorithmique et structures de données. `Vidéos` |
 
 ---
 
 ## Langages de programmation 
 
 ### C++
-1. [Tutoriels complets](https://www.learncpp.com/)
-2. [Guide de style](https://google.github.io/styleguide/cppguide.html)
+
+| Ressource | Description |
+| --- | --- |
+| [Learn C++](https://www.learncpp.com/) | Tutoriels complets sur le C++ moderne. `Site` |
+| [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) | Standard de style C++ de Google. `Site` |
 
 ### Zig
-1. [Exercices pour apprendre le langage](https://codeberg.org/ziglings/exercises)
-2. [Introduction classique à Zig](https://pedropark99.github.io/zig-book/)
 
-### Python
-1. [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/)
-2. [PEP 484 - Type Hints](https://peps.python.org/pep-0484/)
-3. [PEP 8 - Style Guide for Python Code](https://peps.python.org/pep-0008/)
-4. [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
-5. [PEP 257 - Docstring Conventions](https://peps.python.org/pep-0257/)
-6. [NumpyDoc](https://numpydoc.readthedocs.io/en/latest/format.html)
+| Ressource | Description |
+| --- | --- |
+| [Ziglings](https://codeberg.org/ziglings/exercises) | Apprendre Zig en corrigeant des programmes. `Site` |
+| [Introduction to Zig](https://pedropark99.github.io/zig-book/) | Guide complet pour débuter en Zig. `Site` |
+
+### Python  
+
+| Ressource | Description |
+| --- | --- |
+| [The Zen of Python (PEP 20)](https://peps.python.org/pep-0020/) | Les 19 principes directeurs de Python. `Site` |
+| [Python Type Hints (PEP 484)](https://peps.python.org/pep-0484/) | Standard d'annotations pour le typage statique. `Site` |
+| [PEP 8 (Official Style Guide)](https://peps.python.org/pep-0008/) | Le guide de style officiel pour Python. `Site` |
+| [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) | Conventions de style Python chez Google. `Site` |
+| [Docstring Conventions (PEP 257)](https://peps.python.org/pep-0257/) | Recommandations pour la documentation. `Site` |
+| [numpydoc Style Guide](https://numpydoc.readthedocs.io/en/latest/format.html) | Format de docstring pour la science et l'IA. `Site` |
 
 ---
 
 ## Outils et bonnes pratiques
 
-### Git
-1. [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 
-2. [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow)
-3. [Trunk Based Development](https://trunkbaseddevelopment.com/)
-4. [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/)
+### Git & Branching
+
+| Ressource | Description |
+| --- | --- |
+| [Conventional Commits Specification](https://www.conventionalcommits.org/en/v1.0.0/) | Standard pour les messages de commit. `Site` |
+| [GitHub Flow Guide](https://docs.github.com/en/get-started/quickstart/github-flow) | Workflow simple basé sur les Pull Requests. `Site` |
+| [Trunk Based Development](https://trunkbaseddevelopment.com/) | Pratique de développement pour la CI. `Site` |
+| [GitFlow Model](https://nvie.com/posts/a-successful-git-branching-model/) | Modèle de branchement pour releases structurées. `Site` |
 
 ### Compiler Explorer
-1. [Compiler Explorer](https://godbolt.org/)
+
+| Outil | Description |
+| --- | --- |
+| [Compiler Explorer (Godbolt)](https://godbolt.org/) | Analyse interactive de l'assembleur. `Site` |
 
 ---
 
 ## Programmation GPU
 
 ### CUDA
-1. [CUDA Ontology](https://jamesakl.com/posts/cuda-ontology/)
-2. [Glossaire CUDA](https://modal.com/gpu-glossary/device-hardware/cuda-device-architecture)
-3. [Optimisation d'un kernel CUDA (matmul)](https://www.aleksagordic.com/blog/matmul)
+
+| Ressource | Description |
+| --- | --- |
+| [CUDA Ontology: Architecture & Versions](https://jamesakl.com/posts/cuda-ontology/) | Guide technique sur les API et la compatibilité. `Site` |
+| [CUDA Architecture Glossary (Modal)](https://modal.com/gpu-glossary/device-hardware/cuda-device-architecture) | Termes matériels des GPU (SM, Warp, Threads). `Site` |
+| [NVIDIA GPU Anatomy (High-Perf MatMul)](https://www.aleksagordic.com/blog/matmul) | Analyse des kernels MatMul (PTX, Tensor Cores). `Site` |

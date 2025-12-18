@@ -3,6 +3,7 @@ layout: post
 title: Apprendre la Philosophie
 date: 2025-12-17
 tags: [Philosophie]
+categories: [Philosophie]
 ---
 
 J'ai créé cette ontologie visuelle avec Gemini pour mieux appréhender l'histoire des idées. Elle permet d'explorer les liens de parenté entre les philosophes et la structure des grands courants de pensée.
