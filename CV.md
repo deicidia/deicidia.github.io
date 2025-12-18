@@ -9,7 +9,7 @@ permalink: /CV/
 
 Au cœur de projets alliant performance, optimisation et déploiement de Deep Learning sur systèmes contraints (Edge AI), mon travail s’est articulé autour de deux piliers technologiques :
 
-*   **Optimisation de déploiement (Framework Aidge)** : Contribution à l’architecture et à l’évolution d'un framework dédié à l’inférence haute performance sur cibles embarquées.
+*   **Optimisation de déploiement (Framework Aidge)** : Contribution à l’architecture et à l’évolution d'un framework dédié à l'export de réseaux de neurones sur des systèmes contraints.
 *   **Accélération matérielle (NVIDIA Jetson / CUDA)** : Expertise sur la gamme Jetson Orin via CUDA et TensorRT. Optimisation de modèles de vision (SSMD, YOLO) par quantification avancée (FP16, INT8) et développement de plugins custom pour minimiser les temps d'inférence.
 
 ### Expérience au CEA
