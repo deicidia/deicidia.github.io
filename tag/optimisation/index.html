@@ -1,0 +1,23 @@
+---
+layout: default
+title: "Tag: Optimisation"
+tag_name: "Optimisation"
+tag_slug: "optimisation"
+permalink: /tag/optimisation/
+---
+
+<h1>Articles taggés « {{ page.tag_name }} »</h1>
+
+<ul>
+  {% for p in site.posts %}
+  {% if p.tags %}
+  {% for t in p.tags %}
+  {% assign tslug = t | downcase | slugify %}
+  {% if tslug == page.tag_slug %}
+  <li><a href="{{ p.url }}">{{ p.title }}</a> — <small>{{ p.date | date: "%Y-%m-%d" }}</small></li>
+  {% break %}
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+  {% endfor %}
+</ul>
