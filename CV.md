@@ -1,7 +1,7 @@
 ---
 layout: page
-title: CV Nathan Thoumine - Ingénieur IA Embarquée & Robotique
-description: Découvrez mon parcours professionnel en IA embarquée, Edge AI, et optimisation logicielle. Expertise en CUDA, TensorRT et systèmes embarqués.
+title: Nathan Thoumine
+description: Ingénieur spécialisé en IA Embarquée (Edge AI) et Calcul Haute Performance (HPC). Expertise en optimisation CUDA, TensorRT et architectures de Deep Learning contraintes.
 permalink: /CV/
 ---
 
@@ -26,7 +26,7 @@ Dans un contexte de calcul haute performance (HPC), j'ai travaillé sur la porta
 | Catégorie | Compétences |
 | --- | --- |
 | **Programmation** | Python, C, C++, CUDA / TensorRT |
-| **Outils & Environnements** | Linux, Docker, Git, Make / CMake, LaTeX |
+| **Outils & Environnements** | Linux, Docker, Outils de build, Git |
 
 ### Langues
 
