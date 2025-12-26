@@ -4,7 +4,7 @@ layout: default
 
 <div class="home">
 
-  <h2 class="page-heading">Posts</h2>
+  <h2 class="page-heading">Articles</h2>
 
   <ul class="post-list">
     {% assign sortedPosts = site.posts | sort: 'date' | reverse %}
@@ -15,10 +15,10 @@ layout: default
         <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
       </h2>
       {% if post.tags %}
-      <div class="post-tags" style="margin-top: 0.5rem;">
+      <div class="post-tags" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
         {% for tag in post.tags %}
         <a href="{{ site.baseurl }}/tag/{{ tag | downcase | slugify }}/" class="tag-link"
-          style="display:inline-block; margin-right: 0.5rem; margin-bottom: 0.5rem; padding: 0.2rem 0.6rem; background: #f1f5f9; color: #475569; border-radius: 9999px; text-decoration: none; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.025em;">
+          style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--color-accent-faint); color: var(--color-accent); border-radius: 9999px; text-decoration: none; font-size: 0.7rem; font-weight: 700; font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease;">
           {{ tag }}
         </a>
         {% endfor %}

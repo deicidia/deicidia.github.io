@@ -4,11 +4,14 @@
  * Modern, Apple-inspired design system
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
 // Animation timing
-$anim-duration-fast: 150ms;
+$anim-duration-fast: 200ms;
 $anim-duration-superfast: 100ms;
 $anim-motion-swing: cubic-bezier(0.4, 0.0, 0.2, 1);
 $anim-motion-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+$anim-motion-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
 // Font weights (Velocity uses variable font weights)
 $font-thin: 250;
@@ -76,21 +79,21 @@ $light-base-80: #6b6b78;
 $light-base-90: #484854;
 $light-base-100: #3a3a44;
 
-// Accent color - blue
-$light-accent: #0084ff;
-$light-accent-h: 212;
-$light-accent-s: 100%;
-$light-accent-l: 48%;
+// Accent color - primary brand color
+$light-accent: #2563eb; // Modern Blue
+$light-accent-h: 221;
+$light-accent-s: 83%;
+$light-accent-l: 53%;
 
 // Semantic colors
-$light-red: #f02a1c;
-$light-orange: #ff8f00;
-$light-yellow: #e9bc00;
-$light-green: #09b41d;
-$light-cyan: #04b0a7;
-$light-blue: #0084ff;
-$light-purple: #b24aec;
-$light-pink: #e14693;
+$light-red: #ef4444;
+$light-orange: #f59e0b;
+$light-yellow: #facc15;
+$light-green: #10b981;
+$light-cyan: #06b6d4;
+$light-blue: #3b82f6;
+$light-purple: #8b5cf6;
+$light-pink: #ec4899;
 
 // Dark theme colors
 $dark-base-00: #1a1a1e;
@@ -110,20 +113,20 @@ $dark-base-90: #e1e1e4;
 $dark-base-100: #f5f5f6;
 
 // Dark accent
-$dark-accent: #00b4ff;
-$dark-accent-h: 200;
-$dark-accent-s: 100%;
-$dark-accent-l: 49%;
+$dark-accent: #60a5fa; // Soft Blue for dark mode
+$dark-accent-h: 213;
+$dark-accent-s: 94%;
+$dark-accent-l: 68%;
 
 // Dark semantic colors
-$dark-red: #fb484f;
-$dark-orange: #ff9f0a;
-$dark-yellow: #ffd60a;
-$dark-green: #32d74b;
-$dark-cyan: #64d2ff;
-$dark-blue: #0a84ff;
-$dark-purple: #bf5af2;
-$dark-pink: #ff375f;
+$dark-red: #f87171;
+$dark-orange: #fbbf24;
+$dark-yellow: #fde047;
+$dark-green: #34d399;
+$dark-cyan: #22d3ee;
+$dark-blue: #60a5fa;
+$dark-purple: #a78bfa;
+$dark-pink: #f472b6;
 
 // Transparency values for overlays and shadows
 $trans-faint-00: rgba(0, 0, 0, 0.03);
@@ -155,24 +158,20 @@ $dark-trans-strong-20: rgba(0, 0, 0, 0.75);
 $dark-trans-strong-30: rgba(0, 0, 0, 0.4);
 
 // Shadows (light theme)
-$shadow-xs: 0 0 0 1px $trans-faint-20,
-  0 3px 6px -2px $trans-faint-10;
+$shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-s: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+$shadow-m: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+$shadow-l: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 
-$shadow-s: 0 0.125px 0 0.5px $trans-faint-30,
-  inset 0 -0.125px 1px 0px $trans-faint-30,
-  0 0.75px 2px 0.5px $trans-faint-20;
-
-$shadow-m: 0 2.5px 4px 0px $trans-faint-10,
-  0px 15px 30px $trans-faint-25;
-
-$shadow-code: 0 0.125px 0px 0.375px $trans-faint-50;
-
-$shadow-hover: 0 0.125px 0px 0.375px $trans-faint-60;
+$shadow-code: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
 // CSS Custom Properties (for runtime theming)
 :root {
   // Colors
   --color-base-00: #{$light-base-00};
+  --color-base-00-rgb: 254, 254, 254;
   --color-base-05: #{$light-base-05};
   --color-base-10: #{$light-base-10};
   --color-base-20: #{$light-base-20};
@@ -218,6 +217,7 @@ $shadow-hover: 0 0.125px 0px 0.375px $trans-faint-60;
 // Dark mode variables — only applied when `.dark` class is present
 .dark {
   --color-base-00: #{$dark-base-00};
+  --color-base-00-rgb: 26, 26, 30;
   --color-base-05: #{$dark-base-05};
   --color-base-10: #{$dark-base-10};
   --color-base-20: #{$dark-base-20};

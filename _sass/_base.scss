@@ -38,14 +38,15 @@ pre.mermaid {
  * Basic styling
  */
 body {
-    font: $base-font-weight #{$base-font-size}/#{$base-line-height} $base-font-family;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.7;
     color: var(--text-normal);
     background-color: var(--background-primary);
     -webkit-text-size-adjust: 100%;
-    -webkit-font-feature-settings: "kern" 1;
-    -moz-font-feature-settings: "kern" 1;
-    -o-font-feature-settings: "kern" 1;
-    font-feature-settings: "kern" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-kerning: normal;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -126,7 +127,10 @@ h3,
 h4,
 h5,
 h6 {
+    font-family: 'Outfit', sans-serif;
     color: var(--text-normal);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
 }
 
 h1 {
@@ -212,9 +216,9 @@ blockquote {
 pre,
 code {
     font-size: 0.9em;
-    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-family: 'SF Mono', 'JetBrains Mono', 'Roboto Mono', Menlo, Monaco, Consolas, monospace;
     border: 1px solid var(--code-border);
-    border-radius: $radius-s;
+    border-radius: $radius-sm;
     background-color: var(--code-background);
 }
 
