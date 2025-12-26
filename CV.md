@@ -1,6 +1,7 @@
 ---
 layout: page
-title: Ingénieur IA embarquée (Edge AI)
+title: CV Nathan Thoumine - Ingénieur IA Embarquée & Robotique
+description: Découvrez mon parcours professionnel en IA embarquée, Edge AI, et optimisation logicielle. Expertise en CUDA, TensorRT et systèmes embarqués.
 permalink: /CV/
 ---
 

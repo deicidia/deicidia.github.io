@@ -2,6 +2,7 @@
 layout: post
 title: Liste de ressources
 date: 2025-12-08
+description: Compilation de ressources essentielles en mathématiques, algorithmique, C++, Python, GPU (CUDA) et bonnes pratiques de développement.
 tags: [optimisation, math, programming, competitive programming]
 categories: [ressources]
 ---

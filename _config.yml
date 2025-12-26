@@ -8,14 +8,30 @@
 # Site settings
 title: Nathan Thoumine
 email: thoum.nathan@gmail.com
-author: Nathan Thoumine
-description: > # this means to ignore newlines until "baseurl:"
-  Blog personnel de Nathan Thoumine. Ingénieur IA Embarquée & Robotique.
+author:
+  name: Nathan Thoumine
+  email: thoum.nathan@gmail.com
+  links:
+    - github: deicidia
+    - linkedin: nathan-thoumine
+
+description: >-
+  Portfolio et Blog de Nathan Thoumine. Ingénieur IA Embarquée & Robotique. 
+  Découvrez mes projets sur la vision par ordinateur, l'IA et le développement logiciel.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://deicidia.github.io" # the base hostname & protocol for your site
 twitter_username: 
 github_username:  deicidia
 lang: fr
+locale: fr_FR
+
+# Social sharing image
+social:
+  name: Nathan Thoumine
+  links:
+    - https://github.com/deicidia
+    - https://www.linkedin.com/in/nathan-thoumine/ # Placeholder, user might want to check this
+
 
 # Build settings
 markdown: kramdown

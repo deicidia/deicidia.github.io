@@ -2,7 +2,11 @@
 
   <div class="wrapper">
 
-    <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
+    {% if page.url == "/" %}
+    <h1 class="site-title"><a href="{{ site.baseurl }}/">{{ site.title }}</a></h1>
+    {% else %}
+    <span class="site-title"><a href="{{ site.baseurl }}/">{{ site.title }}</a></span>
+    {% endif %}
 
     <nav class="site-nav">
       <a href="#" class="menu-icon">

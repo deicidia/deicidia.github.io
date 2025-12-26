@@ -1,6 +1,7 @@
 ---
 layout: page
-title: À-PROPOS
+title: À propos de Nathan Thoumine
+description: En savoir plus sur Nathan Thoumine, sa vision du blog et ses projets en IA, robotique et philosophie.
 permalink: /À-PROPOS/
 ---
 

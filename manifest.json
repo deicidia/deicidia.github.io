@@ -1,0 +1,16 @@
+{
+  "name": "Nathan Thoumine - Portfolio & Blog",
+  "short_name": "N. Thoumine",
+  "description": "Portfolio et Blog de Nathan Thoumine. Ingénieur IA Embarquée & Robotique.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2c3e50",
+  "icons": [
+    {
+      "src": "/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
