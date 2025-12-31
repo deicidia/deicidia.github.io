@@ -139,8 +139,8 @@ permalink: /workout/
     }
 
     .input-mini:focus {
-      ring-width: 2px;
-      outline: none;
+      outline: 2px solid #3b82f6;
+      outline-offset: 0px;
     }
 
     .guide-card:hover {
@@ -321,6 +321,25 @@ permalink: /workout/
         <div id="no-data-msg"
           class="hidden absolute inset-0 flex items-center justify-center text-slate-400 text-sm font-medium">
           Pas encore assez de données. Valide des séances !
+        </div>
+      </div>
+
+      <!-- HEATMAP (GitHub Style) -->
+      <div
+        class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+        <h3 class="font-bold text-slate-800 dark:text-white mb-4">Constance (6 derniers mois)</h3>
+        <div class="flex flex-col items-end">
+          <div id="heatmap-grid" class="flex gap-[2px] overflow-x-auto pb-1 max-w-full">
+            <!-- JS Injected -->
+          </div>
+          <div class="flex gap-2 text-[10px] text-slate-400 mt-2">
+            <span>Moins</span>
+            <div class="w-2 h-2 rounded-[2px] bg-slate-100 dark:bg-slate-700/50"></div>
+            <div class="w-2 h-2 rounded-[2px] bg-green-200 dark:bg-green-900/40"></div>
+            <div class="w-2 h-2 rounded-[2px] bg-green-400 dark:bg-green-600"></div>
+            <div class="w-2 h-2 rounded-[2px] bg-green-600 dark:bg-green-500"></div>
+            <span>Plus</span>
+          </div>
         </div>
       </div>
 
@@ -1250,6 +1269,79 @@ permalink: /workout/
       }
 
       updateStatsChart();
+      generateHeatmap();
+    }
+
+    function generateHeatmap() {
+      const archives = getArchives();
+      const container = document.getElementById('heatmap-grid');
+
+      // Get dates for the last 6 months (180 days)
+      const today = new Date();
+      const startDate = new Date(today);
+      startDate.setDate(startDate.getDate() - 179); // 180 days total including today
+
+      // Count workouts per day
+      const workoutCounts = {};
+      archives.forEach(entry => {
+        const date = new Date(entry.date);
+        const dateKey = date.toISOString().split('T')[0];
+        workoutCounts[dateKey] = (workoutCounts[dateKey] || 0) + 1;
+      });
+
+      // Find max count for color scaling
+      const maxCount = Math.max(...Object.values(workoutCounts), 1);
+
+      // Generate grid (organized by weeks)
+      const weeks = [];
+      let currentWeek = [];
+
+      for (let i = 0; i < 180; i++) {
+        const date = new Date(startDate);
+        date.setDate(date.getDate() + i);
+        const dateKey = date.toISOString().split('T')[0];
+        const count = workoutCounts[dateKey] || 0;
+
+        // Determine color intensity
+        let colorClass = 'bg-slate-100 dark:bg-slate-700/50'; // No workout
+        if (count > 0) {
+          const intensity = count / maxCount;
+          if (intensity <= 0.33) {
+            colorClass = 'bg-green-200 dark:bg-green-900/40';
+          } else if (intensity <= 0.66) {
+            colorClass = 'bg-green-400 dark:bg-green-600';
+          } else {
+            colorClass = 'bg-green-600 dark:bg-green-500';
+          }
+        }
+
+        const dayOfWeek = date.getDay();
+        currentWeek.push({
+          date: dateKey,
+          count: count,
+          colorClass: colorClass,
+          dayOfWeek: dayOfWeek
+        });
+
+        // Start new week on Sunday (day 0) or when we reach 7 days
+        if (dayOfWeek === 6 || i === 179) {
+          weeks.push([...currentWeek]);
+          currentWeek = [];
+        }
+      }
+
+      // Render the heatmap
+      let html = '';
+      weeks.forEach(week => {
+        html += '<div class="flex flex-col gap-[2px]">';
+        week.forEach(day => {
+          const tooltip = `${day.date}: ${day.count} séance${day.count !== 1 ? 's' : ''}`;
+          html += `<div class="w-2 h-2 rounded-[2px] ${day.colorClass}" title="${tooltip}"></div>`;
+        });
+        html += '</div>';
+      });
+
+      container.innerHTML = html;
     }
 
     function updateStatsChart() {
