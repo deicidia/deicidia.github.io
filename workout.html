@@ -165,8 +165,16 @@ permalink: /workout/
           <!-- Theme Toggle -->
           <button onclick="toggleTheme()"
             class="p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
-            <span id="theme-icon-sun" class="hidden">☀️</span>
-            <span id="theme-icon-moon">🌙</span>
+            <!-- Sun Icon (Light Mode) -->
+            <svg id="theme-icon-sun" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <!-- Moon Icon (Dark Mode) -->
+            <svg id="theme-icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
           </button>
         </div>
 
@@ -179,11 +187,9 @@ permalink: /workout/
           <button onclick="switchProgram('split')" id="btn-prog-split"
             class="program-selector-btn inactive flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap mx-1">Split</button>
           <button onclick="switchProgram('guide')" id="btn-prog-guide"
-            class="program-selector-btn inactive flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap text-emerald-600 dark:text-emerald-400">🎓
-            Guide</button>
+            class="program-selector-btn inactive flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap text-emerald-600 dark:text-emerald-400">Guide</button>
           <button onclick="switchProgram('stats')" id="btn-prog-stats"
-            class="program-selector-btn inactive flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap text-purple-600 dark:text-purple-400">📈
-            Stats</button>
+            class="program-selector-btn inactive flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap text-purple-600 dark:text-purple-400">Stats</button>
         </div>
       </div>
       <!-- Sub-Navigation (Dynamic) -->
@@ -312,7 +318,7 @@ permalink: /workout/
       <!-- PR Badge -->
       <div id="stats-pr-badge"
         class="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-3 py-2 rounded-lg text-xs font-bold border border-amber-200 dark:border-amber-700/50 flex items-center justify-center gap-1 hidden">
-        🏆 Record Personnel: <span id="stats-pr-value" class="text-sm">--</span>
+        Record Personnel: <span id="stats-pr-value" class="text-sm">--</span>
       </div>
 
       <!-- Chart Area -->
@@ -367,11 +373,11 @@ permalink: /workout/
         <div class="flex gap-4">
           <button onclick="exportData()"
             class="flex-1 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2 rounded-lg font-bold text-sm transition-colors border border-slate-200 dark:border-slate-600">
-            💾 Sauvegarder
+            Sauvegarder
           </button>
           <button onclick="document.getElementById('import-file').click()"
             class="flex-1 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-700 dark:text-blue-300 py-2 rounded-lg font-bold text-sm transition-colors border border-blue-200 dark:border-blue-800">
-            📥 Restaurer
+            Restaurer
           </button>
           <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(this)">
         </div>
@@ -393,7 +399,7 @@ permalink: /workout/
           <h2 id="view-title" class="text-xl font-bold text-slate-800 dark:text-slate-100">Titre</h2>
           <div class="flex gap-2">
             <span id="view-time"
-              class="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold uppercase flex items-center gap-1">⏱️
+              class="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold uppercase flex items-center gap-1">
               <span id="view-time-val">--</span></span>
             <span id="view-badge"
               class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-xs font-bold uppercase">Badge</span>
@@ -407,8 +413,8 @@ permalink: /workout/
           <div
             class="p-3 cursor-pointer flex justify-between items-center hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors"
             onclick="toggleElement('warmup-content')">
-            <div class="flex items-center gap-2"><span class="text-orange-600 dark:text-orange-400 font-bold">🔥
-                Échauffement Requis</span></div>
+            <div class="flex items-center gap-2"><span
+                class="text-orange-600 dark:text-orange-400 font-bold">Échauffement Requis</span></div>
             <span class="text-orange-400 text-xs font-bold">VOIR ▼</span>
           </div>
           <div id="warmup-content" class="px-4 pb-4 hidden border-t border-orange-100 dark:border-orange-800/30 pt-2">
@@ -505,7 +511,7 @@ permalink: /workout/
       <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
         <button onclick="archiveSession()"
           class="whitespace-nowrap bg-emerald-100 dark:bg-emerald-900 hover:bg-emerald-200 dark:hover:bg-emerald-800 text-emerald-700 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700 px-3 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-1">
-          ✅ <span class="hidden sm:inline">Valider</span>
+          <span class="hidden sm:inline">Valider</span><span class="sm:hidden">✓</span>
         </button>
         <div id="timer-display"
           class="hidden bg-slate-800 text-white font-mono text-xl px-4 py-2 rounded-lg font-bold min-w-[90px] text-center shadow-lg transform -translate-y-1">
@@ -983,8 +989,8 @@ permalink: /workout/
           if (s.weight > maxW) { maxW = s.weight; maxR = s.reps; }
         });
 
-        progHint = `<div class="mb-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800/30 text-xs text-blue-800 dark:text-blue-300 flex items-center gap-2">
-          <span>📈</span> <span>Dernière perf: <strong>${maxW}kg</strong> x <strong>${maxR}</strong>. Essaye d'augmenter reps ou charge !</span>
+        progHint = `<div class="mb-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800/30 text-xs text-blue-800 dark:text-blue-300">
+          <span class="font-semibold">Dernière perf:</span> <strong>${maxW}kg</strong> x <strong>${maxR}</strong>. Essaye d'augmenter reps ou charge !
         </div>`;
       } else {
         progHint = `<div class="mb-3 text-xs text-slate-400 italic">Premier enregistrement... Note tes charges.</div>`;
@@ -1011,7 +1017,7 @@ permalink: /workout/
 
       return `<div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all hover:shadow-md animate-fade-in"><div class="flex justify-between items-start mb-3"><div class="pr-2"><span class="inline-block px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-1 tracking-wide">${ex.muscle}</span>
       ${titleHtml}
-      <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 italic">💡 ${ex.note}</p></div><div class="text-right pl-2 shrink-0"><span class="block font-bold text-slate-700 dark:text-slate-200 text-lg whitespace-nowrap">${ex.sets} x ${ex.reps}</span><button onclick="startGlobalTimer(${ex.rest})" class="mt-2 inline-flex items-center gap-1 text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors">⏱️ ${ex.rest}s</button></div></div>${progHint}<div class="mt-4 space-y-2">${setRows}</div>${imgSection}</div>`;
+      <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 italic">${ex.note}</p></div><div class="text-right pl-2 shrink-0"><span class="block font-bold text-slate-700 dark:text-slate-200 text-lg whitespace-nowrap">${ex.sets} x ${ex.reps}</span><button onclick="startGlobalTimer(${ex.rest})" class="mt-2 inline-flex items-center gap-1 text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors">${ex.rest}s</button></div></div>${progHint}<div class="mt-4 space-y-2">${setRows}</div>${imgSection}</div>`;
     }
 
     function toggleGif(id) {
@@ -1186,10 +1192,12 @@ permalink: /workout/
           datasets: [{
             label: 'Intensité',
             data: dataValues,
-            backgroundColor: 'rgba(37, 99, 235, 0.2)',
-            borderColor: '#2563eb',
-            pointBackgroundColor: '#2563eb',
-            borderWidth: 2
+            backgroundColor: isDark ? 'rgba(96, 165, 250, 0.25)' : 'rgba(37, 99, 235, 0.2)',
+            borderColor: isDark ? '#60a5fa' : '#2563eb',
+            pointBackgroundColor: isDark ? '#60a5fa' : '#2563eb',
+            pointBorderColor: isDark ? '#1e293b' : '#fff',
+            pointBorderWidth: 2,
+            borderWidth: 2.5
           }]
         },
         options: {
@@ -1199,12 +1207,26 @@ permalink: /workout/
             r: {
               min: 0,
               max: 10,
-              ticks: { display: false },
-              pointLabels: {
-                font: { size: 11, family: 'Inter' },
-                color: isDark ? '#94a3b8' : '#64748b'
+              ticks: {
+                display: false,
+                backdropColor: 'transparent'
               },
-              grid: { color: isDark ? '#334155' : '#f1f5f9' }
+              pointLabels: {
+                font: {
+                  size: window.innerWidth < 640 ? 10 : 11,
+                  family: 'Inter',
+                  weight: isDark ? '600' : '500'
+                },
+                color: isDark ? '#cbd5e1' : '#64748b'
+              },
+              grid: {
+                color: isDark ? '#475569' : '#f1f5f9',
+                lineWidth: isDark ? 1.5 : 1
+              },
+              angleLines: {
+                color: isDark ? '#475569' : '#e2e8f0',
+                lineWidth: isDark ? 1.5 : 1
+              }
             }
           },
           plugins: { legend: { display: false } }
@@ -1449,12 +1471,16 @@ permalink: /workout/
           datasets: [{
             label: `${exName} (Volume Total)`,
             data: dataPoints.map(d => d.y),
-            borderColor: '#9333ea', // Purple
-            backgroundColor: 'rgba(147, 51, 234, 0.1)',
+            borderColor: isDark ? '#a78bfa' : '#9333ea',
+            backgroundColor: isDark ? 'rgba(167, 139, 250, 0.15)' : 'rgba(147, 51, 234, 0.1)',
             fill: true,
             tension: 0.3,
-            pointBackgroundColor: '#9333ea',
-            pointRadius: 5
+            pointBackgroundColor: isDark ? '#a78bfa' : '#9333ea',
+            pointBorderColor: isDark ? '#1e293b' : '#fff',
+            pointBorderWidth: 2,
+            pointRadius: window.innerWidth < 640 ? 4 : 5,
+            pointHoverRadius: window.innerWidth < 640 ? 6 : 7,
+            borderWidth: isDark ? 2.5 : 2
           }]
         },
         options: {
@@ -1463,17 +1489,40 @@ permalink: /workout/
           scales: {
             y: {
               beginAtZero: false,
-              grid: { color: isDark ? '#334155' : '#f1f5f9' },
-              ticks: { color: isDark ? '#94a3b8' : '#64748b' }
+              grid: {
+                color: isDark ? '#475569' : '#f1f5f9',
+                lineWidth: isDark ? 1 : 0.5
+              },
+              ticks: {
+                color: isDark ? '#cbd5e1' : '#64748b',
+                font: {
+                  size: window.innerWidth < 640 ? 10 : 11,
+                  weight: isDark ? '600' : '500'
+                }
+              }
             },
             x: {
               grid: { display: false },
-              ticks: { color: isDark ? '#94a3b8' : '#64748b' }
+              ticks: {
+                color: isDark ? '#cbd5e1' : '#64748b',
+                font: {
+                  size: window.innerWidth < 640 ? 9 : 11,
+                  weight: isDark ? '600' : '500'
+                },
+                maxRotation: window.innerWidth < 640 ? 45 : 0,
+                minRotation: window.innerWidth < 640 ? 45 : 0
+              }
             }
           },
           plugins: {
             legend: {
-              labels: { color: isDark ? '#e2e8f0' : '#475569' }
+              labels: {
+                color: isDark ? '#e2e8f0' : '#475569',
+                font: {
+                  size: window.innerWidth < 640 ? 11 : 12,
+                  weight: isDark ? '600' : '500'
+                }
+              }
             }
           }
         }
