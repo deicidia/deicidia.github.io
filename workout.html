@@ -134,6 +134,15 @@ permalink: /workout/
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
+    .input-mini {
+      transition: all 0.2s;
+    }
+
+    .input-mini:focus {
+      ring-width: 2px;
+      outline: none;
+    }
+
     .guide-card:hover {
       transform: translateY(-2px);
     }
@@ -172,6 +181,9 @@ permalink: /workout/
           <button onclick="switchProgram('guide')" id="btn-prog-guide"
             class="program-selector-btn inactive flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap text-emerald-600 dark:text-emerald-400">🎓
             Guide</button>
+          <button onclick="switchProgram('stats')" id="btn-prog-stats"
+            class="program-selector-btn inactive flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap text-purple-600 dark:text-purple-400">📈
+            Stats</button>
         </div>
       </div>
       <!-- Sub-Navigation (Dynamic) -->
@@ -279,6 +291,61 @@ permalink: /workout/
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section id="stats-section" class="hidden space-y-6">
+      <!-- Controls -->
+      <div
+        class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-800 dark:text-white">Évolution des Charges</h2>
+          <p class="text-xs text-slate-400">Ton historique de progression.</p>
+        </div>
+        <select id="stats-exercise-select" onchange="updateStatsChart()"
+          class="w-full sm:w-auto p-2 rounded-lg bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <!-- Options injected via JS -->
+        </select>
+      </div>
+
+      <!-- Chart Area -->
+      <div
+        class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 h-80 relative flex flex-col">
+        <!-- PR Badge -->
+        <div id="stats-pr-badge"
+          class="absolute top-4 right-6 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-full text-xs font-bold border border-amber-200 dark:border-amber-700/50 flex items-center gap-1 hidden">
+          🏆 PR: <span id="stats-pr-value" class="text-sm">--</span>
+        </div>
+        <canvas id="progressionChart"></canvas>
+        <div id="no-data-msg"
+          class="hidden absolute inset-0 flex items-center justify-center text-slate-400 text-sm font-medium">
+          Pas encore assez de données. Valide des séances !
+        </div>
+      </div>
+
+      <!-- Data Management -->
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h3 class="font-bold text-slate-800 dark:text-white mb-4">Sauvegarde des Données</h3>
+        <p class="text-xs text-slate-500 mb-4">Vos données sont stockées dans ce navigateur. Pour ne pas les perdre
+          (changement de téléphone, nettoyage cache), pensez à faire une sauvegarde.</p>
+        <div class="flex gap-4">
+          <button onclick="exportData()"
+            class="flex-1 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2 rounded-lg font-bold text-sm transition-colors border border-slate-200 dark:border-slate-600">
+            💾 Sauvegarder
+          </button>
+          <button onclick="document.getElementById('import-file').click()"
+            class="flex-1 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-700 dark:text-blue-300 py-2 rounded-lg font-bold text-sm transition-colors border border-blue-200 dark:border-blue-800">
+            📥 Restaurer
+          </button>
+          <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(this)">
+        </div>
+      </div>
+
+      <!-- History List (Mini) -->
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h3 class="font-bold text-slate-800 dark:text-white mb-4">Historique Récent</h3>
+        <div id="stats-history-list" class="space-y-3 text-sm text-slate-600 dark:text-slate-400"></div>
       </div>
     </section>
 
@@ -401,6 +468,10 @@ permalink: /workout/
         </div>
       </div>
       <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+        <button onclick="archiveSession()"
+          class="whitespace-nowrap bg-emerald-100 dark:bg-emerald-900 hover:bg-emerald-200 dark:hover:bg-emerald-800 text-emerald-700 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700 px-3 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-1">
+          ✅ <span class="hidden sm:inline">Valider</span>
+        </button>
         <div id="timer-display"
           class="hidden bg-slate-800 text-white font-mono text-xl px-4 py-2 rounded-lg font-bold min-w-[90px] text-center shadow-lg transform -translate-y-1">
           00:00</div>
@@ -437,7 +508,19 @@ permalink: /workout/
         { name: "Dislocations d'épaules", info: "10 reps" }
       ],
       exercises: [
-        { name: "Goblet Squat", muscle: "Jambes", sets: 3, reps: "10-12", rest: 90, note: "Dos droit, poussez sur les talons.", img: "/images/exercices/goblet-squat.gif" },
+        {
+          name: "Goblet Squat",
+          muscle: "Jambes",
+          sets: 3,
+          reps: "10-12",
+          rest: 90,
+          note: "Dos droit, poussez sur les talons.",
+          img: "/images/exercices/goblet-squat.gif",
+          variants: [
+            { name: "Goblet Squat", muscle: "Jambes", sets: 3, reps: "10-12", rest: 90, note: "Dos droit, poussez sur les talons.", img: "/images/exercices/goblet-squat.gif" },
+            { name: "Hack Squat", muscle: "Jambes", sets: 3, reps: "10-12", rest: 90, note: "Machine Hack Squat, dos plaqué", img: "https://www.inspireusafoundation.org/file/2021/10/hack-squat-musculature.gif" }
+          ]
+        },
         { name: "Développé Couché", muscle: "Pecs", sets: 3, reps: "10-12", rest: 90, note: "Contrôlez la descente.", img: "/images/exercices/dumbell-press.gif" },
         { name: "Tirage Vertical", muscle: "Dos", sets: 3, reps: "10-12", rest: 60, note: "Amenez la barre à la poitrine.", img: "/images/exercices/lat-pulldown.gif" },
         { name: "Soulevé de Terre Jambes Tendues", muscle: "Ischios", sets: 3, reps: "12-15", rest: 60, note: "Dos plat, fesses en arrière.", img: "/images/exercices/straight-leg-deadlift.gif" },
@@ -563,6 +646,143 @@ permalink: /workout/
       }
     }
 
+    // --- STATE & HISTORY & LOGS ---
+    const HISTORY_KEY = 'muscle_plus_history_v2';
+    const ARCHIVE_KEY = 'muscle_plus_archives';
+    let progressionChart = null;
+
+    // --- PROGRESSION LOGIC ---
+    function getHistory() {
+      try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {}; } catch { return {}; }
+    }
+
+    function getArchives() {
+      try { return JSON.parse(localStorage.getItem(ARCHIVE_KEY)) || []; } catch { return []; }
+    }
+
+    function archiveSession() {
+      if (!confirm("Valider et archiver cette séance dans l'historique ?")) return;
+
+      const history = getHistory();
+      const programKey = state.program === 'split' ? state.splitDay : 'fullbody';
+      const sessionData = history[programKey];
+
+      if (!sessionData) {
+        alert("Rien à enregistrer !");
+        return;
+      }
+
+      const archiveEntry = {
+        date: Date.now(),
+        program: programKey,
+        exercises: {}
+      };
+
+      // Extract simplified stats for charting (Total Volume: Weight * Reps)
+      for (const [name, data] of Object.entries(sessionData)) {
+        let totalVolume = 0;
+        let bestSetWeight = 0;
+        let bestSetReps = 0;
+
+        data.sets.forEach(s => {
+          const w = parseFloat(String(s.weight).replace(',', '.')) || 0;
+          const r = parseFloat(String(s.reps).replace(',', '.')) || 0;
+
+          if (w > 0 && r > 0) {
+            totalVolume += w * r;
+            // Also track best set for hints/records if needed later
+            if (w > bestSetWeight) { bestSetWeight = w; bestSetReps = r; }
+          }
+        });
+
+        if (totalVolume > 0) {
+          archiveEntry.exercises[name] = {
+            weight: bestSetWeight, // Keep for legacy/hint compatibility
+            reps: bestSetReps,     // Keep for legacy/hint compatibility
+            volume: totalVolume    // NEW: Total Tonnage
+          };
+        }
+      }
+
+      const archives = getArchives();
+      archives.push(archiveEntry);
+      localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archives));
+
+      // Reset checkboxes for current session
+      if (sessionData) {
+        Object.values(sessionData).forEach(exData => {
+          if (exData.sets) {
+            exData.sets.forEach(s => s.completed = false);
+          }
+        });
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      }
+
+      // Refresh UI
+      if (state.program === 'fullbody') renderView(fullBodyData);
+      else if (state.program === 'split') loadSplitDay(state.splitDay);
+
+      alert("Séance archivée et réinitialisée ! 🚀");
+    }
+
+    function deleteSession(timestamp) {
+      if (!confirm("Supprimer définitivement cette séance de l'historique ?")) return;
+
+      let archives = getArchives();
+      archives = archives.filter(a => a.date !== timestamp);
+      localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archives));
+
+      initStatsView(); // Refresh list
+    }
+
+
+    function saveSetData(exName, setIndex, field, value) {
+      const history = getHistory();
+      const programKey = state.program === 'split' ? state.splitDay : 'fullbody';
+
+      if (!history[programKey]) history[programKey] = {};
+      if (!history[programKey][exName]) history[programKey][exName] = { sets: [] };
+
+      // Ensure array exists
+      if (!history[programKey][exName].sets[setIndex]) {
+        history[programKey][exName].sets[setIndex] = { weight: '', reps: '', completed: false };
+      }
+
+      // Update field
+      history[programKey][exName].sets[setIndex][field] = value;
+      history[programKey][exName].lastUpdated = Date.now();
+
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    }
+
+    function toggleSetCompletion(exName, setIndex, checkbox) {
+      saveSetData(exName, setIndex, 'completed', checkbox.checked);
+      calculateTotals();
+    }
+
+    function getExerciseHistory(exName) {
+      const history = getHistory();
+      const programKey = state.program === 'split' ? state.splitDay : 'fullbody';
+      return history[programKey]?.[exName] || null;
+    }
+
+    function getPreferredVariant(baseName) {
+      try {
+        const variants = JSON.parse(localStorage.getItem('muscle_plus_variants')) || {};
+        return variants[baseName];
+      } catch { return null; }
+    }
+
+    function setVariant(baseName, variantName) {
+      const variants = JSON.parse(localStorage.getItem('muscle_plus_variants')) || {};
+      variants[baseName] = variantName;
+      localStorage.setItem('muscle_plus_variants', JSON.stringify(variants));
+
+      // Refresh current view
+      if (state.program === 'fullbody') renderView(fullBodyData);
+      else if (state.program === 'split') loadSplitDay(state.splitDay);
+    }
+
     // --- CORE FUNCTIONS ---
 
     function switchProgram(progType) {
@@ -573,33 +793,42 @@ permalink: /workout/
       const btnFB = document.getElementById('btn-prog-fullbody');
       const btnSP = document.getElementById('btn-prog-split');
       const btnGuide = document.getElementById('btn-prog-guide');
+      const btnStats = document.getElementById('btn-prog-stats');
+
       const subNav = document.getElementById('sub-nav-container');
       const guideSection = document.getElementById('guide-section');
+      const statsSection = document.getElementById('stats-section'); // New
       const dashboard = document.getElementById('dashboard-section');
       const workoutContainer = document.getElementById('workout-container');
       const footerControls = document.getElementById('footer-controls');
 
       // Reset all buttons to inactive first
-      [btnFB, btnSP, btnGuide].forEach(btn => {
-        btn.classList.replace('active', 'inactive');
+      [btnFB, btnSP, btnGuide, btnStats].forEach(btn => {
+        if (btn) btn.classList.replace('active', 'inactive');
       });
+
+      // Hide all standard sections first
+      guideSection.classList.add('hidden');
+      statsSection.classList.add('hidden');
+      dashboard.classList.add('hidden');
+      workoutContainer.classList.add('hidden');
+      subNav.classList.add('hidden');
+      footerControls.classList.add('hidden');
 
       if (progType === 'guide') {
         btnGuide.classList.replace('inactive', 'active');
         guideSection.classList.remove('hidden');
-        dashboard.classList.add('hidden');
-        workoutContainer.classList.add('hidden');
-        subNav.classList.add('hidden');
-        footerControls.classList.add('hidden');
+      } else if (progType === 'stats') {
+        btnStats.classList.replace('inactive', 'active');
+        statsSection.classList.remove('hidden');
+        initStatsView();
       } else {
-        guideSection.classList.add('hidden');
         dashboard.classList.remove('hidden');
         workoutContainer.classList.remove('hidden');
         footerControls.classList.remove('hidden');
 
         if (progType === 'fullbody') {
           btnFB.classList.replace('inactive', 'active');
-          subNav.classList.add('hidden');
           renderView(fullBodyData);
           document.getElementById('fullbody-warmup-section').classList.remove('hidden');
           document.getElementById('fullbody-cooldown').classList.remove('hidden');
@@ -648,8 +877,22 @@ permalink: /workout/
       const exContainer = document.getElementById('exercise-list');
       exContainer.innerHTML = '';
       data.exercises.forEach((ex, idx) => {
+        let displayEx = ex;
+        let baseName = null;
+        let variants = null;
+
+        if (ex.variants) {
+          baseName = ex.name;
+          variants = ex.variants;
+          const pref = getPreferredVariant(baseName);
+          if (pref) {
+            const found = variants.find(v => v.name === pref);
+            if (found) displayEx = found;
+          }
+        }
+
         const uniqueId = `ex-${state.program}-${state.splitDay}-${idx}`;
-        exContainer.innerHTML += createExerciseCard(ex, uniqueId);
+        exContainer.innerHTML += createExerciseCard(displayEx, uniqueId, baseName, variants);
       });
       if (state.program === 'fullbody') {
         const fbWarmup = document.getElementById('fb-warmup-list');
@@ -662,16 +905,78 @@ permalink: /workout/
       calculateTotals();
     }
 
-    function createExerciseCard(ex, uniqueId) {
-      let boxes = '';
-      for (let i = 1; i <= ex.sets; i++) {
-        boxes += `<div class="relative"><input type="checkbox" onchange="checkSet(this)" class="custom-checkbox peer appearance-none w-10 h-10 border-2 border-slate-200 dark:border-slate-600 rounded-lg checked:bg-blue-600 checked:border-blue-600 dark:checked:border-blue-500 transition-all cursor-pointer z-10 relative bg-white dark:bg-slate-700"><span class="absolute inset-0 flex items-center justify-center text-slate-300 dark:text-slate-600 font-bold pointer-events-none peer-checked:text-white">${i}</span></div>`;
+    function createExerciseCard(ex, uniqueId, baseName = null, variants = null) {
+      const history = getExerciseHistory(ex.name);
+
+      let setRows = '';
+      for (let i = 0; i < ex.sets; i++) {
+        // Retrieve saved values for this set
+        const setHistory = history?.sets?.[i] || {};
+        const savedWeight = setHistory.weight || '';
+        const savedReps = setHistory.reps || '';
+        const isCompleted = setHistory.completed || false;
+
+        setRows += `
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-bold text-slate-400">
+              ${i + 1}
+            </div>
+            <input type="number" placeholder="kg" value="${savedWeight}" 
+              onchange="saveSetData('${ex.name}', ${i}, 'weight', this.value)"
+              class="input-mini w-20 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-sm focus:border-blue-500 text-center dark:text-white"
+            >
+            <input type="number" placeholder="reps" value="${savedReps}" 
+              onchange="saveSetData('${ex.name}', ${i}, 'reps', this.value)"
+              class="input-mini w-16 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-sm focus:border-blue-500 text-center dark:text-white"
+            >
+            <div class="flex-grow"></div>
+            <input type="checkbox" ${isCompleted ? 'checked' : ''} 
+              onchange="toggleSetCompletion('${ex.name}', ${i}, this)"
+              class="custom-checkbox w-8 h-8 rounded border-2 border-slate-200 dark:border-slate-600 text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-700 cursor-pointer transition-all checked:bg-blue-600 checked:border-blue-600"
+            >
+          </div>
+        `;
       }
+
+      // Progression Hint
+      let progHint = '';
+      if (history && history.sets && history.sets[0] && history.sets[0].weight) {
+        // Find max weight used previously
+        let maxW = 0;
+        let maxR = 0;
+        history.sets.forEach(s => {
+          if (s.weight > maxW) { maxW = s.weight; maxR = s.reps; }
+        });
+
+        progHint = `<div class="mb-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800/30 text-xs text-blue-800 dark:text-blue-300 flex items-center gap-2">
+          <span>📈</span> <span>Dernière perf: <strong>${maxW}kg</strong> x <strong>${maxR}</strong>. Essaye d'augmenter reps ou charge !</span>
+        </div>`;
+      } else {
+        progHint = `<div class="mb-3 text-xs text-slate-400 italic">Premier enregistrement... Note tes charges.</div>`;
+      }
+
       const hasImage = ex.img ? true : false;
       const imgSection = hasImage ? `<div id="gif-${uniqueId}" class="hidden mt-3 border border-slate-200 dark:border-slate-600 rounded-lg overflow-hidden bg-white"><div class="relative w-full h-48 sm:h-64 flex items-center justify-center bg-white"><img src="${ex.img}" alt="${ex.name}" class="max-w-full max-h-full object-contain" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=GIF+Manquant';"></div><div class="p-2 text-center text-xs text-slate-400 bg-slate-50 dark:bg-slate-800">Démo: ${ex.name}</div></div>` : '';
       const btnCam = hasImage ? `<button onclick="toggleGif('${uniqueId}')" class="text-blue-500 hover:text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 p-1.5 rounded-full transition-colors" title="Voir Démo"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg></button>` : '';
 
-      return `<div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all hover:shadow-md animate-fade-in"><div class="flex justify-between items-start mb-3"><div class="pr-2"><span class="inline-block px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-1 tracking-wide">${ex.muscle}</span><h4 class="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight flex items-center gap-2">${ex.name} ${btnCam}</h4><p class="text-xs text-slate-400 dark:text-slate-500 mt-1 italic">💡 ${ex.note}</p></div><div class="text-right pl-2 shrink-0"><span class="block font-bold text-slate-700 dark:text-slate-200 text-lg whitespace-nowrap">${ex.sets} x ${ex.reps}</span><button onclick="startGlobalTimer(${ex.rest})" class="mt-2 inline-flex items-center gap-1 text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors">⏱️ ${ex.rest}s</button></div></div>${imgSection}<div class="flex flex-wrap gap-2 mt-2 pt-2 border-t border-slate-50 dark:border-slate-700">${boxes}</div></div>`;
+      // Variant Selector Logic
+      let titleHtml = `<h4 class="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight flex items-center gap-2">${ex.name} ${btnCam}</h4>`;
+      if (variants && baseName) {
+        const options = variants.map(v => `<option value="${v.name}" ${v.name === ex.name ? 'selected' : ''}>${v.name}</option>`).join('');
+        titleHtml = `<div class="relative flex items-center gap-2">
+          <select onchange="setVariant('${baseName}', this.value)" class="font-bold text-slate-800 dark:text-slate-100 text-lg bg-transparent border-b border-dashed border-slate-400 focus:outline-none focus:border-blue-500 pr-6 py-0.5 cursor-pointer appearance-none relative">
+             ${options}
+          </select>
+          <span class="pointer-events-none absolute right-0 flex items-center px-2 text-slate-700">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+          </span> 
+          ${btnCam}
+        </div>`;
+      }
+
+      return `<div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all hover:shadow-md animate-fade-in"><div class="flex justify-between items-start mb-3"><div class="pr-2"><span class="inline-block px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-1 tracking-wide">${ex.muscle}</span>
+      ${titleHtml}
+      <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 italic">💡 ${ex.note}</p></div><div class="text-right pl-2 shrink-0"><span class="block font-bold text-slate-700 dark:text-slate-200 text-lg whitespace-nowrap">${ex.sets} x ${ex.reps}</span><button onclick="startGlobalTimer(${ex.rest})" class="mt-2 inline-flex items-center gap-1 text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors">⏱️ ${ex.rest}s</button></div></div>${progHint}<div class="mt-4 space-y-2">${setRows}</div>${imgSection}</div>`;
     }
 
     function toggleGif(id) {
@@ -709,10 +1014,17 @@ permalink: /workout/
     }
 
     function calculateTotals() {
-      const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-      state.totalSets = allCheckboxes.length;
-      const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
-      state.setsDone = checkedBoxes.length;
+      // Changed selector to match new structure
+      // We look for the main exercise list AND the abs list AND the warmup list
+      const mainCheckboxes = document.querySelectorAll('#exercise-list input[type="checkbox"]');
+      const absCheckboxes = document.querySelectorAll('#abs-list input[type="checkbox"]');
+      const fbWarmupBoxes = document.querySelectorAll('#fb-warmup-list input[type="checkbox"]');
+
+      const all = [...mainCheckboxes, ...absCheckboxes, ...fbWarmupBoxes];
+      state.totalSets = all.length;
+
+      const checked = all.filter(c => c.checked);
+      state.setsDone = checked.length;
       updateProgressBar();
     }
 
@@ -863,6 +1175,201 @@ permalink: /workout/
           plugins: { legend: { display: false } }
         }
       });
+    }
+
+    // --- STATS FUNCTIONS ---
+
+    function initStatsView() {
+      // 1. Populate Dropdown
+      const archives = getArchives();
+      const selector = document.getElementById('stats-exercise-select');
+      const uniqueExercises = new Set();
+
+      // A. Gather from History
+      archives.forEach(entry => {
+        if (entry.exercises) {
+          Object.keys(entry.exercises).forEach(k => uniqueExercises.add(k));
+        }
+      });
+
+      // B. Gather from Definitions (FullBody + Split + Variants)
+      const programs = [fullBodyData, ...Object.values(splitProgram)];
+
+      programs.forEach(prog => {
+        // 1. Standard Exercises list
+        if (prog.exercises) {
+          prog.exercises.forEach(ex => {
+            uniqueExercises.add(ex.name);
+            if (ex.variants) ex.variants.forEach(v => uniqueExercises.add(v.name));
+          });
+        }
+        // 2. Abs property (if exists in object)
+        if (prog.abs && Array.isArray(prog.abs)) {
+          prog.abs.forEach(ex => {
+            uniqueExercises.add(ex.name);
+            if (ex.variants) ex.variants.forEach(v => uniqueExercises.add(v.name));
+          });
+        }
+        // 3. Program IS an array (e.g. splitProgram.abs)
+        if (Array.isArray(prog)) {
+          prog.forEach(ex => {
+            if (ex.name) {
+              uniqueExercises.add(ex.name);
+              if (ex.variants) ex.variants.forEach(v => uniqueExercises.add(v.name));
+            }
+          });
+        }
+      });
+
+      selector.innerHTML = '';
+      if (uniqueExercises.size === 0) {
+        selector.innerHTML = '<option>Aucune donnée</option>';
+      } else {
+        Array.from(uniqueExercises).sort().forEach(ex => {
+          selector.innerHTML += `<option value="${ex}">${ex}</option>`;
+        });
+      }
+
+      // History List
+      const historyContainer = document.getElementById('stats-history-list');
+      if (archives.length === 0) {
+        historyContainer.innerHTML = 'Aucune séance archivée.';
+      } else {
+        const last5 = archives.slice(-5).reverse();
+        historyContainer.innerHTML = last5.map(a => {
+          const d = new Date(a.date);
+          const count = Object.keys(a.exercises).length;
+          return `<div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-2 last:border-0 last:pb-0">
+             <div><span class="block font-bold text-slate-700 dark:text-slate-300">${d.toLocaleDateString()}</span><span class="text-xs opacity-70">Programme: ${a.program || 'N/A'}</span></div>
+             <div class="flex items-center gap-2">
+               <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-slate-500">${count} Exos</span>
+               <button onclick="deleteSession(${a.date})" class="text-red-400 hover:text-red-600 p-1" title="Supprimer">✕</button>
+             </div>
+           </div>`;
+        }).join('');
+      }
+
+      updateStatsChart();
+    }
+
+    function updateStatsChart() {
+      const exName = document.getElementById('stats-exercise-select').value;
+      const archives = getArchives();
+
+      // Prepare Data (Using VOLUME of Load)
+      // Filter archives that have this exercise
+      const dataPoints = archives
+        .filter(a => a.exercises && a.exercises[exName])
+        .map(a => {
+          let val = 0;
+          // Support both new Volume format and old legacy MaxWeight format
+          if (a.exercises[exName].volume) {
+            val = a.exercises[exName].volume;
+          } else {
+            // Fallback for old archives: Estimate volume based on recorded max set (rough proxy)
+            const w = a.exercises[exName].weight || 0;
+            const r = a.exercises[exName].reps || 0;
+            val = w * r;
+          }
+
+          return {
+            x: new Date(a.date).toLocaleDateString(),
+            y: Math.round(val)
+          };
+        });
+
+      const ctx = document.getElementById('progressionChart').getContext('2d');
+      const isDark = document.documentElement.classList.contains('dark');
+      const prBadge = document.getElementById('stats-pr-badge');
+      const prValue = document.getElementById('stats-pr-value');
+
+      // Calculate PR (Max Volume)
+      if (dataPoints.length > 0) {
+        const maxVol = Math.max(...dataPoints.map(p => p.y));
+        prValue.innerText = `${maxVol} kg`;
+        prBadge.classList.remove('hidden');
+      } else {
+        prBadge.classList.add('hidden');
+      }
+
+      if (progressionChart) {
+        progressionChart.destroy();
+      }
+
+      progressionChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: dataPoints.map(d => d.x),
+          datasets: [{
+            label: `${exName} (Volume Total)`,
+            data: dataPoints.map(d => d.y),
+            borderColor: '#9333ea', // Purple
+            backgroundColor: 'rgba(147, 51, 234, 0.1)',
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: '#9333ea',
+            pointRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: false,
+              grid: { color: isDark ? '#334155' : '#f1f5f9' },
+              ticks: { color: isDark ? '#94a3b8' : '#64748b' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: isDark ? '#94a3b8' : '#64748b' }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: { color: isDark ? '#e2e8f0' : '#475569' }
+            }
+          }
+        }
+      });
+    }
+
+    // --- DATA MANAGEMENT ---
+    function exportData() {
+      const data = {
+        history: localStorage.getItem('muscle_plus_history_v2'),
+        archives: localStorage.getItem('muscle_plus_archives'),
+        variants: localStorage.getItem('muscle_plus_variants'),
+        settings: { theme: localStorage.theme }
+      };
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `muscle_plus_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.history) localStorage.setItem('muscle_plus_history_v2', data.history);
+          if (data.archives) localStorage.setItem('muscle_plus_archives', data.archives);
+          if (data.variants) localStorage.setItem('muscle_plus_variants', data.variants);
+          if (data.settings && data.settings.theme) localStorage.setItem('theme', data.settings.theme);
+
+          alert("Données restaurées avec succès ! La page va se recharger.");
+          location.reload();
+        } catch (err) {
+          alert("Erreur lors de la lecture du fichier : " + err);
+        }
+      };
+      reader.readAsText(file);
     }
   </script>
 </body>
