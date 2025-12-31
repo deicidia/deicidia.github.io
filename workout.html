@@ -309,14 +309,15 @@ permalink: /workout/
         </select>
       </div>
 
+      <!-- PR Badge -->
+      <div id="stats-pr-badge"
+        class="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-3 py-2 rounded-lg text-xs font-bold border border-amber-200 dark:border-amber-700/50 flex items-center justify-center gap-1 hidden">
+        🏆 Record Personnel: <span id="stats-pr-value" class="text-sm">--</span>
+      </div>
+
       <!-- Chart Area -->
       <div
-        class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 h-80 relative flex flex-col">
-        <!-- PR Badge -->
-        <div id="stats-pr-badge"
-          class="absolute top-4 right-6 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-full text-xs font-bold border border-amber-200 dark:border-amber-700/50 flex items-center gap-1 hidden">
-          🏆 PR: <span id="stats-pr-value" class="text-sm">--</span>
-        </div>
+        class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 h-80 flex flex-col">
         <canvas id="progressionChart"></canvas>
         <div id="no-data-msg"
           class="hidden absolute inset-0 flex items-center justify-center text-slate-400 text-sm font-medium">
@@ -332,13 +333,28 @@ permalink: /workout/
           <div id="heatmap-grid" class="flex gap-[2px] overflow-x-auto pb-1 max-w-full">
             <!-- JS Injected -->
           </div>
-          <div class="flex gap-2 text-[10px] text-slate-400 mt-2">
-            <span>Moins</span>
-            <div class="w-2 h-2 rounded-[2px] bg-slate-100 dark:bg-slate-700/50"></div>
-            <div class="w-2 h-2 rounded-[2px] bg-green-200 dark:bg-green-900/40"></div>
-            <div class="w-2 h-2 rounded-[2px] bg-green-400 dark:bg-green-600"></div>
-            <div class="w-2 h-2 rounded-[2px] bg-green-600 dark:bg-green-500"></div>
-            <span>Plus</span>
+          <div class="flex flex-wrap gap-3 text-[10px] text-slate-400 mt-3 items-center justify-end">
+            <span class="font-semibold">Complétion:</span>
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-[2px] bg-slate-100 dark:bg-slate-700/50"></div>
+              <span>0%</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-[2px] bg-green-200 dark:bg-green-900/40"></div>
+              <span>&lt;50%</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-[2px] bg-green-300 dark:bg-green-700"></div>
+              <span>50-70%</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-[2px] bg-green-400 dark:bg-green-600"></div>
+              <span>70-90%</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-[2px] bg-green-600 dark:bg-green-500"></div>
+              <span>90-100%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1281,16 +1297,44 @@ permalink: /workout/
       const startDate = new Date(today);
       startDate.setDate(startDate.getDate() - 179); // 180 days total including today
 
-      // Count workouts per day
-      const workoutCounts = {};
+      // Calculate workout completion rate per day
+      const workoutData = {};
       archives.forEach(entry => {
         const date = new Date(entry.date);
         const dateKey = date.toISOString().split('T')[0];
-        workoutCounts[dateKey] = (workoutCounts[dateKey] || 0) + 1;
-      });
 
-      // Find max count for color scaling
-      const maxCount = Math.max(...Object.values(workoutCounts), 1);
+        // Count total exercises and calculate completion percentage
+        const exerciseCount = Object.keys(entry.exercises || {}).length;
+
+        // Estimate total exercises expected based on program type
+        let expectedExercises = 7; // Default estimate
+        if (entry.program === 'day1' || entry.program === 'day2') {
+          expectedExercises = 5; // PUSH/PULL typically have 5-6 exercises
+        } else if (entry.program === 'day3') {
+          expectedExercises = 6; // LEG day
+        } else if (entry.program === 'day4') {
+          expectedExercises = 6; // HIT day
+        } else if (entry.program === 'fullbody') {
+          expectedExercises = 7; // Full body has 7 exercises
+        }
+
+        // Calculate completion percentage (0-1)
+        const completionRate = Math.min(exerciseCount / expectedExercises, 1);
+
+        // If multiple workouts on same day, take the average
+        if (workoutData[dateKey]) {
+          workoutData[dateKey].count += 1;
+          workoutData[dateKey].totalCompletion += completionRate;
+          workoutData[dateKey].avgCompletion = workoutData[dateKey].totalCompletion / workoutData[dateKey].count;
+        } else {
+          workoutData[dateKey] = {
+            count: 1,
+            totalCompletion: completionRate,
+            avgCompletion: completionRate,
+            exerciseCount: exerciseCount
+          };
+        }
+      });
 
       // Generate grid (organized by weeks)
       const weeks = [];
@@ -1300,26 +1344,37 @@ permalink: /workout/
         const date = new Date(startDate);
         date.setDate(date.getDate() + i);
         const dateKey = date.toISOString().split('T')[0];
-        const count = workoutCounts[dateKey] || 0;
+        const data = workoutData[dateKey];
 
-        // Determine color intensity
+        // Determine color intensity based on completion rate
         let colorClass = 'bg-slate-100 dark:bg-slate-700/50'; // No workout
-        if (count > 0) {
-          const intensity = count / maxCount;
-          if (intensity <= 0.33) {
-            colorClass = 'bg-green-200 dark:bg-green-900/40';
-          } else if (intensity <= 0.66) {
-            colorClass = 'bg-green-400 dark:bg-green-600';
-          } else {
+        let tooltipText = `${dateKey}: Aucune séance`;
+
+        if (data) {
+          const completion = data.avgCompletion;
+          tooltipText = `${dateKey}: ${data.count} séance${data.count !== 1 ? 's' : ''} - ${Math.round(completion * 100)}% complété`;
+
+          // Color based on completion percentage
+          if (completion >= 0.9) {
+            // 90-100%: Dark green (excellent)
             colorClass = 'bg-green-600 dark:bg-green-500';
+          } else if (completion >= 0.7) {
+            // 70-89%: Medium green (good)
+            colorClass = 'bg-green-400 dark:bg-green-600';
+          } else if (completion >= 0.5) {
+            // 50-69%: Light green (moderate)
+            colorClass = 'bg-green-300 dark:bg-green-700';
+          } else if (completion > 0) {
+            // 1-49%: Very light green (incomplete)
+            colorClass = 'bg-green-200 dark:bg-green-900/40';
           }
         }
 
         const dayOfWeek = date.getDay();
         currentWeek.push({
           date: dateKey,
-          count: count,
           colorClass: colorClass,
+          tooltip: tooltipText,
           dayOfWeek: dayOfWeek
         });
 
@@ -1335,8 +1390,7 @@ permalink: /workout/
       weeks.forEach(week => {
         html += '<div class="flex flex-col gap-[2px]">';
         week.forEach(day => {
-          const tooltip = `${day.date}: ${day.count} séance${day.count !== 1 ? 's' : ''}`;
-          html += `<div class="w-2 h-2 rounded-[2px] ${day.colorClass}" title="${tooltip}"></div>`;
+          html += `<div class="w-2 h-2 rounded-[2px] ${day.colorClass}" title="${day.tooltip}"></div>`;
         });
         html += '</div>';
       });
