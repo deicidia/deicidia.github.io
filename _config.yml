@@ -39,6 +39,9 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
+exclude:
+  - todo
+
 # Collections
 collections:
   scans:
