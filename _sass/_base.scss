@@ -21,7 +21,13 @@ figure {
     padding: 0;
 }
 
-/* Centrage de l'élément SVG généré par Mermaid */
+/* Centrage et espacement de l'élément SVG généré par Mermaid */
+.mermaid {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+}
+
 .mermaid svg {
     display: block;
     margin-left: auto;

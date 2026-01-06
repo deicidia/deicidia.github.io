@@ -38,7 +38,37 @@
   <!-- Mermaid diagrams -->
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+
+    async function renderMermaid() {
+      console.log("Mermaid: Starting conversion...");
+      // Target various possible Kramdown/Jekyll outputs
+      const codeBlocks = document.querySelectorAll('pre code.language-mermaid, .language-mermaid pre code, pre.language-mermaid code');
+      console.log(`Mermaid: Found ${codeBlocks.length} code blocks.`);
+
+      codeBlocks.forEach((code, i) => {
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+
+        // Replace the pre-container
+        const pre = code.closest('pre');
+        if (pre) {
+          const container = pre.closest('.language-mermaid') || pre;
+          container.replaceWith(div);
+          console.log(`Mermaid: Converted block ${i + 1}`);
+        }
+      });
+
+      mermaid.initialize({ startOnLoad: false, theme: 'default' });
+      await mermaid.run({ querySelector: '.mermaid' });
+      console.log("Mermaid: Rendering complete.");
+    }
+
+    if (document.readyState === 'complete') {
+      renderMermaid();
+    } else {
+      window.addEventListener('load', renderMermaid);
+    }
   </script>
 
   <!-- Reading progress bar logic -->

@@ -206,6 +206,16 @@ $shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0,
   --link-color: var(--color-accent);
   --link-color-hover: var(--color-base-100);
 
+  // Semantic Colors (Light)
+  --color-red: #{$light-red};
+  --color-orange: #{$light-orange};
+  --color-yellow: #{$light-yellow};
+  --color-green: #{$light-green};
+  --color-cyan: #{$light-cyan};
+  --color-blue: #{$light-blue};
+  --color-purple: #{$light-purple};
+  --color-pink: #{$light-pink};
+
   // Shadows
   --shadow-xs: #{$shadow-xs};
   --shadow-s: #{$shadow-s};
@@ -239,4 +249,14 @@ $shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0,
 
   --code-background: #{$dark-trans-faint-00};
   --code-border: #{$dark-trans-faint-20};
+
+  // Semantic Colors (Dark)
+  --color-red: #{$dark-red};
+  --color-orange: #{$dark-orange};
+  --color-yellow: #{$dark-yellow};
+  --color-green: #{$dark-green};
+  --color-cyan: #{$dark-cyan};
+  --color-blue: #{$dark-blue};
+  --color-purple: #{$dark-purple};
+  --color-pink: #{$dark-pink};
 }
