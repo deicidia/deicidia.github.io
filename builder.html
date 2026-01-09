@@ -7,7 +7,9 @@
   <title>Générateur de CV Ultra-Simple</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Merriweather:wght@300;400;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --primary: #1a252f;
@@ -468,6 +470,18 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <label>Police de caractères</label>
+          <select id="fontSelect" onchange="updateFont(this.value)"
+            style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); font-size:0.95rem; cursor:pointer;">
+            <option value="Inter" style="font-family:Inter;">Inter (Moderne)</option>
+            <option value="Roboto" style="font-family:Roboto;">Roboto (Classique)</option>
+            <option value="Merriweather" style="font-family:Merriweather;">Merriweather (Élégant)</option>
+            <option value="Playfair Display" style="font-family:'Playfair Display';">Playfair Display (Sophistiqué)
+            </option>
+          </select>
+        </div>
+
         <div class="form-group" style="padding:15px; background:#f8fafc; border-radius:8px;">
           <label>Photo de profil</label>
           <div style="display:flex; align-items:center; gap:15px;">
@@ -628,6 +642,20 @@
           <button class="btn btn-accent" style="font-size: 1.2rem; padding: 15px 40px;"
             onclick="exportPDF()">Télécharger en PDF</button>
           <button class="btn btn-outline" onclick="goToStep(1)">Modifier l'apparence</button>
+
+          <div
+            style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%; text-align:center;">
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">Sauvegarde locale</p>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn btn-outline" onclick="exportJSON()" style="font-size:0.9rem;">
+                <span style="margin-right:5px;">💾</span> Exporter JSON
+              </button>
+              <label class="btn btn-outline" style="font-size:0.9rem; cursor:pointer;">
+                <span style="margin-right:5px;">📂</span> Importer JSON
+                <input type="file" accept=".json" onchange="importJSON(event)" style="display:none;">
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -646,6 +674,7 @@
       templateId: 'modern',
       themeColor: '#ffcc00',
       themeTextColor: '#1a252f',
+      fontFamily: 'Inter',
       photoBase64: '',
       showPhoto: true,
       firstName: 'Nelly',
@@ -764,6 +793,12 @@
       return (yiq >= 128) ? '#1a252f' : '#ffffff';
     }
 
+    function updateFont(fontFamily) {
+      cvData.fontFamily = fontFamily;
+      saveToLocal();
+      updatePreview();
+    }
+
     function setTemplate(id) {
       cvData.templateId = id;
       document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
@@ -809,6 +844,13 @@
 
       updateThemeColor(cvData.themeColor || '#ffcc00');
       setTemplate(cvData.templateId || 'modern');
+
+      // Initialize font selector
+      const fontSelect = document.getElementById('fontSelect');
+      if (fontSelect && cvData.fontFamily) {
+        fontSelect.value = cvData.fontFamily;
+      }
+
       renderPalettes();
 
       renderExperiences();
@@ -962,7 +1004,7 @@
       // MODERN TEMPLATE (SIDEBAR)
       if (cvData.templateId === 'modern') {
         preview.innerHTML = `
-          <div class="cv-a4" id="a4-content">
+          <div class="cv-a4" id="a4-content" style="font-family:'${cvData.fontFamily}', sans-serif;">
               <div class="p-sidebar" style="background:${colorVar}; box-shadow: inset 0 0 0 1000px ${colorVar}; color:${contrastColor};">
                   ${photoHTML}
                   <section style="margin-bottom: 25px;">
@@ -1034,18 +1076,24 @@
       }
       // CLASSIC TEMPLATE (SINGLE COLUMN)
       else {
+        const iconLocation = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
+        const iconPhone = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`;
+        const iconMail = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`;
+
         preview.innerHTML = `
-          <div class="cv-a4" style="flex-direction:column; padding:40px 50px;">
+          <div class="cv-a4" style="flex-direction:column; padding:40px 50px; font-family:'${cvData.fontFamily}', sans-serif;">
               <header style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px; border-bottom:4px solid ${colorVar}; padding-bottom:20px;">
                   <div>
                       <h1 style="font-size:2.5rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">${cvData.firstName} <span style="color:${colorVar};">${cvData.lastName}</span></h1>
-                      <div style="font-size:0.9rem; color:#64748b; display:flex; gap:15px; flex-wrap:wrap;">
-                          <span>📍 ${cvData.address}</span>
-                          <span>📞 ${cvData.phone}</span>
-                          <span>✉️ ${cvData.email}</span>
+                      <div style="font-size:0.9rem; color:#64748b; display:flex; gap:15px; flex-wrap:wrap; align-items:center;">
+                          <span style="display:flex; align-items:center; gap:5px;">${iconLocation} ${cvData.address}</span>
+                          <span style="display:flex; align-items:center; gap:5px;">${iconPhone} ${cvData.phone}</span>
+                          <span style="display:flex; align-items:center; gap:5px;">${iconMail} ${cvData.email}</span>
                       </div>
                   </div>
                   ${(cvData.showPhoto && cvData.photoBase64) ? `<img src="${cvData.photoBase64}" style="width:100px; height:100px; border-radius:8px; object-fit:cover; border:2px solid ${colorVar};">` : ''}
+              </header>
+
               </header>
 
               <section style="margin-bottom:25px;">
@@ -1090,6 +1138,36 @@
     }
 
     function exportPDF() { window.print(); }
+
+    function exportJSON() {
+      const dataStr = JSON.stringify(cvData, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `cv_${cvData.firstName || 'mon'}_${cvData.lastName || 'cv'}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          cvData = { ...cvData, ...imported };
+          saveToLocal();
+          initForm();
+          alert('CV importé avec succès !');
+        } catch (err) {
+          alert('Erreur lors de l\'import : fichier JSON invalide.');
+        }
+      };
+      reader.readAsText(file);
+    }
 
     // Init
     loadFromLocal();
