@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de CV Ultra-Simple</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a252f;
+      --accent: #ffcc00;
+      /* Dynamic */
+      --accent-dark: color-mix(in srgb, var(--accent), black 20%);
+      --sidebar-bg: var(--accent);
+      --sidebar-text: #2c3e50;
+      --bg-page: #f0f2f5;
+      --bg-card: #ffffff;
+      --text-main: #2c3e50;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Navigation */
+    .top-nav {
+      height: 70px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo span {
+      color: var(--accent-dark);
+    }
+
+    .steps-nav {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .step-pill {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: var(--bg-page);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .step-pill.active {
+      background: var(--accent);
+      color: var(--primary);
+      box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
+    }
+
+    .step-pill.completed {
+      background: #e1fdf0;
+      color: #10b981;
+    }
+
+    /* Main Layout */
+    .builder-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Form Pane */
+    .form-pane {
+      padding: 40px;
+      overflow-y: auto;
+      background: white;
+      border-right: 1px solid var(--border);
+    }
+
+    .step-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 30px;
+    }
+
+    .section-header h2 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent-dark);
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    /* Preview Pane */
+    .preview-pane {
+      background: var(--bg-page);
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .cv-preview {
+      width: 21cm;
+      min-height: 29.7cm;
+      background: white;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transform: scale(0.7);
+      transform-origin: top center;
+    }
+
+    /* Nested CV Template CSS (The one we built) */
+    .cv-a4 {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      background: #fff;
+    }
+
+    .p-sidebar {
+      width: 33%;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      padding: 30px 20px;
+    }
+
+    .p-main {
+      width: 67%;
+      padding: 30px 35px;
+    }
+
+    .p-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    .p-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      border-bottom: 2px solid #eee;
+      margin-bottom: 12px;
+      padding-bottom: 3px;
+      color: var(--accent-dark);
+    }
+
+    /* Helper for dynamic lists in form */
+    .dynamic-item {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #ef4444;
+      background: #fee2e2;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .template-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .template-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .template-card.active {
+      border-color: var(--accent-dark);
+      background: #fffbeb;
+    }
+
+    .template-card img {
+      width: 100%;
+      height: 120px;
+      background: #f1f5f9;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      object-fit: contain;
+    }
+
+    .photo-preview-form {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #f1f5f9;
+      margin-top: 10px;
+      border: 2px solid var(--border);
+    }
+
+    /* Print optimization */
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      .top-nav,
+      .form-pane,
+      .nav-buttons,
+      .print-btn {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        margin: 0;
+        padding: 0;
+      }
+
+      .preview-pane {
+        padding: 0 !important;
+        background: white !important;
+        overflow: visible !important;
+      }
+
+      .cv-preview {
+        transform: none !important;
+        width: 21cm !important;
+        height: 29.7cm !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        border: none !important;
+      }
+
+      /* Force background colors for PDF printers */
+      [style*="background"] {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="top-nav">
+    <div class="logo">CV <span>MAMAN</span></div>
+    <div class="steps-nav" id="stepsNav">
+      <div class="step-pill active" data-step="1" onclick="goToStep(1)">1. Apparence</div>
+      <div class="step-pill" data-step="2" onclick="goToStep(2)">2. Coordonnées</div>
+      <div class="step-pill" data-step="3" onclick="goToStep(3)">3. Expériences</div>
+      <div class="step-pill" data-step="4" onclick="goToStep(4)">4. Formation</div>
+      <div class="step-pill" data-step="5" onclick="goToStep(5)">5. Compétences</div>
+      <div class="step-pill" data-step="6" onclick="goToStep(6)">6. Autres</div>
+      <div class="step-pill" data-step="7" onclick="goToStep(7)">7. Export</div>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <input type="color" id="globalThemeColor" value="#ffcc00"
+        style="width:40px; height:40px; border:none; border-radius:50%; cursor:pointer;"
+        oninput="updateThemeColor(this.value)">
+      <button class="btn btn-accent" onclick="exportPDF()">Exporter PDF</button>
+    </div>
+  </nav>
+
+  <div class="builder-layout">
+    <!-- Form Pane -->
+    <div class="form-pane">
+      <!-- Step 1: Apparence & Modèle -->
+      <div id="step-1" class="step-content">
+        <div class="section-header">
+          <h2>Apparence & Modèle</h2>
+          <p>Choisissez le style de votre CV et personnalisez-le.</p>
+        </div>
+
+        <label>Modèle de CV</label>
+        <div class="template-selector">
+          <div class="template-card active" id="tpl-modern" onclick="setTemplate('modern')">
+            <div
+              style="height:100px; background:linear-gradient(to right, #ffcc00 35%, #eee 35%); border-radius:4px; margin-bottom:8px;">
+            </div>
+            <strong>Moderne</strong>
+            <p style="font-size:0.7rem; color:var(--text-muted)">Avec barre latérale</p>
+          </div>
+          <div class="template-card" id="tpl-classic" onclick="setTemplate('classic')">
+            <div
+              style="height:100px; background:#eee; border-radius:4px; margin-bottom:8px; display:flex; flex-direction:column; gap:8px; padding:10px;">
+              <div style="height:10px; background:#ddd; width:40%;"></div>
+              <div style="height:40px; background:#ddd; width:100%;"></div>
+            </div>
+            <strong>Classique</strong>
+            <p style="font-size:0.7rem; color:var(--text-muted)">Une seule colonne</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Couleur du thème</label>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input type="color" id="themeColorInput" value="#ffcc00" oninput="updateThemeColor(this.value)"
+              style="width:100%; height:45px;">
+          </div>
+        </div>
+
+        <div class="form-group" style="padding:15px; background:#f8fafc; border-radius:8px;">
+          <label>Photo de profil</label>
+          <div style="display:flex; align-items:center; gap:15px;">
+            <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload(event)"
+              style="font-size:0.8rem;">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <img id="photoPreview" class="photo-preview-form" src="" style="display:none;">
+              <label
+                style="margin-top:5px; font-weight:400; font-size:0.75rem; display:flex; align-items:center; gap:5px;">
+                <input type="checkbox" id="showPhotoToggle" checked
+                  onchange="cvData.showPhoto=this.checked; updatePreview()"> Afficher
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <div></div>
+          <button class="btn btn-primary" onclick="goToStep(2)">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Coordonnées -->
+      <div id="step-2" class="step-content" style="display: none;">
+        <div class="section-header">
+          <h2>Vos Coordonnées</h2>
+          <p>Commençons par le plus important : comment vous contacter.</p>
+        </div>
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" id="firstName" placeholder="Nelly" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" id="lastName" placeholder="YGRIE" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Adresse</label>
+          <input type="text" id="address" placeholder="56340 PLOUHARNEL" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="text" id="phone" placeholder="06 26 54 98 09" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="votre@email.com" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Accroche / Profil</label>
+          <textarea id="profileText" rows="4" placeholder="Quelques mots sur vous..."
+            oninput="updatePreview()"></textarea>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn btn-outline" onclick="goToStep(1)">Retour</button>
+          <button class="btn btn-primary" onclick="goToStep(3)">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Expériences -->
+      <div id="step-3" class="step-content" style="display: none;">
+        <div class="section-header">
+          <h2>Expériences Professionnelles</h2>
+          <p>Ajoutez vos postes en commençant par le plus récent.</p>
+        </div>
+        <div id="exp-container"></div>
+        <button class="btn btn-accent" style="width: 100%; margin-top: 10px;" onclick="addExperience()">+ Ajouter une
+          expérience</button>
+
+        <div class="nav-buttons">
+          <button class="btn btn-outline" onclick="goToStep(2)">Retour</button>
+          <button class="btn btn-primary" onclick="goToStep(4)">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Formation -->
+      <div id="step-4" class="step-content" style="display: none;">
+        <div class="section-header">
+          <h2>Formation</h2>
+          <p>Diplômes, certifications ou formations suivies.</p>
+        </div>
+        <div id="edu-container"></div>
+        <button class="btn btn-accent" style="width: 100%; margin-top: 10px;" onclick="addEducation()">+ Ajouter une
+          formation</button>
+
+        <div class="nav-buttons">
+          <button class="btn btn-outline" onclick="goToStep(3)">Retour</button>
+          <button class="btn btn-primary" onclick="goToStep(5)">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 5: Compétences & Langues -->
+      <div id="step-5" class="step-content" style="display: none;">
+        <div class="section-header">
+          <h2>Compétences & Langues</h2>
+          <p>Vos savoir-faire et langues maîtrisées.</p>
+        </div>
+
+        <label>Compétences (une par ligne)</label>
+        <textarea id="skillsInput" rows="5" placeholder="Accueil client&#10;Gestion de caisse&#10;..."
+          oninput="updatePreview()"></textarea>
+
+        <div style="margin-top: 30px;">
+          <label>Langues</label>
+          <div id="lang-container"></div>
+          <button class="btn btn-accent" style="width: 100%; margin-top: 10px;" onclick="addLanguage()">+ Ajouter une
+            langue</button>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn btn-outline" onclick="goToStep(4)">Retour</button>
+          <button class="btn btn-primary" onclick="goToStep(6)">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 6: Autres -->
+      <div id="step-6" class="step-content" style="display: none;">
+        <div class="section-header">
+          <h2>Infos Complémentaires</h2>
+          <p>Centres d'intérêt, informations personnelles ou permis.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Mobilité (Permis, véhicule...)</label>
+          <input type="text" id="mobility" placeholder="Permis B + véhicule" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Disponibilité</label>
+          <input type="text" id="dispo" placeholder="Dès maintenant" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Centres d'intérêt (un par ligne)</label>
+          <textarea id="interestsInput" rows="4" placeholder="Cuisine&#10;Randonnée&#10;..."
+            oninput="updatePreview()"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Personnel (Ex: 2005-2007: Présence parentale...)</label>
+          <textarea id="personalInput" rows="3" placeholder="Informations personnelles..."
+            oninput="updatePreview()"></textarea>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn btn-outline" onclick="goToStep(5)">Retour</button>
+          <button class="btn btn-primary" onclick="goToStep(7)">Finaliser</button>
+        </div>
+      </div>
+
+      <!-- Step 7: Export -->
+      <div id="step-7" class="step-content" style="display: none;">
+        <div class="section-header" style="text-align: center;">
+          <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+          <h2>Bravo ! Votre CV est prêt.</h2>
+          <p>Vérifiez le rendu à droite. Si tout est bon, exportez-le en PDF.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; margin-top: 40px;">
+          <button class="btn btn-accent" style="font-size: 1.2rem; padding: 15px 40px;"
+            onclick="exportPDF()">Télécharger en PDF</button>
+          <button class="btn btn-outline" onclick="goToStep(1)">Modifier l'apparence</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Pane -->
+    <div class="preview-pane">
+      <div class="cv-preview" id="cvPreview">
+        <!-- Template content injected here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data Structure
+    let cvData = {
+      templateId: 'modern',
+      themeColor: '#ffcc00',
+      photoBase64: '',
+      showPhoto: true,
+      firstName: 'Nelly',
+      lastName: 'YGRIE',
+      address: '56340 PLOUHARNEL',
+      phone: '06 26 54 98 09',
+      email: 'ygrienelly@gmail.com',
+      profileText: 'Professionnelle dotée de nombreuses années d\'expérience dans divers domaines, je suis dynamique et j\'ai un excellent sens du contact.',
+      mobility: 'Permis B + véhicule',
+      dispo: 'Dès maintenant',
+      experiences: [],
+      education: [],
+      skills: ['Accueil clients', 'Fidélisation des clients', 'Sens de l\'écoute active'],
+      languages: [{ name: 'Français : Langue maternelle', level: 100 }],
+      interests: ['Cuisine / cuisine du monde', 'Fitness / Yoga'],
+      personal: ['2005 - 2007 : Présence parentale auprès d\'un enfant handicapé']
+    };
+
+    // UI Logic
+    function goToStep(step) {
+      document.querySelectorAll('.step-content').forEach(s => s.style.display = 'none');
+      document.getElementById(`step-${step}`).style.display = 'block';
+      document.querySelectorAll('.step-pill').forEach(p => {
+        p.classList.remove('active');
+        if (parseInt(p.dataset.step) === step) p.classList.add('active');
+        if (parseInt(p.dataset.step) < step) p.classList.add('completed');
+      });
+      document.querySelector('.form-pane').scrollTo(0, 0);
+    }
+
+    // Theme & Template Logic
+    let themeSaveTimeout;
+    function updateThemeColor(color) {
+      cvData.themeColor = color;
+
+      // 1. Instant Visual Update (CSS Variables)
+      // We update the variables directly on the body for maximum performance
+      document.documentElement.style.setProperty('--accent', color);
+      document.documentElement.style.setProperty('--sidebar-bg', color);
+
+      // 2. Synchronization of inputs (No event trigger)
+      const gInput = document.getElementById('globalThemeColor');
+      const tInput = document.getElementById('themeColorInput');
+      if (gInput.value !== color) gInput.value = color;
+      if (tInput.value !== color) tInput.value = color;
+
+      // 3. Debounced Saving (Prevents lag)
+      clearTimeout(themeSaveTimeout);
+      themeSaveTimeout = setTimeout(() => {
+        saveToLocal();
+      }, 500);
+    }
+
+    function setTemplate(id) {
+      cvData.templateId = id;
+      document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
+      document.getElementById(`tpl-${id}`).classList.add('active');
+      updatePreview();
+    }
+
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          cvData.photoBase64 = e.target.result;
+          document.getElementById('photoPreview').src = e.target.result;
+          document.getElementById('photoPreview').style.display = 'block';
+          updatePreview();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Form Management
+    function initForm() {
+      loadFromLocal();
+
+      document.getElementById('firstName').value = cvData.firstName;
+      document.getElementById('lastName').value = cvData.lastName;
+      document.getElementById('address').value = cvData.address;
+      document.getElementById('phone').value = cvData.phone;
+      document.getElementById('email').value = cvData.email;
+      document.getElementById('profileText').value = cvData.profileText;
+      document.getElementById('mobility').value = cvData.mobility;
+      document.getElementById('dispo').value = cvData.dispo;
+      document.getElementById('skillsInput').value = cvData.skills.join('\n');
+      document.getElementById('interestsInput').value = cvData.interests.join('\n');
+      document.getElementById('personalInput').value = (cvData.personal || []).join('\n');
+      document.getElementById('showPhotoToggle').checked = cvData.showPhoto;
+
+      if (cvData.photoBase64) {
+        document.getElementById('photoPreview').src = cvData.photoBase64;
+        document.getElementById('photoPreview').style.display = 'block';
+      }
+
+      updateThemeColor(cvData.themeColor || '#ffcc00');
+      setTemplate(cvData.templateId || 'modern');
+
+      renderExperiences();
+      renderEducation();
+      renderLanguages();
+      updatePreview();
+    }
+
+    function updatePreview() {
+      cvData.firstName = document.getElementById('firstName').value;
+      cvData.lastName = document.getElementById('lastName').value;
+      cvData.address = document.getElementById('address').value;
+      cvData.phone = document.getElementById('phone').value;
+      cvData.email = document.getElementById('email').value;
+      cvData.profileText = document.getElementById('profileText').value;
+      cvData.mobility = document.getElementById('mobility').value;
+      cvData.dispo = document.getElementById('dispo').value;
+      cvData.skills = document.getElementById('skillsInput').value.split('\n').filter(s => s.trim() !== '');
+      cvData.interests = document.getElementById('interestsInput').value.split('\n').filter(s => s.trim() !== '');
+      cvData.personal = document.getElementById('personalInput').value.split('\n').filter(s => s.trim() !== '');
+
+      saveToLocal();
+      renderTemplate();
+    }
+
+    // Dynamic Lists
+    function addExperience() {
+      cvData.experiences.push({ title: '', company: '', date: '', details: '' });
+      renderExperiences();
+      updatePreview();
+    }
+
+    function renderExperiences() {
+      const container = document.getElementById('exp-container');
+      container.innerHTML = '';
+      cvData.experiences.forEach((exp, index) => {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+                    <button class="remove-btn" onclick="removeExp(${index})">✕</button>
+                    <div class="form-group"><label>Poste</label><input type="text" value="${exp.title}" oninput="cvData.experiences[${index}].title=this.value; updatePreview()"></div>
+                    <div class="form-group"><label>Entreprise / Lieu</label><input type="text" value="${exp.company}" oninput="cvData.experiences[${index}].company=this.value; updatePreview()"></div>
+                    <div class="form-group"><label>Dates (ex: 2020 - 2024)</label><input type="text" value="${exp.date}" oninput="cvData.experiences[${index}].date=this.value; updatePreview()"></div>
+                    <div class="form-group"><label>Missions (une par ligne)</label><textarea oninput="cvData.experiences[${index}].details=this.value; updatePreview()">${exp.details}</textarea></div>
+                `;
+        container.appendChild(div);
+      });
+    }
+
+    function removeExp(index) { cvData.experiences.splice(index, 1); renderExperiences(); updatePreview(); }
+
+    function addEducation() {
+      cvData.education.push({ year: '', title: '', location: '' });
+      renderEducation();
+      updatePreview();
+    }
+
+    function renderEducation() {
+      const container = document.getElementById('edu-container');
+      container.innerHTML = '';
+      cvData.education.forEach((edu, index) => {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+                    <button class="remove-btn" onclick="removeEdu(${index})">✕</button>
+                    <div class="form-group"><label>Année</label><input type="text" value="${edu.year}" oninput="cvData.education[${index}].year=this.value; updatePreview()"></div>
+                    <div class="form-group"><label>Diplôme / Formation</label><input type="text" value="${edu.title}" oninput="cvData.education[${index}].title=this.value; updatePreview()"></div>
+                    <div class="form-group"><label>Lycée / Centre de formation</label><input type="text" value="${edu.location}" oninput="cvData.education[${index}].location=this.value; updatePreview()"></div>
+                `;
+        container.appendChild(div);
+      });
+    }
+
+    function removeEdu(index) { cvData.education.splice(index, 1); renderEducation(); updatePreview(); }
+
+    function addLanguage() {
+      cvData.languages.push({ name: '', level: 50 });
+      renderLanguages();
+      updatePreview();
+    }
+
+    function renderLanguages() {
+      const container = document.getElementById('lang-container');
+      container.innerHTML = '';
+      cvData.languages.forEach((lang, index) => {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+                    <button class="remove-btn" onclick="removeLang(${index})">✕</button>
+                    <div class="form-group"><label>Langue & Niveau (ex: Anglais : Intermédiaire)</label><input type="text" value="${lang.name}" oninput="cvData.languages[${index}].name=this.value; updatePreview()"></div>
+                    <div class="form-group"><label>Barre de progression (%)</label><input type="range" min="0" max="100" value="${lang.level}" oninput="cvData.languages[${index}].level=this.value; updatePreview()"></div>
+                `;
+        container.appendChild(div);
+      });
+    }
+
+    function removeLang(index) { cvData.languages.splice(index, 1); renderLanguages(); updatePreview(); }
+
+    // Local Storage
+    function saveToLocal() { localStorage.setItem('maman_cv_builder_data', JSON.stringify(cvData)); }
+    function loadFromLocal() {
+      const saved = localStorage.getItem('maman_cv_builder_data');
+      if (saved) { cvData = JSON.parse(saved); }
+    }
+
+    // FULL RENDERING ENGINE (THE TEMPLATE)
+    function renderTemplate() {
+      const preview = document.getElementById('cvPreview');
+      const colorVar = 'var(--accent)';
+      const accentMixed = `color-mix(in srgb, ${colorVar}, transparent 85%)`;
+      const contrastColor = '#2c3e50';
+
+      // Shared HTML Snippets
+      const photoHTML = (cvData.showPhoto && cvData.photoBase64) ?
+        `<div style="text-align:center; margin-bottom:20px;">
+          <img src="${cvData.photoBase64}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid white; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+        </div>` : '';
+
+      const expHTML = cvData.experiences.map(exp => `
+                <div style="position: relative; padding-left: 20px; margin-bottom: 15px; border-left: 2px solid #ecf0f1;">
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+                        <span style="font-weight:700; font-size:1rem; color: #1a252f;">${exp.title || '(Poste)'}</span>
+                        <span style="font-size:0.8rem; font-weight:600; color:${colorVar}; background:${accentMixed}; padding:2px 8px; border-radius:10px;">${exp.date || 'Dates'}</span>
+                    </div>
+                    <div style="font-weight:600; font-size:0.9rem; margin-bottom:5px;">${exp.company || 'Entreprise'}</div>
+                    <ul style="list-style:none; padding-left:0;">
+                        ${exp.details.split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8rem; margin-bottom:1px; position:relative; padding-left:15px;">
+                            <span style="position:absolute; left:0; color:${colorVar};">•</span> ${d}
+                        </li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
+      const eduHTML = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px 15px;">` +
+        cvData.education.map(edu => `
+                <div>
+                    <p style="font-weight:700; color:${colorVar}; font-size:0.8rem;">${edu.year || 'Année'}</p>
+                    <p style="font-weight:500; font-size:0.8rem; color:#1a252f; margin:1px 0;">${edu.title || '(Diplôme)'}</p>
+                    <p style="font-size:0.75rem; color:#7f8c8d;">${edu.location || 'Lieu'}</p>
+                </div>
+            `).join('') + `</div>`;
+
+      const langHTML = cvData.languages.map(lang => `
+                <div style="margin-bottom:10px;">
+                    <span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:4px;">${lang.name}</span>
+                    <div style="width:100%; height:6px; background:rgba(0,0,0,0.1); border-radius:3px; overflow:hidden;">
+                        <div style="width:${lang.level}%; height:100%; background:${cvData.templateId === 'modern' ? contrastColor : colorVar}; border-radius:3px;"></div>
+                    </div>
+                </div>
+            `).join('');
+
+      // MODERN TEMPLATE (SIDEBAR)
+      if (cvData.templateId === 'modern') {
+        preview.innerHTML = `
+          <div class="cv-a4" id="a4-content">
+              <div class="p-sidebar" style="background:${colorVar}; box-shadow: inset 0 0 0 1000px ${colorVar};">
+                  ${photoHTML}
+                  <section style="margin-bottom: 25px;">
+                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Coordonnées</h2>
+                      <div style="margin-bottom:12px;">
+                          <p style="font-size:0.7rem; color:rgba(0,0,0,0.5); text-transform:uppercase; font-weight:700;">Adresse</p>
+                          <p style="font-size:0.85rem;">${cvData.address}</p>
+                      </div>
+                      <div style="margin-bottom:12px;">
+                          <p style="font-size:0.7rem; color:rgba(0,0,0,0.5); text-transform:uppercase; font-weight:700;">Téléphone</p>
+                          <p style="font-size:0.85rem;">${cvData.phone}</p>
+                      </div>
+                      <div style="margin-bottom:12px;">
+                          <p style="font-size:0.7rem; color:rgba(0,0,0,0.5); text-transform:uppercase; font-weight:700;">Email</p>
+                          <p style="font-size:0.85rem;">${cvData.email}</p>
+                      </div>
+                      ${cvData.mobility ? `<div style="margin-bottom:12px;"><p style="font-size:0.7rem; color:rgba(0,0,0,0.5); text-transform:uppercase; font-weight:700;">Mobilité</p><p style="font-size:0.85rem;">${cvData.mobility}</p></div>` : ''}
+                      ${cvData.dispo ? `<div style="margin-bottom:12px;"><p style="font-size:0.7rem; color:rgba(0,0,0,0.5); text-transform:uppercase; font-weight:700;">Disponibilité</p><p style="font-size:0.85rem;">${cvData.dispo}</p></div>` : ''}
+                  </section>
+
+                  <section style="margin-bottom: 25px;">
+                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Compétences</h2>
+                      <ul style="list-style:none;">
+                          ${cvData.skills.map(s => `<li style="font-size:0.85rem; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                      </ul>
+                  </section>
+
+                  <section style="margin-bottom: 25px;">
+                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Langues</h2>
+                      ${langHTML}
+                  </section>
+
+                  <section style="margin-bottom: 25px;">
+                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Intérêts</h2>
+                      <ul style="list-style:none;">
+                          ${cvData.interests.map(s => `<li style="font-size:0.85rem; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                      </ul>
+                  </section>
+
+                  ${cvData.personal.length ? `
+                  <section>
+                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Personnel</h2>
+                      <ul style="list-style:none;">
+                          ${cvData.personal.map(s => `<li style="font-size:0.85rem; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                      </ul>
+                  </section>` : ''}
+              </div>
+              <div class="p-main">
+                  <header style="margin-bottom:30px;">
+                      <h1 style="font-size:2.2rem; font-weight:700; text-transform:uppercase; color:#1a252f;"><span style="font-weight:300; color:${colorVar};">${cvData.firstName}</span> ${cvData.lastName}</h1>
+                  </header>
+                  
+                  <section style="margin-bottom:30px;">
+                      <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Profil</h3>
+                      <p style="font-size:0.9rem; text-align:justify; line-height:1.5; color:#2c3e50;">${cvData.profileText}</p>
+                  </section>
+
+                  <section style="margin-bottom:30px;">
+                      <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Parcours Professionnel</h3>
+                      ${expHTML}
+                  </section>
+
+                  <section>
+                      <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Formation</h3>
+                      ${eduHTML}
+                  </section>
+              </div>
+          </div>`;
+      }
+      // CLASSIC TEMPLATE (SINGLE COLUMN)
+      else {
+        preview.innerHTML = `
+          <div class="cv-a4" style="flex-direction:column; padding:40px 50px;">
+              <header style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px; border-bottom:4px solid ${colorVar}; padding-bottom:20px;">
+                  <div>
+                      <h1 style="font-size:2.5rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">${cvData.firstName} <span style="color:${colorVar};">${cvData.lastName}</span></h1>
+                      <div style="font-size:0.9rem; color:#64748b; display:flex; gap:15px; flex-wrap:wrap;">
+                          <span>📍 ${cvData.address}</span>
+                          <span>📞 ${cvData.phone}</span>
+                          <span>✉️ ${cvData.email}</span>
+                      </div>
+                  </div>
+                  ${(cvData.showPhoto && cvData.photoBase64) ? `<img src="${cvData.photoBase64}" style="width:100px; height:100px; border-radius:8px; object-fit:cover; border:2px solid ${colorVar};">` : ''}
+              </header>
+
+              <section style="margin-bottom:25px;">
+                  <h3 style="font-size:1.2rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+                    <span style="width:30px; height:2px; background:${colorVar};"></span> Profil
+                  </h3>
+                  <p style="font-size:0.95rem; line-height:1.6; color:#2c3e50;">${cvData.profileText}</p>
+              </section>
+
+              <div style="display:grid; grid-template-columns: 2fr 1fr; gap:40px;">
+                  <div class="left-col">
+                      <section style="margin-bottom:30px;">
+                          <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; border-left:4px solid ${colorVar}; padding-left:10px;">Expériences</h3>
+                          ${expHTML}
+                      </section>
+                      <section>
+                          <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; border-left:4px solid ${colorVar}; padding-left:10px;">Formation</h3>
+                          ${eduHTML}
+                      </section>
+                  </div>
+                  <div class="right-col">
+                      <section style="margin-bottom:25px;">
+                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Compétences</h3>
+                          <ul style="list-style:none; font-size:0.85rem;">
+                              ${cvData.skills.map(s => `<li style="margin-bottom:6px; background:#f8fafc; padding:4px 10px; border-radius:4px; border-left:2px solid ${colorVar};">${s}</li>`).join('')}
+                          </ul>
+                      </section>
+                      <section style="margin-bottom:25px;">
+                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Langues</h3>
+                          ${langHTML}
+                      </section>
+                      <section>
+                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Intérêts</h3>
+                          <div style="display:flex; flex-wrap:wrap; gap:5px;">
+                              ${cvData.interests.map(s => `<span style="font-size:0.75rem; background:#eee; padding:3px 8px; border-radius:12px;">${s}</span>`).join('')}
+                          </div>
+                      </section>
+                  </div>
+              </div>
+          </div>`;
+      }
+    }
+
+    function exportPDF() { window.print(); }
+
+    // Init
+    loadFromLocal();
+    initForm();
+  </script>
+</body>
+
+</html>
