@@ -1662,10 +1662,10 @@
           linkedin: `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>`
         };
 
-        const sectionHeader = (title) => `
-          <div style="display:flex; align-items:center; margin-bottom:15px; margin-top:10px;">
+        const sectionHeader = (title, isFirst = false) => `
+          <div style="display:flex; align-items:center; margin-bottom:12px; margin-top:${isFirst ? '0' : '20px'};">
             <h2 style="font-size:1.4em; font-weight:700; color:${colorVar}; margin-right:12px; white-space:nowrap; text-transform:none;">${title}</h2>
-            <div style="flex-grow:1; height:1.5px; background:#444; margin-top:5px;"></div>
+            <div style="flex-grow:1; height:1px; background:#666; margin-top:5px;"></div>
           </div>
         `;
 
@@ -1686,14 +1686,14 @@
                   </div>
               </header>
 
-              <section style="margin-bottom:10px;">
-                ${sectionHeader('Profil')}
+              <section style="margin-bottom:0;">
+                ${sectionHeader('Profil', true)}
                 <p style="font-size:0.9em; color:#000; line-height:${cvData.lineHeight || '1.4'}; text-align:justify;">${cvData.profileText}</p>
               </section>
 
-              <section style="margin-bottom:10px;">
+              <section style="margin-bottom:0;">
                 ${sectionHeader('Compétences')}
-                <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; flex-direction:column; gap:8px;">
                   ${cvData.skills.map(s => {
           const parts = s.split(':');
           if (parts.length > 1) {
@@ -1707,15 +1707,16 @@
                 </div>
               </section>
 
-              <section style="margin-bottom:10px;">
+              <section style="margin-bottom:0;">
                 ${sectionHeader('Expérience professionnelle')}
-                ${cvData.experiences.map(exp => {
+                ${cvData.experiences.map((exp, index) => {
           const companyParts = (exp.company || '').split('—');
           const mainCompany = companyParts[0].trim();
           const subCompany = companyParts.length > 1 ? companyParts[1].trim() : '';
+          const isLast = index === cvData.experiences.length - 1;
 
           return `
-                  <div style="margin-bottom:25px;">
+                  <div style="margin-bottom:${isLast ? '0' : '20px'};">
                     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1px;">
                       <span style="font-weight:700; font-size:1.05em; color:#000;">${mainCompany}${subCompany ? ` — <span style="font-weight:600;">${subCompany}</span>` : ''}</span>
                       <span style="font-size:0.9em; color:${colorVar}; font-weight:500; font-style:italic;">${exp.location || ''}</span>
@@ -1735,10 +1736,12 @@
                 `}).join('')}
               </section>
 
-              <section style="margin-bottom:10px;">
+              <section style="margin-bottom:0;">
                 ${sectionHeader('Formation')}
-                ${cvData.education.map(edu => `
-                  <div style="margin-bottom:20px;">
+                ${cvData.education.map((edu, index) => {
+            const isLast = index === cvData.education.length - 1;
+            return `
+                  <div style="margin-bottom:${isLast ? '0' : '15px'};">
                     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1px;">
                       <span style="font-weight:700; font-size:1.05em; color:#000;">${edu.location}</span>
                       <span style="font-size:0.9em; color:${colorVar}; font-weight:500; font-style:italic;">${edu.city || ''}</span>
@@ -1757,26 +1760,26 @@
                     </ul>
                     ` : ''}
                   </div>
-                `).join('')}
+                `}).join('')}
               </section>
 
-              <section style="margin-bottom:10px;">
+              <section style="margin-bottom:0;">
                 ${sectionHeader('Centres d’intérêt')}
                 <div style="display:flex; flex-direction:column; gap:8px;">
                   ${cvData.interests.map(s => {
-            const parts = s.split(':');
-            if (parts.length > 1) {
-              return `<div style="display:flex; font-size:0.95em;">
+              const parts = s.split(':');
+              if (parts.length > 1) {
+                return `<div style="display:flex; font-size:0.95em;">
                         <span style="min-width:130px; font-weight:700; text-align:right; margin-right:15px; color:#000;">${parts[0].trim()}</span>
                         <span style="color:#333;">${parts.slice(1).join(':').trim()}</span>
                       </div>`;
-            }
-            return `<div style="font-size:0.95em; margin-left:145px; color:#333;">${s.trim()}</div>`;
-          }).join('')}
+              }
+              return `<div style="font-size:0.95em; margin-left:145px; color:#333;">${s.trim()}</div>`;
+            }).join('')}
                 </div>
               </section>
 
-              <section>
+              <section style="margin-bottom:0;">
                 ${sectionHeader('Langues')}
                 <div style="display:flex; flex-direction:column; gap:8px;">
                   ${cvData.languages.map(l => `
