@@ -587,6 +587,36 @@
             <strong>Expert</strong>
             <p style="font-size:0.7rem; color:var(--text-muted)">Technique & Académique</p>
           </div>
+          <div class="template-card" id="tpl-creative" onclick="setTemplate('creative')">
+            <div
+              style="height:100px; background:#eee; border-radius:4px; margin-bottom:8px; position:relative; overflow:hidden;">
+              <div
+                style="position:absolute; top:0; left:0; right:0; height:15px; background:var(--accent); opacity:0.6;">
+              </div>
+              <div style="padding:20px 8px 8px 8px;">
+                <div style="height:8px; background:#ddd; width:60%; margin-bottom:8px;"></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
+                  <div style="background:#ddd; height:40px; border-radius:3px;"></div>
+                  <div style="background:#f5f5f5; height:40px; border-radius:3px; border:1px dashed #ddd;"></div>
+                </div>
+              </div>
+            </div>
+            <strong>Créatif</strong>
+            <p style="font-size:0.7rem; color:var(--text-muted)">Asymétrique & Dynamique</p>
+          </div>
+          <div class="template-card" id="tpl-executive" onclick="setTemplate('executive')">
+            <div
+              style="height:100px; background:#eee; border-radius:4px; margin-bottom:8px; display:flex; flex-direction:column; align-items:center; padding:10px; gap:4px;">
+              <div style="height:6px; width:50%; background:#7f8c8d; border-radius:3px;"></div>
+              <div style="height:4px; width:30%; background:var(--accent); border-radius:2px;"></div>
+              <div style="height:1px; background:#cbd5e1; width:100%; margin:4px 0;"></div>
+              <div style="height:2px; width:90%; background:#ddd;"></div>
+              <div style="height:2px; width:90%; background:#ddd;"></div>
+              <div style="height:2px; width:90%; background:#ddd;"></div>
+            </div>
+            <strong>Exécutif</strong>
+            <p style="font-size:0.7rem; color:var(--text-muted)">Sobre & Prestigieux</p>
+          </div>
         </div>
 
         <div class="form-group">
@@ -742,7 +772,8 @@
           <textarea id="profileText" rows="4" placeholder="Quelques mots sur vous..."
             oninput="updatePreview(); autoResize(this)"></textarea>
           <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Astuce : utilisez
-            <strong>**texte**</strong> pour mettre en gras.</p>
+            <strong>**texte**</strong> pour mettre en gras.
+          </p>
         </div>
 
         <div class="nav-buttons">
@@ -1803,6 +1834,156 @@
                   `).join('')}
                 </div>
               </section>
+          </div>`;
+      }
+      // CREATIVE TEMPLATE (Right Sidebar, Bold Header)
+      else if (cvData.templateId === 'creative') {
+        const sideColor = `color-mix(in srgb, ${colorVar}, black 5%)`;
+        preview.innerHTML = `
+          <div class="cv-a4" style="flex-direction:column; font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:${cvData.lineHeight || '1.4'}; color:#333; gap:0; background:#fff;">
+              <header style="background:${colorVar}; color:${contrastColor}; padding:40px 50px; display:flex; justify-content:space-between; align-items:center;">
+                  <div style="flex:1;">
+                      <h1 style="font-size:2.8em; font-weight:900; margin:0; line-height:1; letter-spacing:-1px;">${cvData.firstName} ${cvData.lastName}</h1>
+                      ${cvData.jobTitle ? `<p style="font-size:1.3em; margin-top:10px; opacity:0.9; font-weight:500;">${cvData.jobTitle}</p>` : ''}
+                  </div>
+                  ${photoHTML}
+              </header>
+
+              <div style="display:grid; grid-template-columns: 1fr 0.45fr; flex:1;">
+                  <div style="padding:40px 30px 40px 50px; border-right:1px solid #f1f5f9;">
+                      <section style="margin-bottom:30px;">
+                          <h2 style="font-size:1.2em; font-weight:800; color:${colorVar}; text-transform:uppercase; margin-bottom:15px; display:flex; align-items:center; gap:10px;">
+                              <span style="width:10px; height:10px; background:${colorVar}; border-radius:2px;"></span> Pofit personnel
+                          </h2>
+                          <p style="font-size:0.95em; text-align:justify; color:#444;">${h(cvData.profileText)}</p>
+                      </section>
+
+                      <section style="margin-bottom:30px;">
+                          <h2 style="font-size:1.2em; font-weight:800; color:${colorVar}; text-transform:uppercase; margin-bottom:15px; display:flex; align-items:center; gap:10px;">
+                              <span style="width:10px; height:10px; background:${colorVar}; border-radius:2px;"></span> Expérience professionnelle
+                          </h2>
+                          ${cvData.experiences.map(exp => `
+                              <div style="margin-bottom:20px;">
+                                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                      <h3 style="font-size:1.05em; font-weight:700; color:#1a252f; margin:0;">${exp.title}</h3>
+                                      <span style="font-size:0.85em; font-weight:600; color:#666;">${exp.date}</span>
+                                  </div>
+                                  <p style="font-size:0.9em; font-weight:700; color:${colorVar}; margin-bottom:8px;">${exp.company} | ${exp.location}</p>
+                                  <ul style="list-style:none; padding:0; margin:0;">
+                                      ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `
+                                          <li style="font-size:0.85em; margin-bottom:4px; position:relative; padding-left:15px; text-align:justify; color:#444;">
+                                              <span style="position:absolute; left:0; color:${colorVar}; font-weight:bold;">›</span> ${h(d)}
+                                          </li>
+                                      `).join('')}
+                                  </ul>
+                              </div>
+                          `).join('')}
+                      </section>
+                  </div>
+
+                  <div style="background:#fcfdfe; padding:40px 30px; display:flex; flex-direction:column; gap:30px;">
+                      <section>
+                          <h2 style="font-size:1em; font-weight:800; color:#1a252f; text-transform:uppercase; margin-bottom:15px; border-bottom:2px solid ${colorVar}; padding-bottom:5px;">Contact</h2>
+                          <div style="font-size:0.85em; display:flex; flex-direction:column; gap:8px; color:#555;">
+                              <p><strong>Tel:</strong> ${cvData.phone}</p>
+                              <p><strong>Mail:</strong> ${cvData.email}</p>
+                              <p><strong>Ville:</strong> ${cvData.address}</p>
+                              ${cvData.website ? `<p><strong>Web:</strong> ${cvData.website}</p>` : ''}
+                          </div>
+                      </section>
+
+                      <section>
+                          <h2 style="font-size:1em; font-weight:800; color:#1a252f; text-transform:uppercase; margin-bottom:15px; border-bottom:2px solid ${colorVar}; padding-bottom:5px;">Formation</h2>
+                          ${cvData.education.map(edu => `
+                              <div style="margin-bottom:12px;">
+                                  <p style="font-size:0.85em; font-weight:700; color:#1a252f; margin-bottom:2px;">${edu.title}</p>
+                                  <p style="font-size:0.8em; color:#666;">${edu.year} | ${edu.location}</p>
+                              </div>
+                          `).join('')}
+                      </section>
+
+                      <section>
+                          <h2 style="font-size:1em; font-weight:800; color:#1a252f; text-transform:uppercase; margin-bottom:15px; border-bottom:2px solid ${colorVar}; padding-bottom:5px;">Expertise</h2>
+                          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                              ${cvData.skills.map(s => `<span style="font-size:0.75em; padding:4px 10px; background:#fff; border:1px solid ${colorVar}; border-radius:4px; color:#1a252f; font-weight:600;">${s}</span>`).join('')}
+                          </div>
+                      </section>
+
+                      <section>
+                          <h2 style="font-size:1em; font-weight:800; color:#1a252f; text-transform:uppercase; margin-bottom:15px; border-bottom:2px solid ${colorVar}; padding-bottom:5px;">Langues</h2>
+                          ${cvData.languages.map(l => `
+                              <div style="margin-bottom:8px;">
+                                  <p style="font-size:0.85em; font-weight:700; color:#1a252f; display:flex; justify-content:space-between;">
+                                      <span>${l.name}</span> <span style="font-weight:400; font-size:0.8em;">${l.level}%</span>
+                                  </p>
+                                  <div style="height:4px; background:#eee; border-radius:2px; margin-top:4px;">
+                                      <div style="height:100%; width:${l.level}%; background:${colorVar}; border-radius:2px;"></div>
+                                  </div>
+                              </div>
+                          `).join('')}
+                      </section>
+                  </div>
+              </div>
+          </div>`;
+      }
+      // EXECUTIVE TEMPLATE (Centered, Elegant)
+      else if (cvData.templateId === 'executive') {
+        preview.innerHTML = `
+          <div class="cv-a4" style="flex-direction:column; padding:50px 70px; font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:1.5; color:#2c3e50; gap:0; background:#fff;">
+              <header style="text-align:center; margin-bottom:40px; border-bottom:2px solid #2c3e50; padding-bottom:30px;">
+                  <h1 style="font-size:2.8em; font-weight:400; text-transform:uppercase; color:#1a252f; letter-spacing:4px; margin-bottom:5px;">${cvData.firstName} ${cvData.lastName}</h1>
+                  <p style="font-size:1.3em; letter-spacing:2px; color:${colorVar}; font-weight:600; text-transform:uppercase; margin-top:10px;">${cvData.jobTitle}</p>
+                  <div style="display:flex; justify-content:center; gap:20px; font-size:0.85em; margin-top:20px; color:#7f8c8d; font-weight:500;">
+                      <span>${cvData.phone}</span> • <span>${cvData.email}</span> • <span>${cvData.address}</span>
+                  </div>
+              </header>
+
+              <div style="display:flex; flex-direction:column; gap:35px;">
+                  <section>
+                      <h2 style="font-size:1.1em; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#1a252f; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px; text-align:center;">Profil Professionnel</h2>
+                      <p style="text-align:justify; font-size:0.95em; color:#34495e;">${h(cvData.profileText)}</p>
+                  </section>
+
+                  <section>
+                      <h2 style="font-size:1.1em; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#1a252f; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:20px; text-align:center;">Parcours de Carrière</h2>
+                      ${cvData.experiences.map(exp => `
+                          <div style="margin-bottom:25px;">
+                              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+                                  <h3 style="font-size:1.1em; font-weight:700; color:#1a252f; margin:0;">${exp.company}</h3>
+                                  <span style="font-size:0.9em; font-weight:600; color:#7f8c8d;">${exp.date}</span>
+                              </div>
+                              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;">
+                                  <p style="font-size:1em; font-weight:600; color:${colorVar}; margin:0;">${exp.title}</p>
+                                  <p style="font-size:0.85em; color:#95a5a6; font-style:italic;">${exp.location}</p>
+                              </div>
+                              <ul style="list-style-type: square; margin:0; padding-left:20px; font-size:0.9em; color:#34495e;">
+                                  ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `
+                                      <li style="margin-bottom:6px; text-align:justify;">${h(d)}</li>
+                                  `).join('')}
+                              </ul>
+                          </div>
+                      `).join('')}
+                  </section>
+
+                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:50px;">
+                      <section>
+                          <h2 style="font-size:1.1em; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#1a252f; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">Formation</h2>
+                          ${cvData.education.map(edu => `
+                              <div style="margin-bottom:15px;">
+                                  <p style="font-weight:700; font-size:1em; color:#1a252f; margin-bottom:2px;">${edu.title}</p>
+                                  <p style="font-size:0.85em; color:#7f8c8d;">${edu.location} | ${edu.year}</p>
+                              </div>
+                          `).join('')}
+                      </section>
+
+                      <section>
+                          <h2 style="font-size:1.1em; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#1a252f; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">Compétences</h2>
+                          <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                              ${cvData.skills.map(s => `<span style="font-size:0.85em; font-weight:600; color:#2c3e50; background:#f8f9fa; padding:4px 12px; border:1px solid #dee2e6;">${s}</span>`).join('')}
+                          </div>
+                      </section>
+                  </div>
+              </div>
           </div>`;
       }
     }
