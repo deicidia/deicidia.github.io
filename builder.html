@@ -150,6 +150,12 @@
       background-color: white;
     }
 
+    textarea {
+      resize: none;
+      overflow: hidden;
+      min-height: 100px;
+    }
+
     label {
       display: block;
       font-size: 0.9rem;
@@ -537,7 +543,7 @@
         <div class="template-selector">
           <div class="template-card active" id="tpl-modern" onclick="setTemplate('modern')">
             <div
-              style="height:100px; background:linear-gradient(to right, #ffcc00 35%, #eee 35%); border-radius:4px; margin-bottom:8px;">
+              style="height:100px; background:linear-gradient(to right, var(--accent) 35%, #eee 35%); border-radius:4px; margin-bottom:8px;">
             </div>
             <strong>Moderne</strong>
             <p style="font-size:0.7rem; color:var(--text-muted)">Barre latérale</p>
@@ -730,7 +736,7 @@
             </div>
           </div>
           <textarea id="profileText" rows="4" placeholder="Quelques mots sur vous..."
-            oninput="updatePreview()"></textarea>
+            oninput="updatePreview(); autoResize(this)"></textarea>
         </div>
 
         <div class="nav-buttons">
@@ -780,18 +786,21 @@
 
         <label>Compétences (une par ligne)</label>
         <textarea id="skillsInput" rows="5" placeholder="Accueil client&#10;Gestion de caisse&#10;..."
-          oninput="updatePreview()"></textarea>
+          oninput="updatePreview(); autoResize(this)"></textarea>
 
         <div style="margin-top: 30px;">
           <label>Langues</label>
           <div id="lang-container"></div>
           <button class="btn btn-accent" style="width: 100%; margin-top: 10px;" onclick="addLanguage()">+ Ajouter une
             langue</button>
-          <label
-            style="margin-top:15px; font-weight:400; font-size:0.85rem; display:flex; align-items:center; gap:8px;">
-            <input type="checkbox" id="showLangBars" checked
-              onchange="cvData.showLangBars=this.checked; updatePreview()"> Afficher les barres de niveau
-          </label>
+          <div
+            style="margin-top:20px; padding:15px; background:var(--bg-card); border:1.5px solid var(--border); border-radius:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;"
+            onclick="const chk = document.getElementById('showLangBars'); chk.checked = !chk.checked; chk.dispatchEvent(new Event('change'))">
+            <span style="font-weight:600; font-size:0.95rem; color:var(--primary);">Afficher les barres de niveau</span>
+            <input type="checkbox" id="showLangBars" checked style="width:20px; height:20px; cursor:pointer;"
+              onclick="event.stopPropagation()"
+              onchange="cvData.showLangBars=this.checked; updatePreview(); event.stopPropagation()">
+          </div>
         </div>
 
         <div class="nav-buttons">
@@ -818,12 +827,12 @@
         <div class="form-group">
           <label>Centres d'intérêt (un par ligne)</label>
           <textarea id="interestsInput" rows="4" placeholder="Cuisine&#10;Randonnée&#10;..."
-            oninput="updatePreview()"></textarea>
+            oninput="updatePreview(); autoResize(this)"></textarea>
         </div>
         <div class="form-group">
           <label>Personnel (Ex: 2005-2007: Présence parentale...)</label>
           <textarea id="personalInput" rows="3" placeholder="Informations personnelles..."
-            oninput="updatePreview()"></textarea>
+            oninput="updatePreview(); autoResize(this)"></textarea>
         </div>
 
         <div class="nav-buttons">
@@ -1047,6 +1056,12 @@
       updatePreview();
     }
 
+    function autoResize(textarea) {
+      if (!textarea) return;
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
     function setTemplate(id) {
       const el = document.getElementById(`tpl-${id}`);
       if (!el) {
@@ -1175,6 +1190,12 @@
       renderExperiences();
       renderEducation();
       renderLanguages();
+
+      // Initial resize for textareas
+      setTimeout(() => {
+        document.querySelectorAll('textarea').forEach(autoResize);
+      }, 0);
+
       updatePreview();
     }
 
@@ -1217,7 +1238,7 @@
                       <div class="form-group"><label>Ville / Lieu</label><input type="text" value="${exp.location || ''}" oninput="cvData.experiences[${index}].location=this.value; updatePreview()"></div>
                     </div>
                     <div class="form-group"><label>Dates (ex: 2020 - 2024)</label><input type="text" value="${exp.date}" oninput="cvData.experiences[${index}].date=this.value; updatePreview()"></div>
-                    <div class="form-group"><label>Missions (une par ligne)</label><textarea oninput="cvData.experiences[${index}].details=this.value; updatePreview()">${exp.details}</textarea></div>
+                    <div class="form-group"><label>Missions (une par ligne)</label><textarea oninput="cvData.experiences[${index}].details=this.value; updatePreview(); autoResize(this)">${exp.details}</textarea></div>
                 `;
         container.appendChild(div);
       });
@@ -1245,7 +1266,7 @@
                       <div class="form-group"><label>Lycée / Université</label><input type="text" value="${edu.location}" oninput="cvData.education[${index}].location=this.value; updatePreview()"></div>
                       <div class="form-group"><label>Ville</label><input type="text" value="${edu.city || ''}" placeholder="Optionnel" oninput="cvData.education[${index}].city=this.value; updatePreview()"></div>
                     </div>
-                    <div class="form-group"><label>Description / Détails</label><textarea rows="2" oninput="cvData.education[${index}].details=this.value; updatePreview()">${edu.details || ''}</textarea></div>
+                    <div class="form-group"><label>Description / Détails</label><textarea rows="2" oninput="cvData.education[${index}].details=this.value; updatePreview(); autoResize(this)">${edu.details || ''}</textarea></div>
                 `;
         container.appendChild(div);
       });
@@ -1545,7 +1566,7 @@
                               <div style="margin-bottom:12px;">
                                   <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
                                       <span style="font-size:0.85em; font-weight:600; color:#1e293b;">${lang.name}</span>
-                                      <span style="font-size:0.75em; color:#64748b; font-weight:700;">${lang.level}%</span>
+                                      ${cvData.showLangBars !== false ? `<span style="font-size:0.75em; color:#64748b; font-weight:700;">${lang.level}%</span>` : ''}
                                   </div>
                                   ${cvData.showLangBars !== false ? `<div style="width:100%; height:6px; background:#f1f5f9; border-radius:3px; overflow:hidden;"><div style="width:${lang.level}%; height:100%; background:${colorVar}; border-radius:3px;"></div></div>` : ''}
                               </div>
@@ -1625,7 +1646,7 @@
                       <section>
                           <h3 style="font-size:0.8em; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:8px; letter-spacing:0.05em;">Langues</h3>
                           <p style="font-size:0.8em; color:#334155; font-weight:500;">
-                            ${cvData.languages.map(l => `<span style="color:#0f172a; font-weight:700;">${l.name}</span> <span style="color:#64748b;">(${l.level}%)</span>`).join(' • ')}
+                            ${cvData.languages.map(l => `<span style="color:#0f172a; font-weight:700;">${l.name}</span> ${cvData.showLangBars !== false ? `<span style="color:#64748b;">(${l.level}%)</span>` : ''}`).join(' • ')}
                           </p>
                       </section>
                   </div>
@@ -1761,7 +1782,7 @@
                   ${cvData.languages.map(l => `
                     <div style="display:flex; font-size:0.95em;">
                       <span style="min-width:130px; font-weight:700; text-align:right; margin-right:15px; color:#000;">${l.name}</span>
-                      <span style="color:#333;">Maîtrise ${l.level}%</span>
+                      ${cvData.showLangBars !== false ? `<span style="color:#333;">Maîtrise ${l.level}%</span>` : ''}
                     </div>
                   `).join('')}
                 </div>
@@ -1840,8 +1861,10 @@
 
     function useSuggestion(el) {
       const text = el.textContent;
-      document.getElementById('profileText').value = text;
+      const profileTextarea = document.getElementById('profileText');
+      profileTextarea.value = text;
       cvData.profileText = text;
+      autoResize(profileTextarea);
       updatePreview();
       document.getElementById('suggestionsBox').style.display = 'none';
     }
