@@ -741,6 +741,8 @@
           </div>
           <textarea id="profileText" rows="4" placeholder="Quelques mots sur vous..."
             oninput="updatePreview(); autoResize(this)"></textarea>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Astuce : utilisez
+            <strong>**texte**</strong> pour mettre en gras.</p>
         </div>
 
         <div class="nav-buttons">
@@ -1245,7 +1247,8 @@
                       <div class="form-group"><label>Ville / Lieu</label><input type="text" value="${exp.location || ''}" oninput="cvData.experiences[${index}].location=this.value; updatePreview()"></div>
                     </div>
                     <div class="form-group"><label>Dates (ex: 2020 - 2024)</label><input type="text" value="${exp.date}" oninput="cvData.experiences[${index}].date=this.value; updatePreview()"></div>
-                    <div class="form-group"><label>Missions (une par ligne)</label><textarea oninput="cvData.experiences[${index}].details=this.value; updatePreview(); autoResize(this)">${exp.details}</textarea></div>
+                    <div class="form-group"><label>Missions (une par ligne)</label><textarea oninput="cvData.experiences[${index}].details=this.value; updatePreview(); autoResize(this)">${exp.details}</textarea>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Astuce : utilisez <strong>**texte**</strong> pour mettre en gras.</p></div>
                 `;
         container.appendChild(div);
       });
@@ -1273,7 +1276,8 @@
                       <div class="form-group"><label>Lycée / Université</label><input type="text" value="${edu.location}" oninput="cvData.education[${index}].location=this.value; updatePreview()"></div>
                       <div class="form-group"><label>Ville</label><input type="text" value="${edu.city || ''}" placeholder="Optionnel" oninput="cvData.education[${index}].city=this.value; updatePreview()"></div>
                     </div>
-                    <div class="form-group"><label>Description / Détails</label><textarea rows="2" oninput="cvData.education[${index}].details=this.value; updatePreview(); autoResize(this)">${edu.details || ''}</textarea></div>
+                    <div class="form-group"><label>Description / Détails</label><textarea rows="2" oninput="cvData.education[${index}].details=this.value; updatePreview(); autoResize(this)">${edu.details || ''}</textarea>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Astuce : utilisez <strong>**texte**</strong> pour mettre en gras.</p></div>
                 `;
         container.appendChild(div);
       });
@@ -1316,6 +1320,7 @@
       const colorVar = 'var(--accent)';
       const accentMixed = `color-mix(in srgb, ${colorVar}, transparent 85%)`;
       const contrastColor = 'var(--accent-text)';
+      const h = (t) => (t || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
       // Shared HTML Snippets
       const photoHTML = (cvData.showPhoto && cvData.photoBase64) ?
@@ -1332,7 +1337,7 @@
                     <div style="font-weight:600; font-size:0.9em; margin-bottom:5px;">${exp.company || 'Entreprise'}</div>
                     <ul style="list-style:none; padding-left:0;">
                         ${exp.details.split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8em; margin-bottom:1px; position:relative; padding-left:15px; text-align:justify;">
-                            <span style="position:absolute; left:0; color:${colorVar};">•</span> ${d}
+                            <span style="position:absolute; left:0; color:${colorVar};">•</span> ${h(d)}
                         </li>`).join('')}
                     </ul>
                 </div>
@@ -1416,7 +1421,7 @@
                   
                   <section style="margin-bottom:30px;">
                       <h3 style="font-size:1.1em; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Profil</h3>
-                      <p style="font-size:0.9em; text-align:justify; line-height:${cvData.lineHeight || '1.4'}; color:#2c3e50;">${cvData.profileText}</p>
+                      <p style="font-size:0.9em; text-align:justify; line-height:${cvData.lineHeight || '1.4'}; color:#2c3e50;">${h(cvData.profileText)}</p>
                   </section>
 
                   <section style="margin-bottom:30px;">
@@ -1457,7 +1462,7 @@
                   <h3 style="font-size:1.2em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; display:flex; align-items:center; gap:10px;">
                     <span style="width:30px; height:2px; background:${colorVar};"></span> Profil
                   </h3>
-                  <p style="font-size:0.95em; line-height:1.6; color:#2c3e50; text-align:justify;">${cvData.profileText}</p>
+                  <p style="font-size:0.95em; line-height:1.6; color:#2c3e50; text-align:justify;">${h(cvData.profileText)}</p>
               </section>
 
               <div style="display:grid; grid-template-columns: 2fr 1fr; gap:40px;">
@@ -1511,7 +1516,7 @@
                       <span style="display:flex; align-items:center; gap:6px;">${icons.mail} <a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></span>
                       ${cvData.website ? `<span style="display:flex; align-items:center; gap:6px;">${icons.globe} <a href="${cvData.website.startsWith('http') ? cvData.website : 'https://' + cvData.website}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.website}</a></span>` : ''}
                   </div>
-                  ${cvData.profileText ? `<p style="margin-top:20px; font-size:0.95em; color:#475569; max-width:680px; margin-left:auto; margin-right:auto; line-height:1.6; text-align:justify; border-top:1px solid #f1f5f9; padding-top:15px;">${cvData.profileText}</p>` : ''}
+                  ${cvData.profileText ? `<p style="margin-top:20px; font-size:0.95em; color:#475569; max-width:680px; margin-left:auto; margin-right:auto; line-height:1.6; text-align:justify; border-top:1px solid #f1f5f9; padding-top:15px;">${h(cvData.profileText)}</p>` : ''}
               </header>
 
               <section style="margin-bottom:30px; background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #f1f5f9;">
@@ -1541,7 +1546,7 @@
                                     <ul style="list-style:none; padding:0; margin:0;">
                                         ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8em; color:#475569; margin-bottom:4px; display:flex; gap:8px; line-height:${cvData.lineHeight || '1.4'};">
                                           <span style="color:${colorVar}; font-weight:bold;">•</span> 
-                                          <span style="flex:1; text-align:justify;">${d}</span>
+                                          <span style="flex:1; text-align:justify;">${h(d)}</span>
                                         </li>`).join('')}
                                     </ul>
                                 </div>
@@ -1611,7 +1616,7 @@
               <div style="display:grid; grid-template-columns: 1fr; gap:0;">
                   <section style="margin-bottom:15px;">
                       <h3 style="font-size:0.8em; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:6px; letter-spacing:0.05em;">Profil</h3>
-                      <p style="font-size:0.85em; color:#334155; text-align:justify; line-height:${cvData.lineHeight || '1.4'};">${cvData.profileText}</p>
+                      <p style="font-size:0.85em; color:#334155; text-align:justify; line-height:${cvData.lineHeight || '1.4'};">${h(cvData.profileText)}</p>
                   </section>
 
                   <section style="margin-bottom:15px;">
@@ -1623,7 +1628,7 @@
                                   <span style="color:${colorVar}; font-size:0.75em;">${exp.date}</span>
                               </div>
                               <p style="font-size:0.8em; color:#64748b; font-weight:600; margin-bottom:3px;">${exp.company}</p>
-                              <p style="font-size:0.8em; color:#334155; line-height:${cvData.lineHeight || '1.4'}; text-align:justify;">${(exp.details || '').split('\n').filter(d => d.trim()).join(' • ')}</p>
+                              <p style="font-size:0.8em; color:#334155; line-height:${cvData.lineHeight || '1.4'}; text-align:justify;">${(exp.details || '').split('\n').filter(d => d.trim()).map(d => h(d)).join(' • ')}</p>
                               ${i < cvData.experiences.length - 1 ? separator : ''}
                           </div>
                       `).join('')}
@@ -1696,7 +1701,7 @@
 
               <section style="margin-bottom:0;">
                 ${sectionHeader('Profil', true)}
-                <p style="font-size:0.9em; color:#000; line-height:${cvData.lineHeight || '1.4'}; text-align:justify;">${cvData.profileText}</p>
+                <p style="font-size:0.9em; color:#000; line-height:${cvData.lineHeight || '1.4'}; text-align:justify;">${h(cvData.profileText)}</p>
               </section>
 
               <section style="margin-bottom:0;">
@@ -1736,7 +1741,7 @@
                     <ul style="list-style-type: none; margin:0; padding:0;">
                       ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `
                         <li style="font-size:0.9em; color:#000; margin-bottom:6px; position:relative; padding-left:15px; text-align:justify;">
-                          <span style="position:absolute; left:0;">•</span>${d}
+                          <span style="position:absolute; left:0;">•</span>${h(d)}
                         </li>
                       `).join('')}
                     </ul>
@@ -1762,7 +1767,7 @@
                     <ul style="list-style-type: none; margin:0; padding:0;">
                       ${edu.details.split('\n').filter(d => d.trim()).map(d => `
                         <li style="font-size:0.9em; color:#000; position:relative; padding-left:15px; text-align:justify;">
-                          <span style="position:absolute; left:0;">•</span>${d}
+                          <span style="position:absolute; left:0;">•</span>${h(d)}
                         </li>
                       `).join('')}
                     </ul>
