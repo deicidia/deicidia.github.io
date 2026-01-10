@@ -88,9 +88,9 @@
     }
 
     .step-pill.active {
-      background: var(--accent);
-      color: var(--primary);
-      box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
+      background: #1a252f;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
     .step-pill.completed {
@@ -184,8 +184,8 @@
     }
 
     .btn-accent {
-      background: var(--accent);
-      color: var(--primary);
+      background: #1a252f;
+      color: white;
     }
 
     .btn-outline {
@@ -416,10 +416,18 @@
       <div class="step-pill" data-step="6" onclick="goToStep(6)">6. Autres</div>
       <div class="step-pill" data-step="7" onclick="goToStep(7)">7. Export</div>
     </div>
-    <div style="display:flex; gap:10px;">
-      <input type="color" id="globalThemeColor" value="#ffcc00"
-        style="width:40px; height:40px; border:none; border-radius:50%; cursor:pointer;"
-        oninput="updateThemeColor(this.value)">
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div style="display:flex; align-items:center; gap:5px;" title="Zoom prévisualisation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+          <path d="M11 8v6" />
+          <path d="M8 11h6" />
+        </svg>
+        <input type="range" id="zoomSlider" min="40" max="100" value="70" oninput="updateZoom(this.value)"
+          style="width:80px; cursor:pointer;">
+      </div>
       <button class="btn btn-accent" onclick="exportPDF()">Exporter PDF</button>
     </div>
   </nav>
@@ -462,11 +470,18 @@
         </div>
 
         <div class="form-group">
-          <label>Ou couleur personnalisée</label>
-          <div style="display:flex; gap:10px; align-items:center;">
-            <input type="color" id="themeColorInput" value="#ffcc00"
-              oninput="updateThemeColor(this.value); clearPaletteSelection()"
-              style="width:100%; height:45px; border-radius: 8px; border: 1px solid var(--border); padding: 5px; cursor: pointer;">
+          <label>Couleur du thème</label>
+          <div
+            style="display:flex; gap:15px; align-items:center; padding:15px; background:#f8fafc; border-radius:12px;">
+            <div style="position:relative;">
+              <input type="color" id="themeColorInput" value="#ffcc00"
+                oninput="updateThemeColor(this.value); clearPaletteSelection()"
+                style="width:60px; height:60px; border-radius: 12px; border: 2px solid #e2e8f0; padding: 3px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            </div>
+            <div style="flex:1;">
+              <p style="font-size:0.85rem; font-weight:600; margin-bottom:5px;">Couleur personnalisée</p>
+              <p style="font-size:0.75rem; color:var(--text-muted);">Cliquez pour choisir une couleur</p>
+            </div>
           </div>
         </div>
 
@@ -482,18 +497,30 @@
           </select>
         </div>
 
-        <div class="form-group" style="padding:15px; background:#f8fafc; border-radius:8px;">
+        <div class="form-group">
           <label>Photo de profil</label>
-          <div style="display:flex; align-items:center; gap:15px;">
-            <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload(event)"
-              style="font-size:0.8rem;">
-            <div style="display:flex; flex-direction:column; align-items:center;">
-              <img id="photoPreview" class="photo-preview-form" src="" style="display:none;">
-              <label
-                style="margin-top:5px; font-weight:400; font-size:0.75rem; display:flex; align-items:center; gap:5px;">
-                <input type="checkbox" id="showPhotoToggle" checked
-                  onchange="cvData.showPhoto=this.checked; updatePreview()"> Afficher
-              </label>
+          <div
+            style="display:flex; align-items:center; gap:20px; padding:20px; background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius:12px; border:2px dashed #cbd5e1;">
+            <div style="position:relative;">
+              <img id="photoPreview" class="photo-preview-form" src=""
+                style="display:none; width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid white; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+              <div id="photoPlaceholder"
+                style="width:80px; height:80px; border-radius:50%; background:#cbd5e1; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#94a3b8;">
+                👤</div>
+            </div>
+            <div style="flex:1;">
+              <label for="photoUpload"
+                style="display:inline-block; padding:10px 20px; background:#1a252f; color:white; border-radius:8px; cursor:pointer; font-size:0.85rem; font-weight:600; margin-bottom:0;">📷
+                Choisir une photo</label>
+              <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload(event)"
+                style="display:none;">
+              <div style="margin-top:10px;">
+                <label
+                  style="font-weight:400; font-size:0.8rem; display:flex; align-items:center; gap:5px; margin-bottom:0;">
+                  <input type="checkbox" id="showPhotoToggle" checked
+                    onchange="cvData.showPhoto=this.checked; updatePreview()"> Afficher sur le CV
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -531,7 +558,25 @@
           <input type="email" id="email" placeholder="votre@email.com" oninput="updatePreview()">
         </div>
         <div class="form-group">
-          <label>Accroche / Profil</label>
+          <label>Accroche / Profil <button type="button" onclick="toggleSuggestions()"
+              style="font-size:0.75rem; padding:3px 8px; margin-left:10px; cursor:pointer; border:1px solid var(--border); border-radius:4px; background:var(--bg-card);">💡
+              Suggestions</button></label>
+          <div id="suggestionsBox"
+            style="display:none; margin-bottom:10px; padding:10px; background:#fffbeb; border:1px solid #fcd34d; border-radius:8px; font-size:0.8rem;">
+            <p style="font-weight:600; margin-bottom:8px;">Cliquez pour copier :</p>
+            <div style="display:flex; flex-direction:column; gap:5px;">
+              <span class="suggestion-item" onclick="useSuggestion(this)"
+                style="cursor:pointer; padding:5px; border-radius:4px; background:white; border:1px solid #e2e8f0;">Professionnelle
+                dynamique avec X années d'expérience, je suis reconnue pour mon sens du contact et ma capacité
+                d'adaptation.</span>
+              <span class="suggestion-item" onclick="useSuggestion(this)"
+                style="cursor:pointer; padding:5px; border-radius:4px; background:white; border:1px solid #e2e8f0;">Motivée
+                et rigoureuse, je recherche un poste où je pourrai mettre à profit mes compétences en [domaine].</span>
+              <span class="suggestion-item" onclick="useSuggestion(this)"
+                style="cursor:pointer; padding:5px; border-radius:4px; background:white; border:1px solid #e2e8f0;">Fort(e)
+                d'une expérience variée, je suis disponible immédiatement et prête à relever de nouveaux défis.</span>
+            </div>
+          </div>
           <textarea id="profileText" rows="4" placeholder="Quelques mots sur vous..."
             oninput="updatePreview()"></textarea>
         </div>
@@ -636,10 +681,20 @@
           <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
           <h2>Bravo ! Votre CV est prêt.</h2>
           <p>Vérifiez le rendu à droite. Si tout est bon, exportez-le en PDF.</p>
+
+          <div id="completionIndicator" style="margin-top:20px; padding:15px; background:#f8fafc; border-radius:8px;">
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Complétion du CV</p>
+            <div style="width:100%; height:10px; background:#e2e8f0; border-radius:5px; overflow:hidden;">
+              <div id="completionBar"
+                style="height:100%; background:#10b981; border-radius:5px; transition:width 0.3s;"></div>
+            </div>
+            <p id="completionText" style="font-size:0.8rem; margin-top:5px; font-weight:600;"></p>
+          </div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; margin-top: 40px;">
-          <button class="btn btn-accent" style="font-size: 1.2rem; padding: 15px 40px;"
+          <button class="btn"
+            style="font-size: 1.2rem; padding: 15px 40px; background:#10b981; color:white; border:none;"
             onclick="exportPDF()">Télécharger en PDF</button>
           <button class="btn btn-outline" onclick="goToStep(1)">Modifier l'apparence</button>
 
@@ -655,6 +710,14 @@
                 <input type="file" accept=".json" onchange="importJSON(event)" style="display:none;">
               </label>
             </div>
+          </div>
+
+          <div
+            style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%; text-align:center;">
+            <button class="btn" onclick="resetCV()"
+              style="font-size:0.9rem; background:#dc2626; color:white; border:none;">
+              🗑️ Réinitialiser tout
+            </button>
           </div>
         </div>
       </div>
@@ -677,20 +740,20 @@
       fontFamily: 'Inter',
       photoBase64: '',
       showPhoto: true,
-      firstName: 'Nelly',
-      lastName: 'YGRIE',
-      address: '56340 PLOUHARNEL',
-      phone: '06 26 54 98 09',
-      email: 'ygrienelly@gmail.com',
-      profileText: 'Professionnelle dotée de nombreuses années d\'expérience dans divers domaines, je suis dynamique et j\'ai un excellent sens du contact.',
-      mobility: 'Permis B + véhicule',
-      dispo: 'Dès maintenant',
+      firstName: '',
+      lastName: '',
+      address: '',
+      phone: '',
+      email: '',
+      profileText: '',
+      mobility: '',
+      dispo: '',
       experiences: [],
       education: [],
-      skills: ['Accueil clients', 'Fidélisation des clients', 'Sens de l\'écoute active'],
-      languages: [{ name: 'Français : Langue maternelle', level: 100 }],
-      interests: ['Cuisine / cuisine du monde', 'Fitness / Yoga'],
-      personal: ['2005 - 2007 : Présence parentale auprès d\'un enfant handicapé']
+      skills: [],
+      languages: [],
+      interests: [],
+      personal: []
     };
 
     // UI Logic
@@ -703,6 +766,18 @@
         if (parseInt(p.dataset.step) < step) p.classList.add('completed');
       });
       document.querySelector('.form-pane').scrollTo(0, 0);
+
+      // Update completion indicator on step 7
+      if (step === 7) {
+        const pct = getCompletionPercentage();
+        document.getElementById('completionBar').style.width = pct + '%';
+        document.getElementById('completionText').textContent = pct + '% complété';
+      }
+    }
+
+    function updateZoom(value) {
+      const scale = value / 100;
+      document.querySelector('.cv-preview').style.transform = `scale(${scale})`;
     }
 
     // Theme & Template Logic
@@ -814,6 +889,8 @@
           cvData.photoBase64 = e.target.result;
           document.getElementById('photoPreview').src = e.target.result;
           document.getElementById('photoPreview').style.display = 'block';
+          const placeholder = document.getElementById('photoPlaceholder');
+          if (placeholder) placeholder.style.display = 'none';
           updatePreview();
         };
         reader.readAsDataURL(file);
@@ -840,6 +917,8 @@
       if (cvData.photoBase64) {
         document.getElementById('photoPreview').src = cvData.photoBase64;
         document.getElementById('photoPreview').style.display = 'block';
+        const placeholder = document.getElementById('photoPlaceholder');
+        if (placeholder) placeholder.style.display = 'none';
       }
 
       updateThemeColor(cvData.themeColor || '#ffcc00');
@@ -1167,6 +1246,64 @@
         }
       };
       reader.readAsText(file);
+    }
+
+    function resetCV() {
+      if (!confirm('Êtes-vous sûr de vouloir supprimer toutes les informations du CV ?')) return;
+
+      localStorage.removeItem('maman_cv_builder_data');
+      cvData = {
+        templateId: 'modern',
+        themeColor: '#ffcc00',
+        themeTextColor: '#1a252f',
+        fontFamily: 'Inter',
+        photoBase64: '',
+        showPhoto: true,
+        firstName: '',
+        lastName: '',
+        address: '',
+        phone: '',
+        email: '',
+        profileText: '',
+        mobility: '',
+        dispo: '',
+        experiences: [],
+        education: [],
+        skills: [],
+        languages: [],
+        interests: [],
+        personal: []
+      };
+      initForm();
+      goToStep(1);
+      alert('CV réinitialisé !');
+    }
+
+    function toggleSuggestions() {
+      const box = document.getElementById('suggestionsBox');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function useSuggestion(el) {
+      const text = el.textContent;
+      document.getElementById('profileText').value = text;
+      cvData.profileText = text;
+      updatePreview();
+      document.getElementById('suggestionsBox').style.display = 'none';
+    }
+
+    function getCompletionPercentage() {
+      let filled = 0;
+      const total = 8;
+      if (cvData.firstName) filled++;
+      if (cvData.lastName) filled++;
+      if (cvData.phone || cvData.email) filled++;
+      if (cvData.profileText) filled++;
+      if (cvData.experiences.length > 0) filled++;
+      if (cvData.education.length > 0) filled++;
+      if (cvData.skills.length > 0) filled++;
+      if (cvData.languages.length > 0) filled++;
+      return Math.round((filled / total) * 100);
     }
 
     // Init
