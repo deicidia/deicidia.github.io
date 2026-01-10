@@ -449,7 +449,7 @@
               style="height:100px; background:linear-gradient(to right, #ffcc00 35%, #eee 35%); border-radius:4px; margin-bottom:8px;">
             </div>
             <strong>Moderne</strong>
-            <p style="font-size:0.7rem; color:var(--text-muted)">Avec barre latérale</p>
+            <p style="font-size:0.7rem; color:var(--text-muted)">Barre latérale</p>
           </div>
           <div class="template-card" id="tpl-classic" onclick="setTemplate('classic')">
             <div
@@ -458,7 +458,17 @@
               <div style="height:40px; background:#ddd; width:100%;"></div>
             </div>
             <strong>Classique</strong>
-            <p style="font-size:0.7rem; color:var(--text-muted)">Une seule colonne</p>
+            <p style="font-size:0.7rem; color:var(--text-muted)">Une colonne</p>
+          </div>
+          <div class="template-card" id="tpl-tech" onclick="setTemplate('tech')">
+            <div
+              style="height:100px; background:#eee; border-radius:4px; margin-bottom:8px; display:grid; grid-template-columns:1fr 1fr; gap:5px; padding:8px;">
+              <div style="background:#ddd; border-radius:3px;"></div>
+              <div style="background:#ddd; border-radius:3px;"></div>
+              <div style="background:#ffcc00; border-radius:3px; grid-column:span 2;"></div>
+            </div>
+            <strong>Technique</strong>
+            <p style="font-size:0.7rem; color:var(--text-muted)">Skills-first</p>
           </div>
         </div>
 
@@ -640,6 +650,11 @@
           <div id="lang-container"></div>
           <button class="btn btn-accent" style="width: 100%; margin-top: 10px;" onclick="addLanguage()">+ Ajouter une
             langue</button>
+          <label
+            style="margin-top:15px; font-weight:400; font-size:0.85rem; display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" id="showLangBars" checked
+              onchange="cvData.showLangBars=this.checked; updatePreview()"> Afficher les barres de niveau
+          </label>
         </div>
 
         <div class="nav-buttons">
@@ -758,6 +773,7 @@
       education: [],
       skills: [],
       languages: [],
+      showLangBars: true,
       interests: [],
       personal: []
     };
@@ -920,6 +936,7 @@
       document.getElementById('interestsInput').value = cvData.interests.join('\n');
       document.getElementById('personalInput').value = (cvData.personal || []).join('\n');
       document.getElementById('showPhotoToggle').checked = cvData.showPhoto;
+      document.getElementById('showLangBars').checked = cvData.showLangBars !== false;
 
       if (cvData.photoBase64) {
         document.getElementById('photoPreview').src = cvData.photoBase64;
@@ -1082,9 +1099,9 @@
       const langHTML = cvData.languages.map(lang => `
                 <div style="margin-bottom:10px;">
                     <span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:4px;">${lang.name}</span>
-                    <div style="width:100%; height:6px; background:rgba(0,0,0,0.1); border-radius:3px; overflow:hidden;">
+                    ${cvData.showLangBars !== false ? `<div style="width:100%; height:6px; background:rgba(0,0,0,0.1); border-radius:3px; overflow:hidden;">
                         <div style="width:${lang.level}%; height:100%; background:${cvData.templateId === 'modern' ? contrastColor : colorVar}; border-radius:3px;"></div>
-                    </div>
+                    </div>` : ''}
                 </div>
             `).join('');
 
@@ -1218,11 +1235,91 @@
                       <section>
                           <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Intérêts</h3>
                           <div style="display:flex; flex-wrap:wrap; gap:5px;">
-                              ${cvData.interests.map(s => `<span style="font-size:0.75rem; background:#eee; padding:3px 8px; border-radius:12px;">${s}</span>`).join('')}
+                          ${cvData.interests.map(s => `<span style="font-size:0.75rem; background:#eee; padding:3px 8px; border-radius:12px;">${s}</span>`).join('')}
                           </div>
                       </section>
                   </div>
               </div>
+          </div>`;
+      }
+      // TECH TEMPLATE (SKILLS-FIRST)
+      else if (cvData.templateId === 'tech') {
+        const iconLocation = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
+        const iconPhone = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.1.65.42 2.24.7 2.81a2 2 0 0 1-.45 2.11l-.27.27a16 16 0 0 0 6 6l.27-.27a2 2 0 0 1 2.11-.45c.57.28 2.16.6 2.81.7a2 2 0 0 1 1.72 2z"/></svg>`;
+        const iconMail = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`;
+        const iconGlobe = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`;
+
+        preview.innerHTML = `
+          <div class="cv-a4" style="flex-direction:column; padding:35px 45px; font-family:'${cvData.fontFamily}', sans-serif;">
+              <header style="text-align:center; margin-bottom:25px; padding-bottom:20px; border-bottom:3px solid ${colorVar};">
+                  <h1 style="font-size:2.2rem; font-weight:700; color:#1a252f; margin-bottom:8px;">${cvData.firstName} <span style="color:${colorVar};">${cvData.lastName}</span></h1>
+                  <div style="font-size:0.8rem; color:#64748b; display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+                      <span style="display:flex; align-items:center; gap:4px;">${iconLocation} ${cvData.address}</span>
+                      <span style="display:flex; align-items:center; gap:4px;">${iconPhone} ${cvData.phone}</span>
+                      <span style="display:flex; align-items:center; gap:4px;">${iconMail} ${cvData.email}</span>
+                      ${cvData.website ? `<span style="display:flex; align-items:center; gap:4px;">${iconGlobe} ${cvData.website}</span>` : ''}
+                  </div>
+                  ${cvData.profileText ? `<p style="margin-top:15px; font-size:0.9rem; color:#475569; max-width:600px; margin-left:auto; margin-right:auto; line-height:1.5;">${cvData.profileText}</p>` : ''}
+              </header>
+
+              <section style="margin-bottom:25px;">
+                  <h3 style="font-size:1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span style="width:25px; height:2px; background:${colorVar};"></span>Compétences</h3>
+                  <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                      ${cvData.skills.map(s => `<span style="font-size:0.8rem; padding:6px 14px; background:color-mix(in srgb, ${colorVar}, white 85%); color:#1a252f; border-radius:20px; font-weight:500;">${s}</span>`).join('')}
+                  </div>
+              </section>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
+                  <section>
+                      <h3 style="font-size:1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span style="width:25px; height:2px; background:${colorVar};"></span>Formation</h3>
+                      ${cvData.education.map(edu => `
+                          <div style="margin-bottom:12px; padding-left:12px; border-left:2px solid #e2e8f0;">
+                              <p style="font-weight:600; font-size:0.85rem; color:#1a252f;">${edu.title || 'Diplôme'}</p>
+                              <p style="font-size:0.75rem; color:${colorVar}; font-weight:600;">${edu.year || 'Année'}</p>
+                              <p style="font-size:0.75rem; color:#64748b;">${edu.location || 'Établissement'}</p>
+                          </div>
+                      `).join('')}
+                  </section>
+
+                  <section>
+                      <h3 style="font-size:1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span style="width:25px; height:2px; background:${colorVar};"></span>Langues</h3>
+                      ${cvData.languages.map(lang => `
+                          <div style="margin-bottom:8px;">
+                              <span style="font-size:0.8rem; font-weight:500;">${lang.name}</span>
+                              ${cvData.showLangBars !== false ? `<div style="margin-top:3px; width:100%; height:4px; background:#e2e8f0; border-radius:2px;"><div style="width:${lang.level}%; height:100%; background:${colorVar}; border-radius:2px;"></div></div>` : ''}
+                          </div>
+                      `).join('')}
+                  </section>
+              </div>
+
+              ${cvData.experiences.length > 0 ? `
+              <section style="margin-top:25px;">
+                  <h3 style="font-size:1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span style="width:25px; height:2px; background:${colorVar};"></span>Expériences</h3>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                      ${cvData.experiences.map(exp => `
+                          <div style="padding:12px; background:#f8fafc; border-radius:8px; border-left:3px solid ${colorVar};">
+                              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                  <span style="font-weight:600; font-size:0.85rem; color:#1a252f;">${exp.title || 'Poste'}</span>
+                                  <span style="font-size:0.7rem; color:${colorVar}; font-weight:600;">${exp.date || 'Date'}</span>
+                              </div>
+                              <p style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">${exp.company || 'Entreprise'}</p>
+                              <ul style="list-style:none; padding:0; margin:0;">
+                                  ${exp.details.split('\\n').filter(d => d.trim()).slice(0, 2).map(d => `<li style="font-size:0.7rem; color:#475569;">• ${d}</li>`).join('')}
+                              </ul>
+                          </div>
+                      `).join('')}
+                  </div>
+              </section>
+              ` : ''}
+
+              ${cvData.interests.length > 0 ? `
+              <section style="margin-top:20px;">
+                  <h3 style="font-size:1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; display:flex; align-items:center; gap:8px;"><span style="width:25px; height:2px; background:${colorVar};"></span>Centres d'intérêt</h3>
+                  <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                      ${cvData.interests.map(s => `<span style="font-size:0.75rem; padding:4px 10px; background:#f1f5f9; border-radius:12px;">${s}</span>`).join('')}
+                  </div>
+              </section>
+              ` : ''}
           </div>`;
       }
     }
