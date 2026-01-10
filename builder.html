@@ -1304,7 +1304,7 @@
                               </div>
                               <p style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">${exp.company || 'Entreprise'}</p>
                               <ul style="list-style:none; padding:0; margin:0;">
-                                  ${exp.details.split('\\n').filter(d => d.trim()).slice(0, 2).map(d => `<li style="font-size:0.7rem; color:#475569;">• ${d}</li>`).join('')}
+                                  ${exp.details.split('\n').filter(d => d.trim()).slice(0, 2).map(d => `<li style="font-size:0.7rem; color:#475569;">• ${d}</li>`).join('')}
                               </ul>
                           </div>
                       `).join('')}
