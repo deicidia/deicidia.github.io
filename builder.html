@@ -1324,7 +1324,7 @@
                     </div>
                     <div style="font-weight:600; font-size:0.9em; margin-bottom:5px;">${exp.company || 'Entreprise'}</div>
                     <ul style="list-style:none; padding-left:0;">
-                        ${exp.details.split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8em; margin-bottom:1px; position:relative; padding-left:15px;">
+                        ${exp.details.split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8em; margin-bottom:1px; position:relative; padding-left:15px; text-align:justify;">
                             <span style="position:absolute; left:0; color:${colorVar};">•</span> ${d}
                         </li>`).join('')}
                     </ul>
@@ -1533,7 +1533,7 @@
                                     <ul style="list-style:none; padding:0; margin:0;">
                                         ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8em; color:#475569; margin-bottom:4px; display:flex; gap:8px; line-height:${cvData.lineHeight || '1.4'};">
                                           <span style="color:${colorVar}; font-weight:bold;">•</span> 
-                                          <span>${d}</span>
+                                          <span style="flex:1; text-align:justify;">${d}</span>
                                         </li>`).join('')}
                                     </ul>
                                 </div>
@@ -1615,7 +1615,7 @@
                                   <span style="color:${colorVar}; font-size:0.75em;">${exp.date}</span>
                               </div>
                               <p style="font-size:0.8em; color:#64748b; font-weight:600; margin-bottom:3px;">${exp.company}</p>
-                              <p style="font-size:0.8em; color:#334155; line-height:${cvData.lineHeight || '1.4'};">${(exp.details || '').split('\n').filter(d => d.trim()).join(' • ')}</p>
+                              <p style="font-size:0.8em; color:#334155; line-height:${cvData.lineHeight || '1.4'}; text-align:justify;">${(exp.details || '').split('\n').filter(d => d.trim()).join(' • ')}</p>
                               ${i < cvData.experiences.length - 1 ? separator : ''}
                           </div>
                       `).join('')}
@@ -1727,7 +1727,7 @@
                     </div>
                     <ul style="list-style-type: none; margin:0; padding:0;">
                       ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `
-                        <li style="font-size:0.9em; color:#000; margin-bottom:6px; position:relative; padding-left:15px;">
+                        <li style="font-size:0.9em; color:#000; margin-bottom:6px; position:relative; padding-left:15px; text-align:justify;">
                           <span style="position:absolute; left:0;">•</span>${d}
                         </li>
                       `).join('')}
@@ -1753,7 +1753,7 @@
                     ${edu.details ? `
                     <ul style="list-style-type: none; margin:0; padding:0;">
                       ${edu.details.split('\n').filter(d => d.trim()).map(d => `
-                        <li style="font-size:0.9em; color:#000; position:relative; padding-left:15px;">
+                        <li style="font-size:0.9em; color:#000; position:relative; padding-left:15px; text-align:justify;">
                           <span style="position:absolute; left:0;">•</span>${d}
                         </li>
                       `).join('')}
