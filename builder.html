@@ -699,6 +699,10 @@
           <input type="text" id="lastName" placeholder="NOM" oninput="updatePreview()">
         </div>
         <div class="form-group">
+          <label>Titre du poste / Recherche</label>
+          <input type="text" id="jobTitle" placeholder="Ingénieur IA Embarqué" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
           <label>Adresse</label>
           <input type="text" id="address" placeholder="Ville ou code postal" oninput="updatePreview()">
         </div>
@@ -910,6 +914,7 @@
       showPhoto: true,
       firstName: '',
       lastName: '',
+      jobTitle: '',
       address: '',
       phone: '',
       email: '',
@@ -1150,6 +1155,7 @@
 
       document.getElementById('firstName').value = cvData.firstName;
       document.getElementById('lastName').value = cvData.lastName;
+      document.getElementById('jobTitle').value = cvData.jobTitle || '';
       document.getElementById('address').value = cvData.address;
       document.getElementById('phone').value = cvData.phone;
       document.getElementById('email').value = cvData.email;
@@ -1202,6 +1208,7 @@
     function updatePreview() {
       cvData.firstName = document.getElementById('firstName').value;
       cvData.lastName = document.getElementById('lastName').value;
+      cvData.jobTitle = document.getElementById('jobTitle').value;
       cvData.address = document.getElementById('address').value;
       cvData.phone = document.getElementById('phone').value;
       cvData.email = document.getElementById('email').value;
@@ -1377,7 +1384,7 @@
                   <section style="margin-bottom: 25px;">
                       <h2 style="font-size: 1em; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Compétences</h2>
                       <ul style="list-style:none;">
-                          ${cvData.skills.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                          ${cvData.skills.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px; font-weight:600;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
                       </ul>
                   </section>
 
@@ -1389,7 +1396,7 @@
                   <section style="margin-bottom: 25px;">
                       <h2 style="font-size: 1em; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Intérêts</h2>
                       <ul style="list-style:none;">
-                          ${cvData.interests.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                          ${cvData.interests.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px; font-weight:600;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
                       </ul>
                   </section>
 
@@ -1397,13 +1404,14 @@
                   <section>
                       <h2 style="font-size: 1em; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Personnel</h2>
                       <ul style="list-style:none;">
-                          ${cvData.personal.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                          ${cvData.personal.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px; font-weight:600;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
                       </ul>
                   </section>` : ''}
               </div>
               <div class="p-main">
                   <header style="margin-bottom:30px;">
-                      <h1 style="font-size:2.2em; font-weight:700; text-transform:uppercase; color:#1a252f;"><span style="font-weight:300; color:${colorVar};">${cvData.firstName}</span> ${cvData.lastName}</h1>
+                      <h1 style="font-size:2.2em; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:5px;"><span style="font-weight:300; color:${colorVar};">${cvData.firstName}</span> ${cvData.lastName}</h1>
+                      ${cvData.jobTitle ? `<p style="font-size:1.2em; color:${colorVar}; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-top:0;">${cvData.jobTitle}</p>` : ''}
                   </header>
                   
                   <section style="margin-bottom:30px;">
@@ -1673,7 +1681,7 @@
           <div class="cv-a4" style="flex-direction:column; padding:45px 55px; font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:${cvData.lineHeight || '1.4'}; gap:0; color:#000; background:white;">
               <header style="text-align:center; margin-bottom:10px;">
                   <h1 style="font-size:2.2em; font-weight:400; color:#333; margin-bottom:0px; letter-spacing:0.02em;">${cvData.firstName} ${cvData.lastName}</h1>
-                  <h2 style="font-size:1.6em; font-weight:500; color:${colorVar}; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.04em;">${cvData.dispo || 'TITRE DU POSTE'}</h2>
+                  <h2 style="font-size:1.6em; font-weight:500; color:${colorVar}; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.04em;">${cvData.jobTitle || 'TITRE DU POSTE'}</h2>
                   <p style="font-size:0.8em; color:#666; margin-bottom:8px;">${cvData.address}</p>
                   <div style="font-size:0.75em; color:#000; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; font-weight:500; align-items:center;">
                       <span style="display:flex; align-items:center; gap:5px;">${icons.phone} ${cvData.phone}</span>
@@ -1702,7 +1710,7 @@
                         <span style="color:#333;">${parts.slice(1).join(':').trim()}</span>
                       </div>`;
           }
-          return `<div style="font-size:0.95em; margin-left:145px; color:#333;">${s.trim()}</div>`;
+          return `<div style="font-size:0.95em; margin-left:145px; color:#333; font-weight:700;">${s.trim()}</div>`;
         }).join('')}
                 </div>
               </section>
@@ -1839,6 +1847,7 @@
         showPhoto: true,
         firstName: '',
         lastName: '',
+        jobTitle: '',
         address: '',
         phone: '',
         email: '',
