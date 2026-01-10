@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Merriweather:wght@300;400;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Merriweather:wght@300;400;700&family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -144,21 +144,36 @@
       color: var(--primary);
     }
 
-    input,
-    textarea,
-    select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 1rem;
-      transition: border-color 0.2s;
+    input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(255, 204, 0, 0.15);
+      background-color: white;
     }
 
-    input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):focus {
-      outline: none;
-      border-color: var(--accent-dark);
+    select {
+      appearance: none;
+      background-color: #f8fafc;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 14px;
+      padding: 12px 16px;
+      padding-right: 40px !important;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    select:hover {
+      border-color: #cbd5e1;
+      background-color: #f1f5f9;
     }
 
     input[type="checkbox"],
@@ -577,16 +592,36 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Police de caractères</label>
-          <select id="fontSelect" onchange="updateFont(this.value)"
-            style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); font-size:0.95rem; cursor:pointer;">
-            <option value="Inter" style="font-family:Inter;">Inter (Moderne)</option>
-            <option value="Roboto" style="font-family:Roboto;">Roboto (Classique)</option>
-            <option value="Merriweather" style="font-family:Merriweather;">Merriweather (Élégant)</option>
-            <option value="Playfair Display" style="font-family:'Playfair Display';">Playfair Display (Sophistiqué)
-            </option>
-          </select>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;" class="form-group">
+          <div>
+            <label>Police de caractères</label>
+            <select id="fontSelect" onchange="updateFont(this.value)">
+              <option value="Inter" style="font-family:Inter;">Inter (Moderne)</option>
+              <option value="Roboto" style="font-family:Roboto;">Roboto (Classique)</option>
+              <option value="Merriweather" style="font-family:Merriweather;">Merriweather (Élégant)</option>
+              <option value="Playfair Display" style="font-family:'Playfair Display';">Playfair Display (Sophistiqué)
+              </option>
+              <option value="Outfit" style="font-family:'Outfit';">Outfit (Premium)</option>
+            </select>
+          </div>
+          <div>
+            <label>Taille du texte</label>
+            <select id="fontSizeSelect" onchange="updateFontSize(this.value)">
+              <option value="85%">Petite</option>
+              <option value="100%" selected>Normale</option>
+              <option value="115%">Grande</option>
+              <option value="130%">Très grande</option>
+            </select>
+          </div>
+          <div>
+            <label>Interligne</label>
+            <select id="lineHeightSelect" onchange="updateLineHeight(this.value)">
+              <option value="1.2">Étroit</option>
+              <option value="1.4" selected>Normal</option>
+              <option value="1.6">Large</option>
+              <option value="1.8">Très large</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-group">
@@ -846,6 +881,8 @@
       themeColor: '#ffcc00',
       themeTextColor: '#1a252f',
       fontFamily: 'Inter',
+      fontSize: '100%',
+      lineHeight: '1.4',
       photoBase64: '',
       showPhoto: true,
       firstName: '',
@@ -984,6 +1021,18 @@
       updatePreview();
     }
 
+    function updateFontSize(fontSize) {
+      cvData.fontSize = fontSize;
+      saveToLocal();
+      updatePreview();
+    }
+
+    function updateLineHeight(lineHeight) {
+      cvData.lineHeight = lineHeight;
+      saveToLocal();
+      updatePreview();
+    }
+
     function setTemplate(id) {
       const el = document.getElementById(`tpl-${id}`);
       if (!el) {
@@ -1091,10 +1140,20 @@
       updateThemeColor(cvData.themeColor || '#ffcc00');
       setTemplate(cvData.templateId || 'modern');
 
-      // Initialize font selector
+      // Initialize font selectors
       const fontSelect = document.getElementById('fontSelect');
       if (fontSelect && cvData.fontFamily) {
         fontSelect.value = cvData.fontFamily;
+      }
+
+      const fontSizeSelect = document.getElementById('fontSizeSelect');
+      if (fontSizeSelect && cvData.fontSize) {
+        fontSizeSelect.value = cvData.fontSize;
+      }
+
+      const lineHeightSelect = document.getElementById('lineHeightSelect');
+      if (lineHeightSelect && cvData.lineHeight) {
+        lineHeightSelect.value = cvData.lineHeight;
       }
 
       renderPalettes();
@@ -1225,12 +1284,12 @@
       const expHTML = cvData.experiences.map(exp => `
                 <div style="position: relative; padding-left: 20px; margin-bottom: 15px; border-left: 2px solid #ecf0f1;">
                     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-                        <span style="font-weight:700; font-size:1rem; color: #1a252f;">${exp.title || '(Poste)'}</span>
-                        <span style="font-size:0.8rem; font-weight:600; color:${colorVar}; background:${accentMixed}; padding:2px 8px; border-radius:10px;">${exp.date || 'Dates'}</span>
+                        <span style="font-weight:700; font-size:1em; color: #1a252f;">${exp.title || '(Poste)'}</span>
+                        <span style="font-size:0.8em; font-weight:600; color:${colorVar}; background:${accentMixed}; padding:2px 8px; border-radius:10px;">${exp.date || 'Dates'}</span>
                     </div>
-                    <div style="font-weight:600; font-size:0.9rem; margin-bottom:5px;">${exp.company || 'Entreprise'}</div>
+                    <div style="font-weight:600; font-size:0.9em; margin-bottom:5px;">${exp.company || 'Entreprise'}</div>
                     <ul style="list-style:none; padding-left:0;">
-                        ${exp.details.split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8rem; margin-bottom:1px; position:relative; padding-left:15px;">
+                        ${exp.details.split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8em; margin-bottom:1px; position:relative; padding-left:15px;">
                             <span style="position:absolute; left:0; color:${colorVar};">•</span> ${d}
                         </li>`).join('')}
                     </ul>
@@ -1240,15 +1299,15 @@
       const eduHTML = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px 15px;">` +
         cvData.education.map(edu => `
                 <div>
-                    <p style="font-weight:700; color:${colorVar}; font-size:0.8rem;">${edu.year || 'Année'}</p>
-                    <p style="font-weight:500; font-size:0.8rem; color:#1a252f; margin:1px 0;">${edu.title || '(Diplôme)'}</p>
-                    <p style="font-size:0.75rem; color:#7f8c8d;">${edu.location || 'Lieu'}</p>
+                    <p style="font-weight:700; color:${colorVar}; font-size:0.8em;">${edu.year || 'Année'}</p>
+                    <p style="font-weight:500; font-size:0.8em; color:#1a252f; margin:1px 0;">${edu.title || '(Diplôme)'}</p>
+                    <p style="font-size:0.75em; color:#7f8c8d;">${edu.location || 'Lieu'}</p>
                 </div>
             `).join('') + `</div>`;
 
       const langHTML = cvData.languages.map(lang => `
                 <div style="margin-bottom:10px;">
-                    <span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:4px;">${lang.name}</span>
+                    <span style="font-size:0.8em; font-weight:600; display:block; margin-bottom:4px;">${lang.name}</span>
                     ${cvData.showLangBars !== false ? `<div style="width:100%; height:6px; background:rgba(0,0,0,0.1); border-radius:3px; overflow:hidden;">
                         <div style="width:${lang.level}%; height:100%; background:${cvData.templateId === 'modern' ? contrastColor : colorVar}; border-radius:3px;"></div>
                     </div>` : ''}
@@ -1258,72 +1317,72 @@
       // MODERN TEMPLATE (SIDEBAR)
       if (cvData.templateId === 'modern') {
         preview.innerHTML = `
-          <div class="cv-a4" id="a4-content" style="font-family:'${cvData.fontFamily}', sans-serif;">
+          <div class="cv-a4" id="a4-content" style="font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:${cvData.lineHeight || '1.4'};">
               <div class="p-sidebar" style="background:${colorVar}; box-shadow: inset 0 0 0 1000px ${colorVar}; color:${contrastColor};">
                   ${photoHTML}
                   <section style="margin-bottom: 25px;">
-                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Coordonnées</h2>
+                      <h2 style="font-size: 1em; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Coordonnées</h2>
                       <div style="margin-bottom:12px;">
-                          <p style="font-size:0.7rem; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Adresse</p>
-                          <p style="font-size:0.85rem;">${cvData.address}</p>
+                          <p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Adresse</p>
+                          <p style="font-size:0.85em;">${cvData.address}</p>
                       </div>
                       <div style="margin-bottom:12px;">
-                          <p style="font-size:0.7rem; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Téléphone</p>
-                          <p style="font-size:0.85rem;">${cvData.phone}</p>
+                          <p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Téléphone</p>
+                          <p style="font-size:0.85em;">${cvData.phone}</p>
                       </div>
                       <div style="margin-bottom:12px;">
-                          <p style="font-size:0.7rem; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Email</p>
-                          <p style="font-size:0.85rem;"><a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></p>
+                          <p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Email</p>
+                          <p style="font-size:0.85em;"><a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></p>
                       </div>
-                      ${cvData.website ? `<div style="margin-bottom:12px;"><p style="font-size:0.7rem; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Site web</p><p style="font-size:0.85rem;"><a href="${cvData.website.startsWith('http') ? cvData.website : 'https://' + cvData.website}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.website}</a></p></div>` : ''}
-                      ${cvData.mobility ? `<div style="margin-bottom:12px;"><p style="font-size:0.7rem; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Mobilité</p><p style="font-size:0.85rem;">${cvData.mobility}</p></div>` : ''}
-                      ${cvData.dispo ? `<div style="margin-bottom:12px;"><p style="font-size:0.7rem; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Disponibilité</p><p style="font-size:0.85rem;">${cvData.dispo}</p></div>` : ''}
+                      ${cvData.website ? `<div style="margin-bottom:12px;"><p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Site web</p><p style="font-size:0.85em;"><a href="${cvData.website.startsWith('http') ? cvData.website : 'https://' + cvData.website}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.website}</a></p></div>` : ''}
+                      ${cvData.mobility ? `<div style="margin-bottom:12px;"><p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Mobilité</p><p style="font-size:0.85em;">${cvData.mobility}</p></div>` : ''}
+                      ${cvData.dispo ? `<div style="margin-bottom:12px;"><p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Disponibilité</p><p style="font-size:0.85em;">${cvData.dispo}</p></div>` : ''}
                   </section>
 
                   <section style="margin-bottom: 25px;">
-                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Compétences</h2>
+                      <h2 style="font-size: 1em; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Compétences</h2>
                       <ul style="list-style:none;">
-                          ${cvData.skills.map(s => `<li style="font-size:0.85rem; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                          ${cvData.skills.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
                       </ul>
                   </section>
 
                   <section style="margin-bottom: 25px;">
-                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Langues</h2>
+                      <h2 style="font-size: 1em; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Langues</h2>
                       ${langHTML}
                   </section>
 
                   <section style="margin-bottom: 25px;">
-                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Intérêts</h2>
+                      <h2 style="font-size: 1em; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Intérêts</h2>
                       <ul style="list-style:none;">
-                          ${cvData.interests.map(s => `<li style="font-size:0.85rem; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                          ${cvData.interests.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
                       </ul>
                   </section>
 
                   ${cvData.personal.length ? `
                   <section>
-                      <h2 style="font-size: 1rem; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Personnel</h2>
+                      <h2 style="font-size: 1em; border-bottom: 2px solid ${contrastColor}; margin-bottom: 12px; display:inline-block; text-transform:uppercase; color:${contrastColor};">Personnel</h2>
                       <ul style="list-style:none;">
-                          ${cvData.personal.map(s => `<li style="font-size:0.85rem; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
+                          ${cvData.personal.map(s => `<li style="font-size:0.85em; margin-bottom:5px; position:relative; padding-left:15px;"><span style="position:absolute; left:0;">•</span>${s}</li>`).join('')}
                       </ul>
                   </section>` : ''}
               </div>
               <div class="p-main">
                   <header style="margin-bottom:30px;">
-                      <h1 style="font-size:2.2rem; font-weight:700; text-transform:uppercase; color:#1a252f;"><span style="font-weight:300; color:${colorVar};">${cvData.firstName}</span> ${cvData.lastName}</h1>
+                      <h1 style="font-size:2.2em; font-weight:700; text-transform:uppercase; color:#1a252f;"><span style="font-weight:300; color:${colorVar};">${cvData.firstName}</span> ${cvData.lastName}</h1>
                   </header>
                   
                   <section style="margin-bottom:30px;">
-                      <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Profil</h3>
-                      <p style="font-size:0.9rem; text-align:justify; line-height:1.5; color:#2c3e50;">${cvData.profileText}</p>
+                      <h3 style="font-size:1.1em; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Profil</h3>
+                      <p style="font-size:0.9em; text-align:justify; line-height:${cvData.lineHeight || '1.4'}; color:#2c3e50;">${cvData.profileText}</p>
                   </section>
 
                   <section style="margin-bottom:30px;">
-                      <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Parcours Professionnel</h3>
+                      <h3 style="font-size:1.1em; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Parcours Professionnel</h3>
                       ${expHTML}
                   </section>
 
                   <section>
-                      <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Formation</h3>
+                      <h3 style="font-size:1.1em; font-weight:700; text-transform:uppercase; border-bottom:2px solid ${colorVar}30; padding-bottom:5px; margin-bottom:15px; color:#1a252f;">Formation</h3>
                       ${eduHTML}
                   </section>
               </div>
@@ -1337,11 +1396,11 @@
         const iconGlobe = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`;
 
         preview.innerHTML = `
-          <div class="cv-a4" style="flex-direction:column; padding:40px 50px; font-family:'${cvData.fontFamily}', sans-serif;">
+          <div class="cv-a4" style="flex-direction:column; padding:40px 50px; font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:${cvData.lineHeight || '1.4'};">
               <header style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px; border-bottom:4px solid ${colorVar}; padding-bottom:20px;">
                   <div>
-                      <h1 style="font-size:2.5rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">${cvData.firstName} <span style="color:${colorVar};">${cvData.lastName}</span></h1>
-                      <div style="font-size:0.9rem; color:#64748b; display:flex; gap:15px; flex-wrap:wrap; align-items:center;">
+                      <h1 style="font-size:2.5em; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">${cvData.firstName} <span style="color:${colorVar};">${cvData.lastName}</span></h1>
+                      <div style="font-size:0.9em; color:#64748b; display:flex; gap:15px; flex-wrap:wrap; align-items:center;">
                           <span style="display:flex; align-items:center; gap:5px;">${iconLocation} ${cvData.address}</span>
                           <span style="display:flex; align-items:center; gap:5px;">${iconPhone} ${cvData.phone}</span>
                           <span style="display:flex; align-items:center; gap:5px;">${iconMail} <a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></span>
@@ -1352,38 +1411,38 @@
               </header>
 
               <section style="margin-bottom:25px;">
-                  <h3 style="font-size:1.2rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+                  <h3 style="font-size:1.2em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; display:flex; align-items:center; gap:10px;">
                     <span style="width:30px; height:2px; background:${colorVar};"></span> Profil
                   </h3>
-                  <p style="font-size:0.95rem; line-height:1.6; color:#2c3e50; text-align:justify;">${cvData.profileText}</p>
+                  <p style="font-size:0.95em; line-height:1.6; color:#2c3e50; text-align:justify;">${cvData.profileText}</p>
               </section>
 
               <div style="display:grid; grid-template-columns: 2fr 1fr; gap:40px;">
                   <div class="left-col">
                       <section style="margin-bottom:30px;">
-                          <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; border-left:4px solid ${colorVar}; padding-left:10px;">Expériences</h3>
+                          <h3 style="font-size:1.1em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; border-left:4px solid ${colorVar}; padding-left:10px;">Expériences</h3>
                           ${expHTML}
                       </section>
                       <section>
-                          <h3 style="font-size:1.1rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; border-left:4px solid ${colorVar}; padding-left:10px;">Formation</h3>
+                          <h3 style="font-size:1.1em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; border-left:4px solid ${colorVar}; padding-left:10px;">Formation</h3>
                           ${eduHTML}
                       </section>
                   </div>
                   <div class="right-col">
                       <section style="margin-bottom:25px;">
-                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Compétences</h3>
-                          <ul style="list-style:none; font-size:0.85rem;">
+                          <h3 style="font-size:0.9em; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Compétences</h3>
+                          <ul style="list-style:none; font-size:0.85em;">
                               ${cvData.skills.map(s => `<li style="margin-bottom:6px; background:#f8fafc; padding:4px 10px; border-radius:4px; border-left:2px solid ${colorVar};">${s}</li>`).join('')}
                           </ul>
                       </section>
                       <section style="margin-bottom:25px;">
-                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Langues</h3>
+                          <h3 style="font-size:0.9em; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Langues</h3>
                           ${langHTML}
                       </section>
                       <section>
-                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Intérêts</h3>
+                          <h3 style="font-size:0.9em; font-weight:700; text-transform:uppercase; color:#1a252f; margin-bottom:10px;">Intérêts</h3>
                           <div style="display:flex; flex-wrap:wrap; gap:5px;">
-                          ${cvData.interests.map(s => `<span style="font-size:0.75rem; background:#eee; padding:3px 8px; border-radius:12px;">${s}</span>`).join('')}
+                          ${cvData.interests.map(s => `<span style="font-size:0.75em; background:#eee; padding:3px 8px; border-radius:12px;">${s}</span>`).join('')}
                           </div>
                       </section>
                   </div>
@@ -1400,31 +1459,31 @@
         };
 
         preview.innerHTML = `
-          <div class="cv-a4" style="flex-direction:column; padding:40px 50px; font-family:'${cvData.fontFamily}', sans-serif; gap:0; color:#334155;">
+          <div class="cv-a4" style="flex-direction:column; padding:40px 50px; font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:${cvData.lineHeight || '1.4'}; gap:0; color:#334155;">
               <header style="text-align:center; margin-bottom:30px; position:relative;">
-                  <h1 style="font-size:2.4rem; font-weight:800; color:#0f172a; margin-bottom:10px; line-height:1.1; letter-spacing:-0.02em;">${cvData.firstName} <span style="color:${colorVar};">${cvData.lastName}</span></h1>
-                  <div style="font-size:0.85rem; color:#64748b; display:flex; justify-content:center; gap:25px; flex-wrap:wrap; font-weight:500;">
+                  <h1 style="font-size:2.4em; font-weight:800; color:#0f172a; margin-bottom:10px; line-height:1.1; letter-spacing:-0.02em;">${cvData.firstName} <span style="color:${colorVar};">${cvData.lastName}</span></h1>
+                  <div style="font-size:0.85em; color:#64748b; display:flex; justify-content:center; gap:25px; flex-wrap:wrap; font-weight:500;">
                       <span style="display:flex; align-items:center; gap:6px;">${icons.loc} ${cvData.address}</span>
                       <span style="display:flex; align-items:center; gap:6px;">${icons.phone} ${cvData.phone}</span>
                       <span style="display:flex; align-items:center; gap:6px;">${icons.mail} <a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></span>
                       ${cvData.website ? `<span style="display:flex; align-items:center; gap:6px;">${icons.globe} <a href="${cvData.website.startsWith('http') ? cvData.website : 'https://' + cvData.website}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.website}</a></span>` : ''}
                   </div>
-                  ${cvData.profileText ? `<p style="margin-top:20px; font-size:0.95rem; color:#475569; max-width:680px; margin-left:auto; margin-right:auto; line-height:1.6; text-align:justify; border-top:1px solid #f1f5f9; padding-top:15px;">${cvData.profileText}</p>` : ''}
+                  ${cvData.profileText ? `<p style="margin-top:20px; font-size:0.95em; color:#475569; max-width:680px; margin-left:auto; margin-right:auto; line-height:1.6; text-align:justify; border-top:1px solid #f1f5f9; padding-top:15px;">${cvData.profileText}</p>` : ''}
               </header>
 
               <section style="margin-bottom:30px; background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #f1f5f9;">
-                  <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
+                  <h3 style="font-size:0.9em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
                     <span style="width:20px; height:2px; background:${colorVar};"></span> Compétences clés
                   </h3>
                   <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                      ${cvData.skills.map(s => `<span style="font-size:0.8rem; padding:8px 16px; background:white; color:#1e293b; border-radius:8px; font-weight:600; border:1px solid #e2e8f0; box-shadow:0 1px 2px rgba(0,0,0,0.05);">${s}</span>`).join('')}
+                      ${cvData.skills.map(s => `<span style="font-size:0.8em; padding:8px 16px; background:white; color:#1e293b; border-radius:8px; font-weight:600; border:1px solid #e2e8f0; box-shadow:0 1px 2px rgba(0,0,0,0.05);">${s}</span>`).join('')}
                   </div>
               </section>
 
               <div style="display:grid; grid-template-columns: 1.3fr 0.7fr; gap:40px;">
                   <div class="tech-main-col">
                       <section style="margin-bottom:30px;">
-                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:20px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
+                          <h3 style="font-size:0.9em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:20px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
                             <span style="width:20px; height:2px; background:${colorVar};"></span> Expériences professionnelles
                           </h3>
                           <div style="position:relative; padding-left:5px;">
@@ -1432,12 +1491,12 @@
                                 <div style="margin-bottom:20px; padding-left:20px; border-left:2.5px solid #e2e8f0; position:relative;">
                                     <div style="position:absolute; left:-7.5px; top:0; width:12px; height:12px; background:white; border:2.5px solid ${colorVar}; border-radius:50%;"></div>
                                     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px;">
-                                        <span style="font-weight:700; font-size:1rem; color:#0f172a;">${exp.title || 'Poste'}</span>
-                                        <span style="font-size:0.75rem; color:${colorVar}; font-weight:800; background:color-mix(in srgb, ${colorVar}, white 90%); padding:2px 8px; border-radius:6px;">${exp.date || 'Dates'}</span>
+                                        <span style="font-weight:700; font-size:1em; color:#0f172a;">${exp.title || 'Poste'}</span>
+                                        <span style="font-size:0.75em; color:${colorVar}; font-weight:800; background:color-mix(in srgb, ${colorVar}, white 90%); padding:2px 8px; border-radius:6px;">${exp.date || 'Dates'}</span>
                                     </div>
-                                    <p style="font-size:0.85rem; color:#64748b; font-weight:600; margin-bottom:8px;">${exp.company || 'Entreprise'}</p>
+                                    <p style="font-size:0.85em; color:#64748b; font-weight:600; margin-bottom:8px;">${exp.company || 'Entreprise'}</p>
                                     <ul style="list-style:none; padding:0; margin:0;">
-                                        ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8rem; color:#475569; margin-bottom:4px; display:flex; gap:8px; line-height:1.4;">
+                                        ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `<li style="font-size:0.8em; color:#475569; margin-bottom:4px; display:flex; gap:8px; line-height:${cvData.lineHeight || '1.4'};">
                                           <span style="color:${colorVar}; font-weight:bold;">•</span> 
                                           <span>${d}</span>
                                         </li>`).join('')}
@@ -1450,29 +1509,29 @@
 
                   <div class="tech-side-col">
                       <section style="margin-bottom:30px;">
-                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
+                          <h3 style="font-size:0.9em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
                             <span style="width:20px; height:2px; background:${colorVar};"></span> Parcours académique
                           </h3>
                           ${cvData.education.map(edu => `
                               <div style="margin-bottom:15px; padding:12px; background:#f8fafc; border-radius:8px; border-right:3px solid ${colorVar};">
-                                  <p style="font-weight:700; font-size:0.9rem; color:#0f172a; margin-bottom:2px;">${edu.title || 'Diplôme'}</p>
+                                  <p style="font-weight:700; font-size:0.9em; color:#0f172a; margin-bottom:2px;">${edu.title || 'Diplôme'}</p>
                                   <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <p style="font-size:0.75rem; color:${colorVar}; font-weight:800;">${edu.year || 'Année'}</p>
-                                    <p style="font-size:0.75rem; color:#64748b; font-style:italic;">${edu.location || 'Établissement'}</p>
+                                    <p style="font-size:0.75em; color:${colorVar}; font-weight:800;">${edu.year || 'Année'}</p>
+                                    <p style="font-size:0.75em; color:#64748b; font-style:italic;">${edu.location || 'Établissement'}</p>
                                   </div>
                               </div>
                           `).join('')}
                       </section>
 
                       <section style="margin-bottom:30px;">
-                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
+                          <h3 style="font-size:0.9em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
                             <span style="width:20px; height:2px; background:${colorVar};"></span> Maîtrise des langues
                           </h3>
                           ${cvData.languages.map(lang => `
                               <div style="margin-bottom:12px;">
                                   <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                                      <span style="font-size:0.85rem; font-weight:600; color:#1e293b;">${lang.name}</span>
-                                      <span style="font-size:0.75rem; color:#64748b; font-weight:700;">${lang.level}%</span>
+                                      <span style="font-size:0.85em; font-weight:600; color:#1e293b;">${lang.name}</span>
+                                      <span style="font-size:0.75em; color:#64748b; font-weight:700;">${lang.level}%</span>
                                   </div>
                                   ${cvData.showLangBars !== false ? `<div style="width:100%; height:6px; background:#f1f5f9; border-radius:3px; overflow:hidden;"><div style="width:${lang.level}%; height:100%; background:${colorVar}; border-radius:3px;"></div></div>` : ''}
                               </div>
@@ -1481,11 +1540,11 @@
 
                       ${cvData.interests.length > 0 ? `
                       <section>
-                          <h3 style="font-size:0.9rem; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
+                          <h3 style="font-size:0.9em; font-weight:700; text-transform:uppercase; color:${colorVar}; margin-bottom:15px; display:flex; align-items:center; gap:10px; letter-spacing:0.05em;">
                             <span style="width:20px; height:2px; background:${colorVar};"></span> Centres d'intérêt
                           </h3>
                           <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                              ${cvData.interests.map(s => `<span style="font-size:0.75rem; padding:5px 12px; background:white; border:1px solid #e2e8f0; border-radius:6px; color:#475569; font-weight:500;">${s}</span>`).join('')}
+                              ${cvData.interests.map(s => `<span style="font-size:0.75em; padding:5px 12px; background:white; border:1px solid #e2e8f0; border-radius:6px; color:#475569; font-weight:500;">${s}</span>`).join('')}
                           </div>
                       </section>` : ''}
                   </div>
@@ -1496,10 +1555,10 @@
       else if (cvData.templateId === 'compact') {
         const separator = `<div style="height:1px; background:linear-gradient(to right, ${colorVar}40, transparent); margin:12px 0;"></div>`;
         preview.innerHTML = `
-          <div class="cv-a4" style="flex-direction:column; padding:35px 50px; font-family:'${cvData.fontFamily}', sans-serif; line-height:1.4; color:#334155; gap:0;">
+          <div class="cv-a4" style="flex-direction:column; padding:35px 50px; font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:${cvData.lineHeight || '1.4'}; color:#334155; gap:0;">
               <header style="margin-bottom:18px; position:relative; padding-bottom:12px;">
-                  <h1 style="font-size:2rem; font-weight:800; color:#0f172a; margin-bottom:4px; text-transform:capitalize;">${cvData.firstName} <span style="color:${colorVar}">${cvData.lastName}</span></h1>
-                  <div style="font-size:0.8rem; color:#64748b; display:flex; gap:12px; flex-wrap:wrap; font-weight:500;">
+                  <h1 style="font-size:2em; font-weight:800; color:#0f172a; margin-bottom:4px; text-transform:capitalize;">${cvData.firstName} <span style="color:${colorVar}">${cvData.lastName}</span></h1>
+                  <div style="font-size:0.8em; color:#64748b; display:flex; gap:12px; flex-wrap:wrap; font-weight:500;">
                       <span>${cvData.address}</span> <span style="color:${colorVar}">|</span> <span>${cvData.phone}</span> <span style="color:${colorVar}">|</span> <span><a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></span>
                       ${cvData.website ? `<span style="color:${colorVar}">|</span> <span><a href="${cvData.website.startsWith('http') ? cvData.website : 'https://' + cvData.website}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.website}</a></span>` : ''}
                   </div>
@@ -1508,35 +1567,35 @@
 
               <div style="display:grid; grid-template-columns: 1fr; gap:0;">
                   <section style="margin-bottom:15px;">
-                      <h3 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:6px; letter-spacing:0.05em;">Profil</h3>
-                      <p style="font-size:0.85rem; color:#334155; text-align:justify; line-height:1.5;">${cvData.profileText}</p>
+                      <h3 style="font-size:0.8em; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:6px; letter-spacing:0.05em;">Profil</h3>
+                      <p style="font-size:0.85em; color:#334155; text-align:justify; line-height:${cvData.lineHeight || '1.4'};">${cvData.profileText}</p>
                   </section>
 
                   <section style="margin-bottom:15px;">
-                      <h3 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; letter-spacing:0.05em;">Expériences</h3>
+                      <h3 style="font-size:0.8em; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; letter-spacing:0.05em;">Expériences</h3>
                       ${cvData.experiences.map((exp, i) => `
                           <div style="margin-bottom:8px;">
-                              <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.85rem; color:#0f172a; margin-bottom:1px;">
+                              <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.85em; color:#0f172a; margin-bottom:1px;">
                                   <span>${exp.title}</span>
-                                  <span style="color:${colorVar}; font-size:0.75rem;">${exp.date}</span>
+                                  <span style="color:${colorVar}; font-size:0.75em;">${exp.date}</span>
                               </div>
-                              <p style="font-size:0.8rem; color:#64748b; font-weight:600; margin-bottom:3px;">${exp.company}</p>
-                              <p style="font-size:0.8rem; color:#334155; line-height:1.4;">${(exp.details || '').split('\n').filter(d => d.trim()).join(' • ')}</p>
+                              <p style="font-size:0.8em; color:#64748b; font-weight:600; margin-bottom:3px;">${exp.company}</p>
+                              <p style="font-size:0.8em; color:#334155; line-height:${cvData.lineHeight || '1.4'};">${(exp.details || '').split('\n').filter(d => d.trim()).join(' • ')}</p>
                               ${i < cvData.experiences.length - 1 ? separator : ''}
                           </div>
                       `).join('')}
                   </section>
 
                   <section style="margin-bottom:15px;">
-                      <h3 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; letter-spacing:0.05em;">Formation</h3>
+                      <h3 style="font-size:0.8em; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:10px; letter-spacing:0.05em;">Formation</h3>
                       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px 30px;">
                           ${cvData.education.map(edu => `
-                              <div style="font-size:0.85rem; border-left:2px solid #f1f5f9; padding-left:10px;">
+                              <div style="font-size:0.85em; border-left:2px solid #f1f5f9; padding-left:10px;">
                                   <div style="display:flex; justify-content:space-between; margin-bottom:1px;">
                                     <span style="font-weight:700; color:#0f172a;">${edu.title}</span>
-                                    <span style="color:${colorVar}; font-weight:700; font-size:0.75rem;">${edu.year}</span>
+                                    <span style="color:${colorVar}; font-weight:700; font-size:0.75em;">${edu.year}</span>
                                   </div>
-                                  <p style="color:#64748b; font-size:0.75rem; font-weight:500;">${edu.location}</p>
+                                  <p style="color:#64748b; font-size:0.75em; font-weight:500;">${edu.location}</p>
                               </div>
                           `).join('')}
                       </div>
@@ -1544,14 +1603,14 @@
 
                   <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:30px; margin-top:5px; padding-top:15px; border-top:1px solid #f1f5f9;">
                       <section>
-                          <h3 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:8px; letter-spacing:0.05em;">Compétences</h3>
-                          <p style="font-size:0.8rem; color:#334155; font-weight:500; display:flex; flex-wrap:wrap; gap:5px;">
+                          <h3 style="font-size:0.8em; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:8px; letter-spacing:0.05em;">Compétences</h3>
+                          <p style="font-size:0.8em; color:#334155; font-weight:500; display:flex; flex-wrap:wrap; gap:5px;">
                             ${cvData.skills.map(s => `<span style="background:#f8fafc; padding:2px 8px; border-radius:4px; border:1px solid #f1f5f9;">${s}</span>`).join('')}
                           </p>
                       </section>
                       <section>
-                          <h3 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:8px; letter-spacing:0.05em;">Langues</h3>
-                          <p style="font-size:0.8rem; color:#334155; font-weight:500;">
+                          <h3 style="font-size:0.8em; font-weight:800; text-transform:uppercase; color:${colorVar}; margin-bottom:8px; letter-spacing:0.05em;">Langues</h3>
+                          <p style="font-size:0.8em; color:#334155; font-weight:500;">
                             ${cvData.languages.map(l => `<span style="color:#0f172a; font-weight:700;">${l.name}</span> <span style="color:#64748b;">(${l.level}%)</span>`).join(' • ')}
                           </p>
                       </section>
@@ -1570,18 +1629,18 @@
 
         const sectionHeader = (title) => `
           <div style="display:flex; align-items:center; margin-bottom:12px; margin-top:20px;">
-            <h2 style="font-size:1.4rem; font-weight:700; color:${colorVar}; margin-right:8px; white-space:nowrap; text-transform:none;">${title}</h2>
+            <h2 style="font-size:1.4em; font-weight:700; color:${colorVar}; margin-right:8px; white-space:nowrap; text-transform:none;">${title}</h2>
             <div style="flex-grow:1; height:1.5px; background:#444; margin-top:5px;"></div>
           </div>
         `;
 
         preview.innerHTML = `
-          <div class="cv-a4" style="flex-direction:column; padding:45px 55px; font-family:'${cvData.fontFamily}', sans-serif; gap:0; color:#000; background:white;">
+          <div class="cv-a4" style="flex-direction:column; padding:45px 55px; font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:${cvData.lineHeight || '1.4'}; gap:0; color:#000; background:white;">
               <header style="text-align:center; margin-bottom:25px;">
-                  <h1 style="font-size:2.2rem; font-weight:400; color:#333; margin-bottom:0px; letter-spacing:0.02em;">${cvData.firstName} ${cvData.lastName}</h1>
-                  <h2 style="font-size:1.6rem; font-weight:500; color:${colorVar}; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.04em;">${cvData.dispo || 'TITRE DU POSTE'}</h2>
-                  <p style="font-size:0.8rem; color:#666; margin-bottom:8px;">${cvData.address}</p>
-                  <div style="font-size:0.75rem; color:#000; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; font-weight:500; align-items:center;">
+                  <h1 style="font-size:2.2em; font-weight:400; color:#333; margin-bottom:0px; letter-spacing:0.02em;">${cvData.firstName} ${cvData.lastName}</h1>
+                  <h2 style="font-size:1.6em; font-weight:500; color:${colorVar}; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.04em;">${cvData.dispo || 'TITRE DU POSTE'}</h2>
+                  <p style="font-size:0.8em; color:#666; margin-bottom:8px;">${cvData.address}</p>
+                  <div style="font-size:0.75em; color:#000; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; font-weight:500; align-items:center;">
                       <span style="display:flex; align-items:center; gap:5px;">${icons.phone} ${cvData.phone}</span>
                       <span style="color:#ccc;">|</span>
                       <span style="display:flex; align-items:center; gap:5px;">${icons.mail} <a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></span>
@@ -1594,7 +1653,7 @@
 
               <section style="margin-bottom:10px;">
                 ${sectionHeader('Profil')}
-                <p style="font-size:0.9rem; color:#000; line-height:1.4; text-align:justify;">${cvData.profileText}</p>
+                <p style="font-size:0.9em; color:#000; line-height:${cvData.lineHeight || '1.4'}; text-align:justify;">${cvData.profileText}</p>
               </section>
 
               <section style="margin-bottom:10px;">
@@ -1603,12 +1662,12 @@
                   ${cvData.skills.map(s => {
           const parts = s.split(':');
           if (parts.length > 1) {
-            return `<div style="display:flex; font-size:0.95rem; line-height:1.3;">
+            return `<div style="display:flex; font-size:0.95em; line-height:1.3;">
                         <span style="min-width:130px; font-weight:700; text-align:right; margin-right:15px; color:#000;">${parts[0].trim()}</span>
                         <span style="color:#333;">${parts.slice(1).join(':').trim()}</span>
                       </div>`;
           }
-          return `<div style="font-size:0.95rem; margin-left:145px; color:#333;">${s.trim()}</div>`;
+          return `<div style="font-size:0.95em; margin-left:145px; color:#333;">${s.trim()}</div>`;
         }).join('')}
                 </div>
               </section>
@@ -1623,16 +1682,16 @@
           return `
                   <div style="margin-bottom:15px;">
                     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1px;">
-                      <span style="font-weight:700; font-size:1.05rem; color:#000;">${mainCompany}${subCompany ? ` — <span style="font-weight:600;">${subCompany}</span>` : ''}</span>
-                      <span style="font-size:0.9rem; color:${colorVar}; font-weight:500; font-style:italic;">${exp.location || ''}</span>
+                      <span style="font-weight:700; font-size:1.05em; color:#000;">${mainCompany}${subCompany ? ` — <span style="font-weight:600;">${subCompany}</span>` : ''}</span>
+                      <span style="font-size:0.9em; color:${colorVar}; font-weight:500; font-style:italic;">${exp.location || ''}</span>
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
-                      <span style="font-style:italic; font-size:0.95rem; color:#333; font-weight:500;">${exp.title}</span>
-                      <span style="font-size:0.85rem; color:#444; font-style:italic; font-weight:500;">${exp.date}</span>
+                      <span style="font-style:italic; font-size:0.95em; color:#333; font-weight:500;">${exp.title}</span>
+                      <span style="font-size:0.85em; color:#444; font-style:italic; font-weight:500;">${exp.date}</span>
                     </div>
                     <ul style="list-style-type: none; margin:0; padding:0;">
                       ${(exp.details || '').split('\n').filter(d => d.trim()).map(d => `
-                        <li style="font-size:0.9rem; color:#000; margin-bottom:3px; position:relative; padding-left:15px;">
+                        <li style="font-size:0.9em; color:#000; margin-bottom:3px; position:relative; padding-left:15px;">
                           <span style="position:absolute; left:0;">•</span>${d}
                         </li>
                       `).join('')}
@@ -1646,17 +1705,17 @@
                 ${cvData.education.map(edu => `
                   <div style="margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1px;">
-                      <span style="font-weight:700; font-size:1.05rem; color:#000;">${edu.location}</span>
-                      <span style="font-size:0.9rem; color:${colorVar}; font-weight:500; font-style:italic;">${edu.city || ''}</span>
+                      <span style="font-weight:700; font-size:1.05em; color:#000;">${edu.location}</span>
+                      <span style="font-size:0.9em; color:${colorVar}; font-weight:500; font-style:italic;">${edu.city || ''}</span>
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-                      <span style="font-style:italic; font-size:0.95rem; color:#333; font-weight:500;">${edu.title}</span>
-                      <span style="font-size:0.85rem; color:#444; font-style:italic; font-weight:500;">${edu.year}</span>
+                      <span style="font-style:italic; font-size:0.95em; color:#333; font-weight:500;">${edu.title}</span>
+                      <span style="font-size:0.85em; color:#444; font-style:italic; font-weight:500;">${edu.year}</span>
                     </div>
                     ${edu.details ? `
                     <ul style="list-style-type: none; margin:0; padding:0;">
                       ${edu.details.split('\n').filter(d => d.trim()).map(d => `
-                        <li style="font-size:0.9rem; color:#000; position:relative; padding-left:15px;">
+                        <li style="font-size:0.9em; color:#000; position:relative; padding-left:15px;">
                           <span style="position:absolute; left:0;">•</span>${d}
                         </li>
                       `).join('')}
@@ -1672,12 +1731,12 @@
                   ${cvData.interests.map(s => {
             const parts = s.split(':');
             if (parts.length > 1) {
-              return `<div style="display:flex; font-size:0.95rem;">
+              return `<div style="display:flex; font-size:0.95em;">
                         <span style="min-width:130px; font-weight:700; text-align:right; margin-right:15px; color:#000;">${parts[0].trim()}</span>
                         <span style="color:#333;">${parts.slice(1).join(':').trim()}</span>
                       </div>`;
             }
-            return `<div style="font-size:0.95rem; margin-left:145px; color:#333;">${s.trim()}</div>`;
+            return `<div style="font-size:0.95em; margin-left:145px; color:#333;">${s.trim()}</div>`;
           }).join('')}
                 </div>
               </section>
@@ -1686,7 +1745,7 @@
                 ${sectionHeader('Langues')}
                 <div style="display:flex; flex-direction:column; gap:5px;">
                   ${cvData.languages.map(l => `
-                    <div style="display:flex; font-size:0.95rem;">
+                    <div style="display:flex; font-size:0.95em;">
                       <span style="min-width:130px; font-weight:700; text-align:right; margin-right:15px; color:#000;">${l.name}</span>
                       <span style="color:#333;">Maîtrise ${l.level}%</span>
                     </div>
