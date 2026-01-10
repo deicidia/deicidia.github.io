@@ -1988,15 +1988,56 @@
       }
     }
 
-    function exportPDF() { window.print(); }
+    function exportPDF() {
+      const templateNames = {
+        'modern': 'Moderne',
+        'classic': 'Classique',
+        'tech': 'Technique',
+        'compact': 'Épuré',
+        'expert': 'Expert',
+        'creative': 'Créatif',
+        'executive': 'Exécutif'
+      };
+
+      const palette = PREDEFINED_PALETTES.find(p => p.color.toLowerCase() === cvData.themeColor.toLowerCase() || rgbToHex(p.color).toLowerCase() === cvData.themeColor.toLowerCase());
+      const colorName = palette ? palette.name : cvData.themeColor;
+      const templateName = templateNames[cvData.templateId] || cvData.templateId;
+
+      const oldTitle = document.title;
+      // Format: "nom prenom modèle couleur"
+      document.title = `${cvData.lastName || ''} ${cvData.firstName || ''} ${templateName} ${colorName}`.trim();
+
+      window.print();
+
+      // Restore title after a short delay to ensure print dialog picks it up
+      setTimeout(() => {
+        document.title = oldTitle;
+      }, 500);
+    }
 
     function exportJSON() {
+      const templateNames = {
+        'modern': 'Moderne',
+        'classic': 'Classique',
+        'tech': 'Technique',
+        'compact': 'Épuré',
+        'expert': 'Expert',
+        'creative': 'Créatif',
+        'executive': 'Exécutif'
+      };
+
+      const palette = PREDEFINED_PALETTES.find(p => p.color.toLowerCase() === cvData.themeColor.toLowerCase() || rgbToHex(p.color).toLowerCase() === cvData.themeColor.toLowerCase());
+      const colorName = palette ? palette.name : cvData.themeColor;
+      const templateName = templateNames[cvData.templateId] || cvData.templateId;
+
+      const fileName = `${cvData.lastName || ''} ${cvData.firstName || ''} ${templateName} ${colorName}`.trim() || 'cv_data';
+
       const dataStr = JSON.stringify(cvData, null, 2);
       const blob = new Blob([dataStr], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `cv_${cvData.firstName || 'mon'}_${cvData.lastName || 'cv'}.json`;
+      a.download = `${fileName}.json`;
       a.click();
       URL.revokeObjectURL(url);
     }
