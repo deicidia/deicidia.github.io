@@ -47,5 +47,6 @@ Dans un contexte de calcul haute performance (HPC), j'ai travaillé sur la porta
 <div style="text-align: center; font-size: 1.5em; margin-top: 20px;">
   <a href="https://www.linkedin.com/in/nathan-thoumine/" target="_blank" style="margin-right: 15px; color: #0077b5;"><i class="fab fa-linkedin"></i></a>
   <a href="https://github.com/DEICIDIA" target="_blank" style="margin-right: 15px; color: #333;"><i class="fab fa-github"></i></a>
+  <a href="https://x.com/ThoumNth" target="_blank" style="margin-right: 15px; color: #000;"><i class="fab fa-x-twitter"></i></a>
   <a href="mailto:nathan.thoumine@gmail.com" style="color: #d14836;"><i class="fas fa-envelope"></i></a>
 </div>

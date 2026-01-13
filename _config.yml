@@ -21,7 +21,7 @@ description: >-
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://deicidia.github.io" # the base hostname & protocol for your site
 image: /images/blog_card.png # Default social sharing image for LinkedIn/Twitter
-twitter_username: 
+twitter_username: ThoumNth 
 github_username:  deicidia
 lang: fr
 locale: fr_FR
@@ -31,7 +31,8 @@ social:
   name: Nathan Thoumine
   links:
     - https://github.com/deicidia
-    - https://www.linkedin.com/in/nathan-thoumine/ # Placeholder, user might want to check this
+    - https://www.linkedin.com/in/nathan-thoumine/
+    - https://x.com/ThoumNth
 
 
 # Build settings

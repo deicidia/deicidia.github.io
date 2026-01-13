@@ -742,12 +742,16 @@
         </div>
         <div class="form-group">
           <label>Email</label>
-          <input type="email" id="email" placeholder="votre@email.com" oninput="updatePreview()">
+          <input type="email" id="email" placeholder="thoum.nathan@gmail.com" oninput="updatePreview()">
         </div>
         <div class="form-group">
           <label>Site web / Portfolio <span
               style="font-size:0.75rem; color:var(--text-muted);">(optionnel)</span></label>
           <input type="url" id="website" placeholder="https://monsite.com" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>X (Twitter) <span style="font-size:0.75rem; color:var(--text-muted);">(optionnel)</span></label>
+          <input type="text" id="twitter" placeholder="@username ou lien" oninput="updatePreview()">
         </div>
         <div class="form-group">
           <label>Accroche / Profil <button type="button" onclick="toggleSuggestions()"
@@ -976,6 +980,7 @@
       phone: '',
       email: '',
       website: '',
+      twitter: '',
       profileText: '',
       mobility: '',
       dispo: '',
@@ -1217,6 +1222,7 @@
       document.getElementById('phone').value = cvData.phone;
       document.getElementById('email').value = cvData.email;
       document.getElementById('website').value = cvData.website || '';
+      document.getElementById('twitter').value = cvData.twitter || '';
       document.getElementById('profileText').value = cvData.profileText;
       document.getElementById('mobility').value = cvData.mobility;
       document.getElementById('dispo').value = cvData.dispo;
@@ -1270,6 +1276,7 @@
       cvData.phone = document.getElementById('phone').value;
       cvData.email = document.getElementById('email').value;
       cvData.website = document.getElementById('website').value;
+      cvData.twitter = document.getElementById('twitter').value;
       cvData.profileText = document.getElementById('profileText').value;
       cvData.mobility = document.getElementById('mobility').value;
       cvData.dispo = document.getElementById('dispo').value;
@@ -1437,6 +1444,7 @@
                           <p style="font-size:0.85em;"><a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></p>
                       </div>
                       ${cvData.website ? `<div style="margin-bottom:12px;"><p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Site web</p><p style="font-size:0.85em;"><a href="${cvData.website.startsWith('http') ? cvData.website : 'https://' + cvData.website}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.website}</a></p></div>` : ''}
+                      ${cvData.twitter ? `<div style="margin-bottom:12px;"><p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">X (Twitter)</p><p style="font-size:0.85em;"><a href="${cvData.twitter.startsWith('http') ? cvData.twitter : 'https://x.com/' + cvData.twitter.replace('@', '')}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.twitter}</a></p></div>` : ''}
                       ${cvData.mobility ? `<div style="margin-bottom:12px;"><p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Mobilité</p><p style="font-size:0.85em;">${cvData.mobility}</p></div>` : ''}
                       ${cvData.dispo ? `<div style="margin-bottom:12px;"><p style="font-size:0.7em; color:inherit; opacity:0.6; text-transform:uppercase; font-weight:700;">Disponibilité</p><p style="font-size:0.85em;">${cvData.dispo}</p></div>` : ''}
                   </section>
@@ -1497,6 +1505,7 @@
         const iconPhone = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`;
         const iconMail = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`;
         const iconGlobe = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`;
+        const iconTwitter = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.638l-5.748-7.852 5.093-7.534h-4.326l-3.619 5.37-4.102-5.984h-3.669zm4.333 1.583h2.365l9.268 12.834h-2.366l-9.267-12.834z"/></svg>`;
 
         preview.innerHTML = `
           <div class="cv-a4" style="flex-direction:column; padding:40px 50px; font-family:'${cvData.fontFamily}', sans-serif; font-size:${cvData.fontSize || '100%'}; line-height:${cvData.lineHeight || '1.4'};">
@@ -1508,6 +1517,7 @@
                           <span style="display:flex; align-items:center; gap:5px;">${iconPhone} ${cvData.phone}</span>
                           <span style="display:flex; align-items:center; gap:5px;">${iconMail} <a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></span>
                           ${cvData.website ? `<span style="display:flex; align-items:center; gap:5px;">${iconGlobe} <a href="${cvData.website.startsWith('http') ? cvData.website : 'https://' + cvData.website}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.website}</a></span>` : ''}
+                          ${cvData.twitter ? `<span style="display:flex; align-items:center; gap:5px;">${iconTwitter} <a href="${cvData.twitter.startsWith('http') ? cvData.twitter : 'https://x.com/' + cvData.twitter.replace('@', '')}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.twitter}</a></span>` : ''}
                       </div>
                   </div>
                   ${(cvData.showPhoto && cvData.photoBase64) ? `<img src="${cvData.photoBase64}" style="width:100px; height:100px; border-radius:8px; object-fit:cover; border:2px solid ${colorVar};">` : ''}
@@ -1558,7 +1568,8 @@
           loc: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
           phone: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.1.65.42 2.24.7 2.81a2 2 0 0 1-.45 2.11l-.27.27a16 16 0 0 0 6 6l.27-.27a2 2 0 0 1 2.11-.45c.57.28 2.16.6 2.81.7a2 2 0 0 1 1.72 2z"/></svg>`,
           mail: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`,
-          globe: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`
+          globe: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
+          twitter: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.638l-5.748-7.852 5.093-7.534h-4.326l-3.619 5.37-4.102-5.984h-3.669zm4.333 1.583h2.365l9.268 12.834h-2.366l-9.267-12.834z"/></svg>`
         };
 
         preview.innerHTML = `
@@ -1570,6 +1581,7 @@
                       <span style="display:flex; align-items:center; gap:6px;">${icons.phone} ${cvData.phone}</span>
                       <span style="display:flex; align-items:center; gap:6px;">${icons.mail} <a href="mailto:${cvData.email}" style="color:inherit; text-decoration:none;">${cvData.email}</a></span>
                       ${cvData.website ? `<span style="display:flex; align-items:center; gap:6px;">${icons.globe} <a href="${cvData.website.startsWith('http') ? cvData.website : 'https://' + cvData.website}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.website}</a></span>` : ''}
+                      ${cvData.twitter ? `<span style="display:flex; align-items:center; gap:6px;">${icons.twitter} <a href="${cvData.twitter.startsWith('http') ? cvData.twitter : 'https://x.com/' + cvData.twitter.replace('@', '')}" target="_blank" style="color:inherit; text-decoration:none;">${cvData.twitter}</a></span>` : ''}
                   </div>
                   ${cvData.profileText ? `<p style="margin-top:20px; font-size:0.95em; color:#475569; max-width:680px; margin-left:auto; margin-right:auto; line-height:1.6; text-align:justify; border-top:1px solid #f1f5f9; padding-top:15px;">${h(cvData.profileText)}</p>` : ''}
               </header>
