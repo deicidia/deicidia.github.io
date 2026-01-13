@@ -881,7 +881,13 @@
       <!-- Step 7: Export -->
       <div id="step-7" class="step-content" style="display: none;">
         <div class="section-header" style="text-align: center;">
-          <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+          <div style="margin-bottom: 20px; display: flex; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+              stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
           <h2>Bravo ! Votre CV est prêt.</h2>
           <p>Vérifiez le rendu à droite. Si tout est bon, exportez-le en PDF.</p>
 
@@ -905,11 +911,25 @@
             style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%; text-align:center;">
             <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">Sauvegarde locale</p>
             <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-              <button class="btn btn-outline" onclick="exportJSON()" style="font-size:0.9rem;">
-                <span style="margin-right:5px;">💾</span> Exporter JSON
+              <button class="btn btn-outline" onclick="exportJSON()"
+                style="font-size:0.9rem; display:flex; align-items:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  style="margin-right:5px;">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg> Exporter JSON
               </button>
-              <label class="btn btn-outline" style="font-size:0.9rem; cursor:pointer;">
-                <span style="margin-right:5px;">📂</span> Importer JSON
+              <label class="btn btn-outline"
+                style="font-size:0.9rem; cursor:pointer; display:flex; align-items:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  style="margin-right:5px;">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg> Importer JSON
                 <input type="file" accept=".json" onchange="importJSON(event)" style="display:none;">
               </label>
             </div>
@@ -918,8 +938,12 @@
           <div
             style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%; text-align:center;">
             <button class="btn" onclick="resetCV()"
-              style="font-size:0.9rem; background:#dc2626; color:white; border:none;">
-              🗑️ Réinitialiser tout
+              style="font-size:0.9rem; background:#dc2626; color:white; border:none; display:flex; align-items:center; gap:5px; margin: 0 auto;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg> Réinitialiser tout
             </button>
           </div>
         </div>
