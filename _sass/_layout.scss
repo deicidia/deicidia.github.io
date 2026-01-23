@@ -150,93 +150,92 @@
         }
 
         @include media-query($on-palm) {
-            display: block; // Stack vertically on mobile
+            display: block;
 
             &:hover .dropdown-content {
-                position: static; // Flow naturally in mobile menu
+                position: static;
                 display: block;
                 box-shadow: none;
                 border: none;
                 background: transparent;
-                padding-left: 20px; // Indent items
+                padding-left: 20px;
             }
         }
-    }
 
-    .dropbtn {
-        cursor: pointer;
-        padding-right: 24px; // Space for arrow
-        position: relative;
+        .dropbtn {
+            cursor: pointer;
+            padding-right: 24px;
+            position: relative;
 
-        &::after {
-            content: "▼";
-            font-size: 0.6em;
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.7;
+            &::after {
+                content: "▼";
+                font-size: 0.6em;
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                opacity: 0.7;
+            }
         }
-    }
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: var(--color-base-00);
-        min-width: 200px;
-        box-shadow: $shadow-l;
-        border-radius: $radius-ml;
-        border: 1px solid var(--border-color);
-        z-index: 1000;
-        top: 100%;
-        right: 0; // Align to right edge
-        left: auto;
-        transform: translateY(10px);
-        padding: 8px 0;
-        opacity: 0;
-        transition: all $anim-duration-fast $anim-motion-smooth;
-
-        &::before {
-            // Little arrow pointing up
-            content: "";
+        .dropdown-content {
+            display: none;
             position: absolute;
-            top: -6px;
-            right: 24px; // Point to the text center roughly
+            background-color: var(--color-base-00);
+            min-width: 200px;
+            box-shadow: $shadow-l;
+            border-radius: $radius-ml;
+            border: 1px solid var(--border-color);
+            z-index: 1000;
+            top: 100%;
+            right: 0;
             left: auto;
-            transform: none;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 6px solid var(--border-color);
-        }
-
-        .page-link {
-            display: block;
-            margin: 0;
-            border-radius: 0;
-            white-space: nowrap;
-            text-align: center; // Center text
-
-            &:hover {
-                background-color: var(--color-accent-faint);
-            }
-        }
-
-        @include media-query($on-palm) {
-            position: static;
-            transform: none;
-            border: none;
-            box-shadow: none;
-            opacity: 1;
-            display: block; // Always show on mobile for simplicity or use hover
-            padding: 0 0 0 15px;
+            transform: translateY(10px);
+            padding: 8px 0;
+            opacity: 0;
+            transition: all $anim-duration-fast $anim-motion-smooth;
 
             &::before {
-                display: none;
+                content: "";
+                position: absolute;
+                top: -6px;
+                right: 24px;
+                left: auto;
+                transform: none;
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-bottom: 6px solid var(--border-color);
             }
 
             .page-link {
-                padding: 8px 0;
-                font-size: 0.9em;
+                display: block;
+                margin: 0;
+                border-radius: 0;
+                white-space: nowrap;
+                text-align: center;
+
+                &:hover {
+                    background-color: var(--color-accent-faint);
+                }
+            }
+
+            @include media-query($on-palm) {
+                position: static;
+                transform: none;
+                border: none;
+                box-shadow: none;
+                opacity: 1;
+                display: block;
+                padding: 0 0 0 15px;
+
+                &::before {
+                    display: none;
+                }
+
+                .page-link {
+                    padding: 8px 0;
+                    font-size: 0.9em;
+                }
             }
         }
     }

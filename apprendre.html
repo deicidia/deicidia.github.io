@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorateur d'Abstractions Informatiques</title>
+  <style>
+    :root {
+      --bg-color: #020617;
+      --text-color: #f8fafc;
+      --layer-width: 850px;
+      --layer-height: 550px;
+      --base-spacing: 50px;
+      --spread-spacing: 80px;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-teal: #14b8a6;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at 20% 30%, #1e1b4b 0%, #020617 100%);
+    }
+
+    /* Décoration d'arrière-plan */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* --- Zone de visualisation 3D --- */
+    .viewport {
+      flex: 1.5;
+      perspective: 3500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .stack-container {
+      position: relative;
+      width: var(--layer-width);
+      height: var(--layer-height);
+      transform-style: preserve-3d;
+      transform: rotateX(65deg) rotateZ(-25deg) translateY(100px);
+      transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: rotateX(60deg) rotateZ(-30deg) translateY(100px);
+      }
+
+      50% {
+        transform: rotateX(58deg) rotateZ(-32deg) translateY(85px);
+      }
+    }
+
+    .viewport:hover .stack-container:not(.focus-mode) {
+      transform: rotateX(50deg) rotateZ(-15deg) translateY(0px) scale(0.75);
+      animation-play-state: paused;
+    }
+
+    /* --- Mode Focus --- */
+    .stack-container.focus-mode {
+      transform: rotateX(0deg) rotateZ(0deg) translateY(0px) scale(0.9) !important;
+    }
+
+    .layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(4px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-style: preserve-3d;
+      pointer-events: auto;
+      /* Permettre le clic sur le plateau */
+      cursor: zoom-in;
+    }
+
+    .layer.focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 50px rgba(59, 130, 246, 0.2);
+      transform: translateZ(400px) !important;
+      cursor: zoom-out;
+    }
+
+    .layer.dimmed {
+      opacity: 0.05 !important;
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .layer-label {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* --- Nœuds sur les plans --- */
+    .node {
+      position: absolute;
+      padding: 12px 20px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: white;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .node:hover {
+      background: var(--accent-blue);
+      transform: translateZ(20px);
+      border-color: white;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .node.active {
+      background: white;
+      color: #020617;
+      transform: translateZ(30px);
+    }
+
+    /* --- Calque SVG pour les flèches --- */
+    #connections-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    path.connection-line {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.2);
+      stroke-width: 1.5;
+      transition: all 0.4s ease;
+      marker-end: url(#arrowhead);
+    }
+
+    path.connection-line:hover {
+      stroke: var(--accent-blue);
+      stroke-width: 3;
+      opacity: 1;
+    }
+
+    text.interaction-label {
+      fill: rgba(255, 255, 255, 0.3);
+      font-size: 10px;
+      font-weight: 500;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .stack-container:hover .connection-line {
+      stroke: rgba(255, 255, 255, 0.4);
+    }
+
+    .layer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .layer span {
+      font-size: 1.4rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      pointer-events: none;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .layer small {
+      font-weight: 500;
+      opacity: 0.9;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* --- Couleurs et Positions (7 Niveaux) --- */
+    .l7 {
+      --z-base: calc(var(--base-spacing) * 6);
+      background: rgba(30, 64, 175, 0.6);
+    }
+
+    /* Indigo - Théorie */
+    .l6 {
+      --z-base: calc(var(--base-spacing) * 5);
+      background: rgba(59, 130, 246, 0.6);
+    }
+
+    /* Bleu - Langages */
+    .l5 {
+      --z-base: calc(var(--base-spacing) * 4);
+      background: rgba(139, 92, 246, 0.6);
+    }
+
+    /* Violet - Compil */
+    .l4 {
+      --z-base: calc(var(--base-spacing) * 3);
+      background: rgba(16, 185, 129, 0.6);
+    }
+
+    /* Vert - OS */
+    .l3 {
+      --z-base: calc(var(--base-spacing) * 2);
+      background: rgba(245, 158, 11, 0.6);
+    }
+
+    /* Ambre - Interface */
+    .l2 {
+      --z-base: calc(var(--base-spacing) * 1);
+      background: rgba(239, 68, 68, 0.6);
+    }
+
+    /* Rouge - Microarch */
+    .l1 {
+      --z-base: 0px;
+      background: rgba(71, 85, 105, 0.6);
+    }
+
+    /* Gris - Physique */
+
+    /* --- Connecteurs (Lignes entre couches) --- */
+    .connector {
+      position: absolute;
+      width: 4px;
+      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transform-style: preserve-3d;
+      pointer-events: none;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      left: 20px;
+    }
+
+    .stack:hover .connector {
+      opacity: 0.8;
+    }
+
+    /* Positions des connecteurs */
+    .c1 {
+      height: var(--base-spacing);
+      bottom: calc(var(--base-spacing) * 0.5);
+    }
+
+    .c2 {
+      height: var(--base-spacing);
+      bottom: calc(var(--base-spacing) * 1.5);
+    }
+
+    /* ... etc ... mais on va plutôt utiliser une approche plus visuelle avec des étiquettes flottantes */
+
+    .interaction-label {
+      position: absolute;
+      left: calc(100% + 20px);
+      white-space: nowrap;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border-left: 2px solid var(--accent-blue);
+      transform: rotateZ(30deg) rotateX(-60deg);
+      opacity: 0;
+      transition: all 0.4s ease;
+      pointer-events: none;
+    }
+
+    .stack:hover .interaction-label {
+      opacity: 1;
+      transform: rotateZ(0deg) rotateX(0deg);
+    }
+
+    /* Mise en avant de la couche cliquée */
+    .layer {
+      --disp-z: var(--z-base);
+      transform: translateZ(var(--disp-z));
+    }
+
+    /* Expansion gérée par JS pour synchronisation SVG */
+
+    .layer:hover:not(.dimmed) {
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      filter: brightness(1.2);
+      transform: translateZ(calc(var(--disp-z) + 30px)) scale(1.05) !important;
+      z-index: 100;
+    }
+
+    path.connection-line.highlight {
+      stroke: var(--accent-blue) !important;
+      stroke-width: 3 !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 5px var(--accent-blue));
+    }
+
+    .interaction-label.highlight {
+      opacity: 1 !important;
+      fill: white !important;
+      font-weight: 800;
+    }
+
+    .layer.active small {
+      color: white;
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    /* --- Panneau d'information --- */
+    .info-panel {
+      flex: 0.7;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      padding: 60px;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .info-card {
+      max-width: 500px;
+      animation: fadeInSlide 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    h2 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin: 0 0 15px 0;
+      background: linear-gradient(to right, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+    }
+
+    .desc {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #94a3b8;
+      margin-bottom: 30px;
+    }
+
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .features-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .features-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: scale(1.02);
+    }
+
+    .features-icon {
+      color: #3b82f6;
+      font-size: 1.2rem;
+      margin-top: 3px;
+    }
+
+    .features-text b {
+      display: block;
+      color: #f8fafc;
+      margin-bottom: 4px;
+    }
+
+    .features-text span {
+      font-size: 0.95rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="viewport">
+    <svg id="connections-svg">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="rgba(59, 130, 246, 0.6)" />
+        </marker>
+      </defs>
+    </svg>
+    <div class="stack-container" id="stack">
+      <!-- Plateaux générés par JS -->
+    </div>
+  </div>
+
+  <div class="info-panel" id="panel">
+    <div class="info-card">
+      <span class="tag">Guide d'exploration</span>
+      <h2>L'Échelle des Abstractions</h2>
+      <p class="desc">Chaque clic vous fait descendre un peu plus bas dans la réalité physique de l'informatique. Du
+        code humain aux électrons.</p>
+      <div class="features-list">
+        <div class="features-item">
+          <div class="features-icon">⚡</div>
+          <div class="features-text">
+            <b>Interactivité 3D</b>
+            <span>Survolez la pile pour la déployer et manipuler les couches.</span>
+          </div>
+        </div>
+        <div class="features-item">
+          <div class="features-icon">🔍</div>
+          <div class="features-text">
+            <b>Détails Techniques</b>
+            <span>Cliquez sur une couche pour voir comment elle fonctionne.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const abstractions = [
+      {
+        id: 'theory', name: '1. Fondements Théoriques', nodes: [
+          { id: 'turing', name: 'Machine de Turing', x: 20, y: 30, tag: 'Calculabilité' },
+          { id: 'automata', name: 'Automates Finis', x: 50, y: 20, tag: 'Théorie des Langages' },
+          { id: 'lambda', name: 'Lambda-Calcul', x: 75, y: 40, tag: 'Logique' }
+        ]
+      },
+      {
+        id: 'language', name: '2. Langages & Logique', nodes: [
+          { id: 'type_system', name: 'Système de Types', x: 25, y: 50, tag: 'Sémantique' },
+          { id: 'high_lvl', name: 'Langages de Haut Niveau', x: 60, y: 45, tag: 'Abstraction' },
+          { id: 'logic_gate_soft', name: 'Logique Booléenne', x: 15, y: 15, tag: 'Mathématiques' }
+        ]
+      },
+      {
+        id: 'compilation', name: '3. Transformation & Runtime', nodes: [
+          { id: 'llvm_ir', name: 'LLVM IR', x: 35, y: 30, tag: 'Intermédiaire' },
+          { id: 'jit', name: 'JIT Compiler', x: 70, y: 25, tag: 'Performance' },
+          { id: 'gc', name: 'Garbage Collector', x: 15, y: 60, tag: 'Runtime' },
+          { id: 'comp_lexer', name: 'Analyse Lexicale', x: 50, y: 10, tag: 'Frontend' }
+        ]
+      },
+      {
+        id: 'system', name: '4. Environnement Système', nodes: [
+          { id: 'kernel', name: 'Kernel (Linux/NT)', x: 45, y: 40, tag: 'Noyau' },
+          { id: 'scheduler', name: 'Threads & Scheduler', x: 15, y: 35, tag: 'Concurrence' },
+          { id: 'v_mem', name: 'Mémoire Virtuelle', x: 75, y: 60, tag: 'Isolation' }
+        ]
+      },
+      {
+        id: 'interface', name: '5. Interface Matériel/Logiciel', nodes: [
+          { id: 'isa', name: 'ISA (x86/ARM)', x: 40, y: 70, tag: 'Standard' },
+          { id: 'abi', name: 'ABI (Convention)', x: 15, y: 80, tag: 'Binaire' },
+          { id: 'syscall', name: 'Appels Système (SVC)', x: 65, y: 75, tag: 'Interaction' }
+        ]
+      },
+      {
+        id: 'microarch', name: '6. Microarchitecture', nodes: [
+          { id: 'pipeline', name: 'Pipelines CPU', x: 20, y: 20, tag: 'Performance' },
+          { id: 'branch_pred', name: 'Branch Prediction', x: 55, y: 15, tag: 'Optimisation' },
+          { id: 'cache_l1', name: 'Caches L1/L2', x: 80, y: 30, tag: 'Latence' }
+        ]
+      },
+      {
+        id: 'physics', name: '7. Physique du Calcul', nodes: [
+          { id: 'gates', name: 'Portes NAND/NOR', x: 30, y: 70, tag: 'Logique Silicium' },
+          { id: 'transistor', name: 'Transistors CMOS', x: 65, y: 80, tag: 'Électronique' },
+          { id: 'wafer', name: 'Gravure Silicium', x: 10, y: 85, tag: 'Manufacture' }
+        ]
+      }
+    ];
+
+    const interactions = [
+      { from: 'theory', to: 'language', nodes: ['automata', 'high_lvl'], label: 'lexing' },
+      { from: 'theory', to: 'language', nodes: ['lambda', 'type_system'], label: 'formalisation' },
+      { from: 'language', to: 'compilation', nodes: ['high_lvl', 'comp_lexer'], label: 'syntax' },
+      { from: 'language', to: 'compilation', nodes: ['type_system', 'llvm_ir'], label: 'type-check' },
+      { from: 'compilation', to: 'compilation', nodes: ['jit', 'llvm_ir'], label: 'optim.' },
+      { from: 'compilation', to: 'system', nodes: ['gc', 'v_mem'], label: 'mmap' },
+      { from: 'compilation', to: 'system', nodes: ['llvm_ir', 'kernel'], label: 'binaire' },
+      { from: 'system', to: 'interface', nodes: ['kernel', 'syscall'], label: 'privilège' },
+      { from: 'system', to: 'interface', nodes: ['v_mem', 'isa'], label: 'paging' },
+      { from: 'system', to: 'interface', nodes: ['scheduler', 'isa'], label: 'timer IRQ' },
+      { from: 'interface', to: 'microarch', nodes: ['isa', 'pipeline'], label: 'µOps' },
+      { from: 'interface', to: 'microarch', nodes: ['abi', 'cache_l1'], label: 'calling conv.' },
+      { from: 'microarch', to: 'physics', nodes: ['pipeline', 'gates'], label: 'logique' },
+      { from: 'microarch', to: 'physics', nodes: ['cache_l1', 'transistor'], label: 'courant' },
+      { from: 'physics', to: 'physics', nodes: ['transistor', 'wafer'], label: 'lithographie' }
+    ];
+
+    const nodeDetails = {
+      'turing': { title: 'Machine de Turing', tag: 'Fondement Mathématique', desc: 'Le modèle abstrait défini par Alan Turing en 1936. Tout ce qui est calculable par un ordinateur moderne peut être simulé par un ruban infini et un automate à états.', points: ['Modèle universel de calcul', 'Calculabilité (Church-Turing)', 'Dépendance aux états/symboles'] },
+      'automata': { title: 'Automates Finis', tag: 'Théorie des Langages', desc: 'Systèmes à états discrets utilisés pour reconnaître des motifs. C\'est la base de l\'analyse lexicale et syntaxique dans tous les compilateurs.', points: ['Automates Déterministes (DFA)', 'Expressions Régulières', 'Base de la Lexicographie'] },
+      'lambda': { title: 'Lambda-Calcul', tag: 'Logique Formelle', desc: 'Système formel créé par Alonzo Church. Fondement de la programmation fonctionnelle où tout est fonction (abstraction et application).', points: ['Programmation fonctionnelle', 'Réduction alpha/bêta', 'Système de types'] },
+      'high_lvl': { title: 'Langages Haut Niveau', tag: 'Abstraction Logicielle', desc: 'C++, Rust, Python, Java... Ces langages cachent la complexité de la gestion mémoire et du CPU pour offrir une sémantique proche du problème métier.', points: ['Productivité accrue', 'Sécurité mémoire', 'Abstraction multi-paradigme'] },
+      'llvm_ir': { title: 'LLVM IR', tag: 'Code Intermédiaire', desc: 'Un langage d\'assemblage portable et typé. Il permet d\'appliquer des optimisations mathématiques complexes avant la génération du binaire final.', points: ['Static Single Assignment (SSA)', 'Optimisations indépendantes', 'Modularité front/back'] },
+      'jit': { title: 'JIT Compiler', tag: 'Performance Dynamique', desc: 'Just-In-Time. Le compilateur binaire qui s\'exécute pendant que le programme tourne, spécialisant le code pour les données réelles.', points: ['Optimisation de points chauds', 'Inlining agressif', 'Utilisé par V8 et la JVM'] },
+      'kernel': { title: 'Kernel (Noyau)', tag: 'Gestionnaire de Ressources', desc: 'Le logiciel le plus privilégié. Il arbitre l\'accès au matériel entre tous les programmes et assure la sécurité du système.', points: ['Gestion de interruptions', 'Drivers matériel', 'Isolation mémoire'] },
+      'scheduler': { title: 'Ordonnanceur', tag: 'Système Temps Partagé', desc: 'Le cerveau de l\'OS qui décide quel "Thread" ou "Processus" a le droit d\'utiliser le CPU à chaque milliseconde.', points: ['Context Switching', 'Priorités de tâches', 'Parallélisme massif'] },
+      'isa': { title: 'ISA (x86/ARM)', tag: 'Contrat Matériel', desc: 'Instruction Set Architecture. La liste de toutes les opérations qu\'un CPU peut physiquement exécuter. C\'est l\'alphabet du silicium.', points: ['Encodage binaire', 'Registres système', 'Compatibilité ascendante'] },
+      'abi': { title: 'ABI', tag: 'Convention Binaire', desc: 'Application Binary Interface. Règle comment les fonctions s\'appellent entre elles (qui nettoie la pile, où sont les paramètres).', points: ['Format ELF/PE', 'Appels de bibliothèques', 'Compatibilité binaire'] },
+      'pipeline': { title: 'Pipelines CPU', tag: 'Microarchitecture', desc: 'Découpage d\'une instruction en étapes (Fetch, Decode, Execute, Writeback). Permet de traiter une instruction à chaque top d\'horloge.', points: ['Super-scalabilité', 'Hazard Unit', 'Fréquence élevée'] },
+      'gates': { title: 'Portes Logiques', tag: 'Physique Numérique', desc: 'L\'implémentation physique des fonctions ET, OU, NON par des transistors. C\'est ici que le silicium réalise le calcul.', points: ['Loi de Moore', 'Délai de propagation', 'Consommation dynamique'] },
+      'transistor': { title: 'Transistors CMOS', tag: 'Électronique du Calcul', desc: 'L\'interrupteur de base de toute l\'informatique. Un simple composant semi-conducteur qui bloque ou laisse passer le courant.', points: ['Gravure en nanomètres', 'Effet tunnel', 'Densité d\'intégration'] }
+    };
+
+    let activeNodeId = null;
+    let focusLayerId = null;
+
+    function initGraphe() {
+      const container = document.getElementById('stack');
+      const baseSpacing = 50;
+
+      abstractions.forEach((lvl, i) => {
+        const layer = document.createElement('div');
+        // i=0 (Théorie) -> l7 (Top), i=6 (Physique) -> l1 (Base)
+        layer.className = `layer l${abstractions.length - i}`;
+        layer.id = `layer-${lvl.id}`;
+        const z = (abstractions.length - 1 - i) * baseSpacing;
+        layer.setAttribute('data-z', z);
+        layer.style.transform = `translateZ(${z}px)`;
+        layer.innerHTML = `<div class="layer-label">${lvl.name}</div>`;
+
+        // Clic sur le plateau pour focus
+        layer.onclick = (e) => {
+          if (e.target === layer || e.target.classList.contains('layer-label')) {
+            toggleFocus(lvl.id);
+          }
+        };
+
+        lvl.nodes.forEach(node => {
+          const nodeDiv = document.createElement('div');
+          nodeDiv.className = 'node';
+          nodeDiv.id = `node-${node.id}`;
+          nodeDiv.style.left = `${node.x}%`;
+          nodeDiv.style.top = `${node.y}%`;
+          nodeDiv.innerText = node.name;
+          nodeDiv.onclick = (e) => { e.stopPropagation(); updateNodeInfo(node.id, nodeDiv); };
+          layer.appendChild(nodeDiv);
+        });
+
+        container.appendChild(layer);
+      });
+
+      setTimeout(drawConnections, 100);
+
+      const viewport = document.querySelector('.viewport');
+
+      // Désactiver le hover system si focus
+      viewport.onmouseenter = () => {
+        if (focusLayerId) return;
+        document.querySelectorAll('.layer').forEach((l, i) => {
+          const z = (abstractions.length - 1 - i) * 100; // Plus d'espace au survol
+          l.style.transform = `translateZ(${z}px)`;
+        });
+        requestAnimationFrame(animateLines);
+      };
+      viewport.onmouseleave = () => {
+        if (focusLayerId) return;
+        document.querySelectorAll('.layer').forEach((l, i) => {
+          const z = (abstractions.length - 1 - i) * 50;
+          l.style.transform = `translateZ(${z}px)`;
+        });
+        requestAnimationFrame(animateLines);
+      };
+
+      // Gestion de la boucle d'animation globale
+      let isAnimating = false;
+      function animateLines() {
+        drawConnections();
+        if (isAnimating) requestAnimationFrame(animateLines);
+      }
+
+      viewport.addEventListener('mouseenter', () => { isAnimating = true; requestAnimationFrame(animateLines); });
+      viewport.addEventListener('mouseleave', () => { isAnimating = false; });
+    }
+
+    function toggleFocus(lvlId) {
+      const container = document.getElementById('stack');
+      const layers = document.querySelectorAll('.layer');
+
+      if (focusLayerId === lvlId) {
+        // Exit Focus
+        focusLayerId = null;
+        container.classList.remove('focus-mode');
+        layers.forEach(l => {
+          l.classList.remove('focus', 'dimmed');
+          const z = l.getAttribute('data-z');
+          l.style.transform = `translateZ(${z}px)`;
+        });
+      } else {
+        // Enter Focus
+        focusLayerId = lvlId;
+        container.classList.add('focus-mode');
+        layers.forEach(l => {
+          if (l.id === `layer-${lvlId}`) {
+            l.classList.add('focus');
+            l.classList.remove('dimmed');
+          } else {
+            l.classList.add('dimmed');
+            l.classList.remove('focus');
+          }
+        });
+      }
+
+      // Lancer une animation de transition pour les lignes
+      let start = null;
+      function step(timestamp) {
+        if (!start) start = timestamp;
+        drawConnections();
+        if (timestamp - start < 850) {
+          requestAnimationFrame(step);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    function drawConnections() {
+      const svg = document.getElementById('connections-svg');
+      svg.innerHTML = '';
+
+      interactions.forEach(inter => {
+        // En mode focus, on ne montre que les lignes liées au plan actif
+        if (focusLayerId && inter.from !== focusLayerId && inter.to !== focusLayerId) return;
+
+        const fromNode = document.getElementById(`node-${inter.nodes[0]}`);
+        const toNode = document.getElementById(`node-${inter.nodes[1]}`);
+
+        if (fromNode && toNode) {
+          const start = getNodeCenter(fromNode);
+          const end = getNodeCenter(toNode);
+          const midY = (start.y + end.y) / 2;
+          const pathData = `M ${start.x} ${start.y} C ${start.x} ${midY}, ${end.x} ${midY}, ${end.x} ${end.y}`;
+
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", pathData);
+          const isHighlighted = activeNodeId && (inter.nodes[0] === activeNodeId || inter.nodes[1] === activeNodeId);
+          path.setAttribute("class", `connection-line ${isHighlighted ? 'highlight' : ''}`);
+          path.setAttribute("marker-end", "url(#arrowhead)");
+          svg.appendChild(path);
+
+          if (inter.label) {
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", (start.x + end.x) / 2 + 10);
+            text.setAttribute("y", midY);
+            text.setAttribute("class", `interaction-label ${isHighlighted ? 'highlight' : ''}`);
+            text.textContent = inter.label;
+            svg.appendChild(text);
+          }
+        }
+      });
+    }
+
+    function getNodeCenter(el) {
+      const rect = el.getBoundingClientRect();
+      const viewport = document.querySelector('.viewport').getBoundingClientRect();
+
+      // On calcule la position relative au viewport pour le SVG overlay
+      return {
+        x: rect.left - viewport.left + rect.width / 2,
+        y: rect.top - viewport.top + rect.height / 2
+      };
+    }
+
+    function updateNodeInfo(id, el) {
+      const data = nodeDetails[id] || { title: id, tag: 'Nœud Technique', desc: 'Description à venir pour ce composant de la pile informatique.', points: [] };
+      const panel = document.getElementById('panel');
+
+      document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+
+      panel.innerHTML = `
+        <div class="info-card">
+          <span class="tag">${data.tag}</span>
+          <h2>${data.title}</h2>
+          <p class="desc">${data.desc}</p>
+          <div class="features-list">
+            ${data.points.map(p => `
+              <div class="features-item">
+                <div class="features-icon">→</div>
+                <div class="features-text"><span>${p}</span></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    initGraphe();
+  </script>
+</body>
+
+</html>
