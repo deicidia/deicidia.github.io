@@ -446,7 +446,7 @@
     line-height: $line-height-normal;
 
     @include media-query($on-palm) {
-        text-align: left;
+        text-align: justify;
     }
 
     p {
@@ -454,7 +454,7 @@
         margin-bottom: $spacing-m;
 
         @include media-query($on-palm) {
-            text-align: left;
+            text-align: justify;
         }
     }
 
