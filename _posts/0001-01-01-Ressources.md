@@ -3,88 +3,61 @@ layout: post
 title: Liste de ressources
 date: 2025-12-08
 description: Compilation de ressources essentielles en mathématiques, algorithmique, C++, Python, GPU (CUDA) et bonnes pratiques de développement.
-tags: [optimisation, math, programming, competitive programming]
+tags: [Algorithmique, Mathématiques, Programmation]
 categories: [ressources]
 ---
 
-## Optimisation & Mathématiques
-
-| Ressource | Description |
-| --- | --- |
-| [Algorithmica](https://en.algorithmica.org/hpc/) | Performance et architectures modernes. <i class="fa-solid fa-globe" title="Site"></i> |
-| [CuriousCoding](https://curiouscoding.nl/posts/) | Algos bio et structures de données. <i class="fa-solid fa-globe" title="Site"></i> |
-| [Bits, Math and Performance](https://bitmath.blogspot.com/) | Bits (SIMD, AVX) et bas-niveau. <i class="fa-solid fa-globe" title="Site"></i> |
-| [Introduction to Probability](https://dlsun.github.io/probability/box-models.html#exm:committee-chair) | Cours de probabilités et statistiques. <i class="fa-solid fa-globe" title="Site"></i> |
-| [Dictionary of Algorithms](https://xlinux.nist.gov/dads/) | Référence NIST des algos/structures. <i class="fa-solid fa-globe" title="Site"></i> |
+Une collection de liens et de documents que j'affectionne et me sont utiles. 
 
 ---
 
-## Competitive Programming
+## Algorithmique & Fondations
 
 | Ressource | Description |
 | --- | --- |
-| [Competitive Programmer's Handbook](https://usaco.guide/CPH.pdf) | Guide exhaustif d'algos de compétition. <i class="fa-solid fa-file-pdf" title="PDF"></i> |
-| [Algorithms (Jeff Erickson)](https://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf) | Cours théorique et rigoureux d'algorithmique. <i class="fa-solid fa-file-pdf" title="PDF"></i> |
-| [Algorithms for Competitive Programming](https://cp-algorithms.com/) | Implémentations d'algos classiques. <i class="fa-solid fa-globe" title="Site"></i> |
-| [TryAlgo](https://tryalgo.org/) | Ressources algorithmiques (Français). <i class="fa-solid fa-globe" title="Site"></i> |
-| [A&DS](https://www.youtube.com/playlist?list=PLrS21S1jm43igE57Ye_edwds_iL7ZOAG4) | Cours d'algorithmique et structures de données. <i class="fa-solid fa-video" title="Vidéos"></i> |
+| [Competitive Programmer's Handbook](https://usaco.guide/CPH.pdf) | Le guide de référence pour les algorithmes de compétition. <i class="fa-solid fa-file-pdf" title="PDF"></i> |
+| [Algorithms (Jeff Erickson)](https://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf) | Une approche théorique et rigoureuse de l'algorithmique. <i class="fa-solid fa-file-pdf" title="PDF"></i> |
+| [Algorithms for Competitive Programming](https://cp-algorithms.com/) | Traductions et implémentations d'algos classiques (E-Maxx). <i class="fa-solid fa-globe" title="Site"></i> |
+| [Dictionary of Algorithms](https://xlinux.nist.gov/dads/) | Référence NIST exhaustive des structures et algorithmes. <i class="fa-solid fa-globe" title="Site"></i> |
+| [TryAlgo](https://tryalgo.org/) | Excellente ressource algorithmique en français. <i class="fa-solid fa-globe" title="Site"></i> |
+| [A&DS (Playlist)](https://www.youtube.com/playlist?list=PLrS21S1jm43igE57Ye_edwds_iL7ZOAG4) | Cours vidéo complet sur les structures de données. <i class="fa-solid fa-video" title="Vidéos"></i> |
 
 ---
 
-## Langages de programmation 
+## Architecture & Performance
+
+| Ressource | Description |
+| --- | --- |
+| [CUDA Architecture Glossary](https://modal.com/gpu-glossary/device-hardware/cuda-device-architecture) | Lexique technique (SM, Warp, Occupancy, etc.). <i class="fa-solid fa-globe" title="Site"></i> |
+| [Algorithmica](https://en.algorithmica.org/hpc/) | Performance, efficience et architectures processeurs modernes. <i class="fa-solid fa-globe" title="Site"></i> |
+| [Bits, Math and Performance](https://bitmath.blogspot.com/) | Manipulation de bits, intrinsèques SIMD (AVX/SSE). <i class="fa-solid fa-globe" title="Site"></i> |
+| [Making Software](https://www.makingsoftware.com/) | Visualisations incroyables sur le fonctionnement interne du soft. <i class="fa-solid fa-globe" title="Site"></i> |
+| [CuriousCoding](https://curiouscoding.nl/posts/) | Algorithmes biologiques et structures spécialisées. <i class="fa-solid fa-globe" title="Site"></i> |
+| [Introduction to Probability](https://dlsun.github.io/probability/box-models.html#exm:committee-chair) | Fondations en probabilités et statistiques. <i class="fa-solid fa-globe" title="Site"></i> |
+
+---
+
+## Langages & Systèmes
 
 ### C++
 
 | Ressource | Description |
 | --- | --- |
-| [Learn C++](https://www.learncpp.com/) | Tutoriels complets sur le C++ moderne. <i class="fa-solid fa-globe" title="Site"></i> |
-| [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) | Guide de style C++ de Google. <i class="fa-solid fa-globe" title="Site"></i> |
+| [Learn C++](https://www.learncpp.com/) | La meilleure ressource pour apprendre le C++ moderne de zéro. <i class="fa-solid fa-globe" title="Site"></i> |
+| [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) | Les conventions de codage utilisées chez Google. <i class="fa-solid fa-globe" title="Site"></i> |
 
 ### Zig
 
 | Ressource | Description |
 | --- | --- |
-| [Ziglings](https://codeberg.org/ziglings/exercises) | Apprendre Zig par la pratique (exercices). <i class="fa-solid fa-globe" title="Site"></i> |
-| [Introduction to Zig](https://pedropark99.github.io/zig-book/) | Guide complet pour débuter en Zig. <i class="fa-solid fa-globe" title="Site"></i> |
-
-### Python  
-
-| Ressource | Description |
-| --- | --- |
-| [The Zen of Python (PEP 20)](https://peps.python.org/pep-0020/) | Les 19 principes directeurs de Python. <i class="fa-solid fa-globe" title="Site"></i> |
-| [Python Type Hints (PEP 484)](https://peps.python.org/pep-0484/) | Standard d'annotations (typage statique). <i class="fa-solid fa-globe" title="Site"></i> |
-| [PEP 8 (Official Style Guide)](https://peps.python.org/pep-0008/) | Guide de style officiel pour Python. <i class="fa-solid fa-globe" title="Site"></i> |
-| [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) | Guide de style Python de Google. <i class="fa-solid fa-globe" title="Site"></i> |
-| [Docstring Conventions (PEP 257)](https://peps.python.org/pep-0257/) | Conventions de docstrings (PEP 257). <i class="fa-solid fa-globe" title="Site"></i> |
-| [numpydoc Style Guide](https://numpydoc.readthedocs.io/en/latest/format.html) | Style numpydoc (Science & IA). <i class="fa-solid fa-globe" title="Site"></i> |
+| [Ziglings](https://codeberg.org/ziglings/exercises) | Apprendre le Zig par des exercices pratiques. <i class="fa-solid fa-globe" title="Site"></i> |
+| [Introduction to Zig](https://pedropark99.github.io/zig-book/) | Un guide structuré pour bien débuter avec le langage. <i class="fa-solid fa-globe" title="Site"></i> |
 
 ---
 
-## Outils et bonnes pratiques
-
-### Git & Branching
+## Programmation GPU (CUDA)
 
 | Ressource | Description |
 | --- | --- |
-| [Conventional Commits Specification](https://www.conventionalcommits.org/en/v1.0.0/) | Standard pour les messages de commit. <i class="fa-solid fa-globe" title="Site"></i> |
-| [GitHub Flow Guide](https://docs.github.com/en/get-started/quickstart/github-flow) | Workflow simple (Pull Requests). <i class="fa-solid fa-globe" title="Site"></i> |
-| [Trunk Based Development](https://trunkbaseddevelopment.com/) | Pratique de développement pour la CI. <i class="fa-solid fa-globe" title="Site"></i> |
-| [GitFlow Model](https://nvie.com/posts/a-successful-git-branching-model/) | Modèle de branchement (GitFlow). <i class="fa-solid fa-globe" title="Site"></i> |
-
-### Compiler Explorer
-
-| Outil | Description |
-| --- | --- |
-| [Compiler Explorer (Godbolt)](https://godbolt.org/) | Analyse interactive de l'assembleur. <i class="fa-solid fa-globe" title="Site"></i> |
-
----
-
-## Programmation GPU
-
-### CUDA
-
-| Ressource | Description |
-| --- | --- |
-| [CUDA Ontology: Architecture & Versions](https://jamesakl.com/posts/cuda-ontology/) | Guide technique : API et compatibilité. <i class="fa-solid fa-globe" title="Site"></i> |
-| [CUDA Architecture Glossary (Modal)](https://modal.com/gpu-glossary/device-hardware/cuda-device-architecture) | Glossaire matériel (SM, Warp, Threads). <i class="fa-solid fa-globe" title="Site"></i> |
-| [NVIDIA GPU Anatomy (High-Perf MatMul)](https://www.aleksagordic.com/blog/matmul) | Analyse kernels MatMul (PTX/Tensor Cores). <i class="fa-solid fa-globe" title="Site"></i> |
+| [CUDA Ontology](https://jamesakl.com/posts/cuda-ontology/) | Comprendre les versions, l'API et la compatibilité. <i class="fa-solid fa-globe" title="Site"></i> |
+| [NVIDIA GPU Anatomy](https://www.aleksagordic.com/blog/matmul) | Analyse profonde de kernels MatMul (PTX/Tensor Cores). <i class="fa-solid fa-globe" title="Site"></i> |
