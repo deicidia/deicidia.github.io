@@ -61,3 +61,5 @@ Une collection de liens et de documents que j'affectionne et me sont utiles.
 | --- | --- |
 | [CUDA Ontology](https://jamesakl.com/posts/cuda-ontology/) | Comprendre les versions, l'API et la compatibilité. <i class="fa-solid fa-globe" title="Site"></i> |
 | [NVIDIA GPU Anatomy](https://www.aleksagordic.com/blog/matmul) | Analyse profonde de kernels MatMul (PTX/Tensor Cores). <i class="fa-solid fa-globe" title="Site"></i> |
+| [LeetCUDA](https://github.com/xlite-dev/LeetCUDA) | Implémentation de kernels CUDA. <i class="fa-solid fa-globe" title="Site"></i> |
+
