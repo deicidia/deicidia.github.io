@@ -31,7 +31,7 @@ Une collection de liens et de documents que j'affectionne et me sont utiles.
 | [CUDA Architecture Glossary](https://modal.com/gpu-glossary/device-hardware/cuda-device-architecture) | Lexique technique (SM, Warp, Occupancy, etc.). <i class="fa-solid fa-globe" title="Site"></i> |
 | [Algorithmica](https://en.algorithmica.org/hpc/) | Performance, efficience et architectures processeurs modernes. <i class="fa-solid fa-globe" title="Site"></i> |
 | [Bits, Math and Performance](https://bitmath.blogspot.com/) | Manipulation de bits, intrinsèques SIMD (AVX/SSE). <i class="fa-solid fa-globe" title="Site"></i> |
-| [Making Software](https://www.makingsoftware.com/) | Visualisations incroyables sur le fonctionnement interne du soft. <i class="fa-solid fa-globe" title="Site"></i> |
+| [Making Software](https://www.makingsoftware.com/) | Visualisations incroyables sur l'informatique de manière générale. <i class="fa-solid fa-globe" title="Site"></i> |
 | [CuriousCoding](https://curiouscoding.nl/posts/) | Algorithmes biologiques et structures spécialisées. <i class="fa-solid fa-globe" title="Site"></i> |
 | [Introduction to Probability](https://dlsun.github.io/probability/box-models.html#exm:committee-chair) | Fondations en probabilités et statistiques. <i class="fa-solid fa-globe" title="Site"></i> |
 
