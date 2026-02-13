@@ -5,6 +5,6 @@ description: En savoir plus sur Nathan Thoumine, sa vision du blog et ses projet
 permalink: /À-PROPOS/
 ---
 
-Un blog éducatif pour canaliser mon éparpillement.
+Un blog éducatif pour structurer mes explorations techniques.
 
 

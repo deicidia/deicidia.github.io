@@ -16,8 +16,8 @@ author:
     - linkedin: nathan-thoumine
 
 description: >-
-  Portfolio et Blog de Nathan Thoumine. Ingénieur IA Embarquée & Robotique. 
-  Découvrez mes projets sur la vision par ordinateur, l'IA et le développement logiciel.
+  Portfolio et Blog de Nathan Thoumine. Ingénieur en IA Embarquée, Robotique et HPC. 
+  Découvrez mes explorations sur la vision par ordinateur, le calcul haute performance et l'autonomie.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://deicidia.github.io" # the base hostname & protocol for your site
 image: /images/blog_card.png # Default social sharing image for LinkedIn/Twitter

@@ -375,3 +375,41 @@ table {
         }
     }
 }
+
+/**
+ * Source types & Badges
+ */
+.source-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-s;
+    background-color: var(--background-secondary);
+    color: var(--text-muted);
+    transition: all $anim-duration-fast $anim-motion-smooth;
+    text-decoration: none !important;
+    border: 1px solid var(--border-color);
+
+    i {
+        font-size: 0.9em;
+    }
+
+    &:hover {
+        background-color: var(--color-accent-faint);
+        color: var(--color-accent);
+        border-color: var(--color-accent);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+    }
+}
+
+/* Center the third column for source types */
+table {
+    th:nth-child(3),
+    td:nth-child(3) {
+        text-align: center;
+        width: 80px;
+    }
+}

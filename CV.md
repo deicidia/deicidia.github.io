@@ -39,9 +39,9 @@ Dans un contexte de calcul haute performance (HPC), j'ai travaillé sur la porta
 
 | Activité | Description |
 | --- | --- |
-| **Plongée** | Dés que l'occasion se présente. |
+| **Plongée** | Dès que l'occasion se présente. |
 | **Photographie et Cinéma** |  Amateur éclairé, au mieux. |
-| **Jeux vidéo** | Jeux de stratégie et coopératif. |
+| **Jeux vidéo** | Jeux de stratégie et jeux coopératifs. |
 
 
 <div style="text-align: center; font-size: 1.5em; margin-top: 20px;">
