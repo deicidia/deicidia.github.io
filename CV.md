@@ -5,7 +5,7 @@ description: Ingénieur spécialisé en IA Embarquée (Edge AI) et Calcul Haute 
 permalink: /CV/
 ---
 
-Ingénieur IA et Computer Vision orienté vers l’accélération GPU. Expérience pratique au CEA dans l’optimisation et le déploiement de modèles Deep Learning sur architectures contraintes (Jetson Orin). Spécialisé dans l’amélioration des performances de l'inférence de modèles de Computer Vision (SSD, YOLO) via la quantification (INT8, FP16) et le profiling, avec une mise en œuvre régulière de CUDA et TensorRT en environnements C++ et Python.
+Ingénieur IA et Computer Vision orienté vers l’accélération GPU. Expérience pratique au CEA dans l’optimisation et le déploiement de modèles Deep Learning sur architectures contraintes (Jetson Orin). Spécialisé dans l'optimisation de l'inférence de modèles de Computer Vision (SSD, YOLO) via la quantification, le profiling et la création d'opérateurs personnalisés (Kernels CUDA / Plugins TensorRT).
 
 ### Compétences
 
