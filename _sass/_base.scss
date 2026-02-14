@@ -415,19 +415,10 @@ td:nth-child(3) {
     vertical-align: middle;
     white-space: nowrap;
 
-    // Élimine le décalage dû aux espaces blancs Markdown
-    font-size: 0;
-
-    // Restaure la taille pour les éléments enfants (texte ou icônes)
+    /* Ensure children are centered and well-aligned */
     &>* {
-        font-size: 0.95em; // Taille par défaut des cellules
         display: inline-flex;
         vertical-align: middle;
-    }
-
-    // Cas spécial pour les icônes FontAwesome directes
-    i {
-        font-size: 1rem;
     }
 }
 
