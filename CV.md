@@ -5,35 +5,14 @@ description: Ingénieur spécialisé en IA Embarquée (Edge AI) et Calcul Haute 
 permalink: /CV/
 ---
 
-### Expérience au CEA-LIST
-**Laboratoire d'Intelligence Artificielle Embarquée**
-
-Au cœur de projets alliant performance, optimisation et déploiement de Deep Learning sur systèmes contraints (Edge AI), mon travail s’est articulé autour de deux piliers technologiques :
-
-*   **Optimisation de déploiement (Framework Aidge)** : Contribution à l’architecture et à l’évolution d'un framework dédié à l'export de réseaux de neurones sur des systèmes contraints.
-*   **Accélération matérielle (NVIDIA Jetson / CUDA)** : Expertise sur la gamme Jetson Orin via CUDA et TensorRT. Optimisation de modèles de vision (SSD, YOLO) par quantification avancée (FP16, INT8) et développement de plugins custom pour minimiser les temps d'inférence.
-
-### Expérience au CEA
-**Laboratoire de Simulation**
-
-Dans un contexte de calcul haute performance (HPC), j'ai travaillé sur la portabilité et l'optimisation de codes de simulation hétérogènes :
-
-*   **Calcul GPU & HPC** : Optimisation de noyaux de calcul complexes pour des codes de simulation multi-physique.
-*   **Interopérabilité & Portabilité (SYCL)** : Évaluation critique et benchmarking de l’écosystème SYCL (OpenSYCL, Intel oneAPI) pour garantir la performance sur des architectures matérielles variées.
+Ingénieur IA et Computer Vision orienté vers l’accélération GPU. Expérience pratique au CEA dans l’optimisation et le déploiement de modèles Deep Learning sur architectures contraintes (Jetson Orin). Spécialisé dans l’amélioration des performances de l'inférence de modèles de Computer Vision (SSD, YOLO) via la quantification (INT8, FP16) et le profiling, avec une mise en œuvre régulière de CUDA et TensorRT en environnements C++ et Python.
 
 ### Compétences
 
 | Catégorie | Compétences |
 | --- | --- |
-| **Programmation** | Python, C, C++, CUDA / TensorRT |
-| **Outils & Environnements** | Linux, Docker, Outils de build, Git |
-
-### Langues
-
-| Langue | Niveau |
-| --- | --- |
-| **Français** | Natif |
-| **Anglais** | Professionnel |
+| **Programmation** | Python, C, C++ |
+| **Libraries & Frameworks** | CUDA / TensorRT, PyTorch, Docker, ONNX |
 
 ### Centres d'intérêt
 

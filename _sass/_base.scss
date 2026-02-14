@@ -290,6 +290,7 @@ table {
         font-size: 0.85em;
         letter-spacing: 0.05em;
         border-bottom: 2px solid var(--border-color);
+        white-space: nowrap; // Fix for word splitting like "FORMA T"
     }
 
     tr:last-child {
@@ -380,6 +381,7 @@ table {
  * Source types & Badges
  */
 .source-badge {
+    margin: 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -405,11 +407,40 @@ table {
     }
 }
 
-/* Center the third column for source types */
-table {
-    th:nth-child(3),
-    td:nth-child(3) {
-        text-align: center;
-        width: 80px;
+
+/* Center text/badges in the third column for resource lists */
+th:nth-child(3),
+td:nth-child(3) {
+    text-align: center !important;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    // Élimine le décalage dû aux espaces blancs Markdown
+    font-size: 0;
+
+    // Restaure la taille pour les éléments enfants (texte ou icônes)
+    &>* {
+        font-size: 0.95em; // Taille par défaut des cellules
+        display: inline-flex;
+        vertical-align: middle;
     }
+
+    // Cas spécial pour les icônes FontAwesome directes
+    i {
+        font-size: 1rem;
+    }
+}
+
+/* Allow users to force centering on any cell by adding a class if they use HTML in MD */
+.text-center {
+    text-align: center !important;
+}
+
+/* Center FontAwesome icons specifically if used standalone */
+td i.fa-solid,
+td i.fas,
+td i.fab {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
 }
