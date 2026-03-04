@@ -7,10 +7,6 @@ tags: [Algorithmique, Mathématiques, Programmation]
 categories: [ressources]
 ---
 
-Une collection de liens et de documents que j'affectionne et me sont utiles. 
-
----
-
 ## Algorithmique & Fondations
 
 | Ressource | Description | Format |
