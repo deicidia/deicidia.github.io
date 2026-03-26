@@ -46,8 +46,15 @@ categories: [ressources]
 
 | Ressource | Description | Format |
 | --- | --- | --- |
-| [Ziglings](https://codeberg.org/ziglings/exercises) | Apprendre le Zig par des exercices pratiques. | <span class="source-badge"><i class="fa-solid fa-globe" title="Site"></i></span> |
+| [Ziglings](https://codeberg.org/ziglings/exercises) | Apprendre Zig par des exercices pratiques. | <span class="source-badge"><i class="fa-solid fa-globe" title="Site"></i></span> |
 | [Introduction to Zig](https://pedropark99.github.io/zig-book/) | Guide d'introduction au langage Zig. | <span class="source-badge"><i class="fa-solid fa-globe" title="Site"></i></span> |
+
+### Rust
+
+| Ressource | Description | Format |
+| --- | --- | --- |
+| [RustTraining](https://github.com/microsoft/RustTraining) | Cours par Microsoft. | <span class="source-badge"><i class="fa-solid fa-globe" title="Site"></i></span> |
+| [Rustlings](https://github.com/rust-lang/rustlings) | Apprendre Rust par des exercices pratiques. | <span class="source-badge"><i class="fa-solid fa-globe" title="Site"></i></span> |
 
 ---
 
