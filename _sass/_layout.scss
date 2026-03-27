@@ -621,3 +621,66 @@
         }
     }
 }
+
+/**
+ * Tags System
+ */
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.post-header .post-tags {
+    margin-bottom: 2rem;
+}
+
+.tag-link {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-accent-faint);
+    color: var(--color-accent);
+    border-radius: 9999px;
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid transparent;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-s);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+}
+
+.post-header .tag-link {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.85rem;
+}
+
+/* Specific Tags Colors */
+.tag-wip {
+    background: rgba(245, 158, 11, 0.15) !important; /* Orange/Yellow faint */
+    color: var(--color-orange, #f59e0b) !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
+    
+    &:hover {
+        background: rgba(245, 158, 11, 0.25) !important;
+    }
+}
+
+.dark .tag-wip {
+    background: rgba(251, 191, 36, 0.15) !important; /* Lighter yellow for dark mode */
+    color: #fbbf24 !important;
+    border-color: rgba(251, 191, 36, 0.3) !important;
+    
+    &:hover {
+        background: rgba(251, 191, 36, 0.25) !important;
+    }
+}

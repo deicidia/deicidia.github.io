@@ -6,10 +6,9 @@ layout: default
   <header class="post-header">
     <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
     {% if page.tags %}
-    <div class="post-tags" style="margin-top: 1rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+    <div class="post-tags">
       {% for tag in page.tags %}
-      <a href="{{ site.baseurl }}/tag/{{ tag | downcase | slugify }}/" class="tag-link"
-        style="display: inline-block; padding: 0.25rem 0.8rem; background: var(--color-accent-faint); color: var(--color-accent); border-radius: 9999px; text-decoration: none; font-size: 0.75rem; font-weight: 700; font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease;">
+      <a href="{{ site.baseurl }}/tag/{{ tag | downcase | slugify }}/" class="tag-link tag-{{ tag | downcase | slugify }}">
         {{ tag }}
       </a>
       {% endfor %}
