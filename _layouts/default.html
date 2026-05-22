@@ -5,11 +5,17 @@
 
 <body>
 
-  {% include header.html %}
+  <div class="hermes-layout-frame">
+    {% include header.html %}
 
-  <div class="page-content">
-    <div class="wrapper">
-      {{ content }}
+    <div class="page-content">
+      {% if page.url == "/" %}
+        {{ content }}
+      {% else %}
+        <div class="wrapper">
+          {{ content }}
+        </div>
+      {% endif %}
     </div>
   </div>
 

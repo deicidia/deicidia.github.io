@@ -1,12 +1,26 @@
 <header class="site-header">
   <div id="reading-progress"></div>
 
-  <div class="wrapper">
+  <div class="header-wrapper">
 
     {% if page.url == "/" %}
-    <h1 class="site-title"><a href="{{ site.baseurl }}/">{{ site.title }}</a></h1>
+    <h1 class="site-title">
+      <a href="{{ site.baseurl }}/">
+        <span class="logo-stacked">
+          <span>NATHAN</span>
+          <span>THOUMINE</span>
+        </span>
+      </a>
+    </h1>
     {% else %}
-    <span class="site-title"><a href="{{ site.baseurl }}/">{{ site.title }}</a></span>
+    <span class="site-title">
+      <a href="{{ site.baseurl }}/">
+        <span class="logo-stacked">
+          <span>NATHAN</span>
+          <span>THOUMINE</span>
+        </span>
+      </a>
+    </span>
     {% endif %}
 
     <nav class="site-nav">
@@ -25,8 +39,7 @@
       </label>
 
       <div class="trigger">
-        <a class="page-link" href="{{ site.baseurl }}/CV/">CV</a>
-        <a class="page-link" href="{{ site.baseurl }}/À-PROPOS/">À-PROPOS</a>
+        <a class="page-link" href="{{ site.baseurl }}/projets/">PROJETS</a>
         <div class="dropdown">
           <span class="page-link dropbtn">OUTILS</span>
           <div class="dropdown-content">

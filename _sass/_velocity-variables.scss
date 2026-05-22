@@ -1,10 +1,4 @@
-/**
- * Velocity Theme Variables
- * Adapted from Obsidian Velocity theme by Floodlight
- * Modern, Apple-inspired design system
- */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=IM+Fell+English&family=VT323&family=Share+Tech+Mono&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 // Animation timing
 $anim-duration-fast: 200ms;
@@ -13,46 +7,46 @@ $anim-motion-swing: cubic-bezier(0.4, 0.0, 0.2, 1);
 $anim-motion-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
 $anim-motion-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-// Font weights (Velocity uses variable font weights)
-$font-thin: 250;
-$font-extralight: 275;
-$font-light: 350;
-$font-normal: 450;
-$font-medium: 550;
-$font-semibold: 650;
-$font-bold: 750;
-$font-extrabold: 850;
-$font-black: 900;
+// Font weights
+$font-thin: 300;
+$font-extralight: 300;
+$font-light: 300;
+$font-normal: 400;
+$font-medium: 500;
+$font-semibold: 600;
+$font-bold: 700;
+$font-extrabold: 800;
+$font-black: 800;
 
 // Heading weights
-$h1-weight: 325;
-$h2-weight: 575;
-$h3-weight: 575;
-$h4-weight: 650;
-$h5-weight: 675;
-$h6-weight: 700;
+$h1-weight: 500;
+$h2-weight: 500;
+$h3-weight: 500;
+$h4-weight: 500;
+$h5-weight: 500;
+$h6-weight: 500;
 
-// Heading sizes
-$h1-size: 1.85em;
-$h2-size: 1.45em;
-$h3-size: 1.25em;
-$h4-size: 1.15em;
-$h5-size: 1.0875em;
+// Heading sizes (Modern high-density layout)
+$h1-size: 2.25em;
+$h2-size: 1.75em;
+$h3-size: 1.35em;
+$h4-size: 1.2em;
+$h5-size: 1.1em;
 $h6-size: 1em;
 
 // Line heights
-$line-height-normal: 1.6;
+$line-height-normal: 1.7;
 $line-height-tight: 1.5;
 
-// Border radius
-$radius-xs: 4px;
-$radius-s: 6px;
-$radius-sm: 8px;
-$radius-m: 10px;
-$radius-ml: 12px;
-$radius-l: 16px;
-$radius-xl: 18px;
-$radius-xxl: 20px;
+// Border radius (Strict high-tech square terminal panels)
+$radius-xs: 0px;
+$radius-s: 0px;
+$radius-sm: 0px;
+$radius-m: 0px;
+$radius-ml: 0px;
+$radius-l: 0px;
+$radius-xl: 0px;
+$radius-xxl: 0px;
 
 // Spacing
 $spacing-xs: 8px;
@@ -61,132 +55,46 @@ $spacing-m: 16px;
 $spacing-l: 24px;
 $spacing-xl: 32px;
 
-// Light theme colors (using standard RGB for better browser support)
-// Base colors - subtle purple-tinted grays
-$light-base-00: #fefefe;
-$light-base-05: #fcfcfc;
-$light-base-10: #f5f5f6;
-$light-base-20: #ebebed;
-$light-base-25: #e1e1e4;
-$light-base-30: #d8d8db;
-$light-base-35: #c9c9cd;
-$light-base-40: #bfbfc4;
-$light-base-50: #b5b5bb;
-$light-base-55: #a5a5ad;
-$light-base-60: #8c8c96;
-$light-base-70: #737380;
-$light-base-80: #6b6b78;
-$light-base-90: #484854;
-$light-base-100: #3a3a44;
+// Base color variables
+$dark-base-00: #0e1320;
+$dark-base-05: #030712;
+$dark-base-10: #0b0f19;
 
-// Accent color - primary brand color
-$light-accent: #2563eb; // Modern Blue
-$light-accent-h: 221;
-$light-accent-s: 83%;
-$light-accent-l: 53%;
+// Light and Dark theme colors are unified for 100% immersive Slate-950 developer TUI look
+$light-base-90: #f3f4f6;
+$light-base-05: #030712;
+$light-accent: #00e5ff;
+$light-base-60: #64748b;
+$light-base-30: #1e293b;
+$light-base-80: #cbd5e1;
 
-// Semantic colors
-$light-red: #ef4444;
-$light-orange: #f59e0b;
-$light-yellow: #facc15;
-$light-green: #10b981;
-$light-cyan: #06b6d4;
-$light-blue: #3b82f6;
-$light-purple: #8b5cf6;
-$light-pink: #ec4899;
-
-// Dark theme colors
-$dark-base-00: #1a1a1e;
-$dark-base-05: #1e1e22;
-$dark-base-10: #242428;
-$dark-base-20: #2c2c32;
-$dark-base-25: #34343c;
-$dark-base-30: #3c3c46;
-$dark-base-35: #484854;
-$dark-base-40: #54545e;
-$dark-base-50: #606068;
-$dark-base-55: #6c6c78;
-$dark-base-60: #8c8c96;
-$dark-base-70: #b5b5bb;
-$dark-base-80: #c9c9cd;
-$dark-base-90: #e1e1e4;
-$dark-base-100: #f5f5f6;
-
-// Dark accent
-$dark-accent: #60a5fa; // Soft Blue for dark mode
-$dark-accent-h: 213;
-$dark-accent-s: 94%;
-$dark-accent-l: 68%;
-
-// Dark semantic colors
-$dark-red: #f87171;
-$dark-orange: #fbbf24;
-$dark-yellow: #fde047;
-$dark-green: #34d399;
-$dark-cyan: #22d3ee;
-$dark-blue: #60a5fa;
-$dark-purple: #a78bfa;
-$dark-pink: #f472b6;
-
-// Transparency values for overlays and shadows
-$trans-faint-00: rgba(0, 0, 0, 0.03);
-$trans-faint-05: rgba(0, 0, 0, 0.0275);
-$trans-faint-10: rgba(0, 0, 0, 0.05);
-$trans-faint-20: rgba(0, 0, 0, 0.06);
-$trans-faint-25: rgba(0, 0, 0, 0.07);
-$trans-faint-30: rgba(0, 0, 0, 0.092);
-$trans-faint-40: rgba(0, 0, 0, 0.114);
-$trans-faint-50: rgba(0, 0, 0, 0.145);
-$trans-faint-60: rgba(0, 0, 0, 0.32);
-
-$trans-strong-00: rgba(255, 255, 255, 0.95);
-$trans-strong-10: rgba(255, 255, 255, 0.8);
-$trans-strong-20: rgba(255, 255, 255, 0.75);
-$trans-strong-30: rgba(255, 255, 255, 0.4);
-$trans-strong-40: rgba(255, 255, 255, 0.1);
-
-// Dark mode transparency
-$dark-trans-faint-00: rgba(255, 255, 255, 0.03);
-$dark-trans-faint-10: rgba(255, 255, 255, 0.05);
-$dark-trans-faint-20: rgba(255, 255, 255, 0.06);
-$dark-trans-faint-30: rgba(255, 255, 255, 0.092);
-$dark-trans-faint-40: rgba(255, 255, 255, 0.114);
-
-$dark-trans-strong-00: rgba(0, 0, 0, 0.95);
-$dark-trans-strong-10: rgba(0, 0, 0, 0.8);
-$dark-trans-strong-20: rgba(0, 0, 0, 0.75);
-$dark-trans-strong-30: rgba(0, 0, 0, 0.4);
-
-// Shadows (light theme)
-$shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-s: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-$shadow-m: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-$shadow-l: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-
-$shadow-code: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-
-// CSS Custom Properties (for runtime theming)
 :root {
-  // Colors
-  --color-base-00: #{$light-base-00};
-  --color-base-00-rgb: 254, 254, 254;
-  --color-base-05: #{$light-base-05};
-  --color-base-10: #{$light-base-10};
-  --color-base-20: #{$light-base-20};
-  --color-base-30: #{$light-base-30};
-  --color-base-40: #{$light-base-40};
-  --color-base-50: #{$light-base-50};
-  --color-base-60: #{$light-base-60};
-  --color-base-70: #{$light-base-70};
-  --color-base-80: #{$light-base-80};
-  --color-base-90: #{$light-base-90};
-  --color-base-100: #{$light-base-100};
+  // Fonts
+  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-family-headings: 'Outfit', 'Inter', sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
 
-  --color-accent: #{$light-accent};
-  --color-accent-hover: #{darken($light-accent, 10%)};
-  --color-accent-faint: #{rgba($light-accent, 0.15)};
+  // Colors (Studio White Light Theme)
+  --color-base-05: #ffffff;       // Pure crisp white canvas
+  --color-base-10: #f9fafb;       // Sleek cool-white for secondary backgrounds
+  --color-base-00: #ffffff;       // White card/box background
+  --color-base-20: #e5e7eb;       // Elegant cool-grey borders
+  --color-base-30: #d1d5db;
+  --color-base-40: #9ca3af;
+  --color-base-50: #6b7280;       // Muted grey text
+  --color-base-60: #4b5563;       // Stronger grey text
+  --color-base-70: #374151;       // Secondary text
+  --color-base-80: #1f2937;       // Muted body text
+  --color-base-90: #111827;       // Primary deep charcoal text
+  --color-base-100: #0f766e;      // Technical teal-emerald accent
+
+  --color-accent: #0f766e;        // Rich dark teal for clean readability on white
+  --color-accent-hover: #0d9488;
+  --color-accent-faint: rgba(15, 118, 110, 0.05);
+
+  --color-cream: #111827;
+  --color-cream-hover: #000000;
+  --color-cream-faint: rgba(17, 24, 39, 0.04);
 
   --text-normal: var(--color-base-90);
   --text-muted: var(--color-base-70);
@@ -195,68 +103,41 @@ $shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0,
   --background-primary: var(--color-base-05);
   --background-secondary: var(--color-base-10);
 
-  --border-color: #{$trans-faint-30};
-  --border-color-hover: #{$trans-faint-40};
+  --border-color: #e5e7eb;
+  --border-color-hover: var(--color-accent);
+
+  // Layout-specific dynamic background transparent colors
+  --header-background: rgba(255, 255, 255, 0.88);
+  --frame-background: rgba(255, 255, 255, 0.82);
+  --grid-line-color: rgba(15, 118, 110, 0.03);
+  --radial-bg-1: rgba(15, 118, 110, 0.02);
+  --radial-bg-2: rgba(15, 118, 110, 0.01);
+  --block-field-bg: rgba(249, 250, 251, 0.9);
+  --right-col-bg: rgba(249, 250, 251, 0.4);
+  --post-item-bg: rgba(255, 255, 255, 0.6);
 
   // Code
-  --code-background: #{$trans-faint-00};
-  --code-border: #{$trans-faint-20};
+  --code-background: #f9fafb;
+  --code-border: #e5e7eb;
 
   // Links
   --link-color: var(--color-accent);
-  --link-color-hover: var(--color-base-100);
+  --link-color-hover: var(--color-accent-hover);
 
-  // Semantic Colors (Light)
-  --color-red: #{$light-red};
-  --color-orange: #{$light-orange};
-  --color-yellow: #{$light-yellow};
-  --color-green: #{$light-green};
-  --color-cyan: #{$light-cyan};
-  --color-blue: #{$light-blue};
-  --color-purple: #{$light-purple};
-  --color-pink: #{$light-pink};
+  // Semantic Colors
+  --color-red: #f43f5e;
+  --color-orange: #f97316;
+  --color-yellow: #eab308;
+  --color-green: #10b981;
+  --color-cyan: #06b6d4;
+  --color-blue: #3b82f6;
+  --color-purple: #8b5cf6;
+  --color-pink: #ec4899;
 
-  // Shadows
-  --shadow-xs: #{$shadow-xs};
-  --shadow-s: #{$shadow-s};
-  --shadow-m: #{$shadow-m};
-  --shadow-code: #{$shadow-code};
-  --shadow-hover: #{$shadow-hover};
-}
-
-// Dark mode variables — only applied when `.dark` class is present
-.dark {
-  --color-base-00: #{$dark-base-00};
-  --color-base-00-rgb: 26, 26, 30;
-  --color-base-05: #{$dark-base-05};
-  --color-base-10: #{$dark-base-10};
-  --color-base-20: #{$dark-base-20};
-  --color-base-30: #{$dark-base-30};
-  --color-base-40: #{$dark-base-40};
-  --color-base-50: #{$dark-base-50};
-  --color-base-60: #{$dark-base-60};
-  --color-base-70: #{$dark-base-70};
-  --color-base-80: #{$dark-base-80};
-  --color-base-90: #{$dark-base-90};
-  --color-base-100: #{$dark-base-100};
-
-  --color-accent: #{$dark-accent};
-  --color-accent-hover: #{lighten($dark-accent, 10%)};
-  --color-accent-faint: #{rgba($dark-accent, 0.15)};
-
-  --border-color: #{$dark-trans-faint-30};
-  --border-color-hover: #{$dark-trans-faint-40};
-
-  --code-background: #{$dark-trans-faint-00};
-  --code-border: #{$dark-trans-faint-20};
-
-  // Semantic Colors (Dark)
-  --color-red: #{$dark-red};
-  --color-orange: #{$dark-orange};
-  --color-yellow: #{$dark-yellow};
-  --color-green: #{$dark-green};
-  --color-cyan: #{$dark-cyan};
-  --color-blue: #{$dark-blue};
-  --color-purple: #{$dark-purple};
-  --color-pink: #{$dark-pink};
+  // Modern TUI shadows
+  --shadow-xs: none;
+  --shadow-s: 3px 3px 0px rgba(15, 118, 110, 0.1);
+  --shadow-m: 4px 4px 0px rgba(17, 24, 39, 0.06);
+  --shadow-code: none;
+  --shadow-hover: 4px 4px 0px var(--color-accent);
 }

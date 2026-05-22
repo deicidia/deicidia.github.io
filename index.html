@@ -4,26 +4,48 @@ layout: default
 
 <div class="home">
 
-  <h2 class="page-heading">Articles</h2>
+  <div class="hermes-hero">
+    <h1 class="hero-title-main">Numinous</h1>
+    <p class="hero-tagline">Un blog éducatif pour canaliser mon éparpillement ... j'espère.</p>
+  </div>
 
-  <ul class="post-list">
-    {% assign sortedPosts = site.posts | sort: 'date' | reverse %}
-    {% for post in sortedPosts %}
-    <li>
-      <p class="post-date">{% include date_fr.html date=post.date %}</p>
-      <h2>
-        <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-      </h2>
-      {% if post.tags %}
-      <div class="post-tags">
-        {% for tag in post.tags %}
-        <a href="{{ site.baseurl }}/tag/{{ tag | downcase | slugify }}/" class="tag-link tag-{{ tag | downcase | slugify }}">
-          {{ tag }}
-        </a>
-        {% endfor %}
+  <div class="hermes-bio-horizontal">
+    <h2 class="section-title-grid">QUI SUIS-JE ?</h2>
+    <div class="bio-content-horizontal">
+      <div class="bio-text">
+        <p>
+          Nathan Thoumine, un ingénieur passionné par l'algorithmique, l'optimisation de performance et les
+          architectures systèmes.
+          Expérience pratique au CEA dans l'optimisation et le déploiement de modèles Deep Learning sur architectures
+          contraintes. Spécialisé dans l'optimisation de l'inférence de modèles de Computer Vision via la
+          quantification, le profiling et la création d'opérateurs personnalisés.
+        </p>
       </div>
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ul>
+
+      <div class="bio-expertise-grid">
+        <div class="expertise-item">
+          <span class="expertise-num">[01]</span>
+          <div class="expertise-text">
+            <strong>Algorithmique & Optimisation</strong>
+            <p>Conception d'algorithmes, structures de données complexes et optimisation de complexité.</p>
+          </div>
+        </div>
+        <div class="expertise-item">
+          <span class="expertise-num">[02]</span>
+          <div class="expertise-text">
+            <strong>Calcul Haute Performance (HPC)</strong>
+            <p>Programmation GPU massivement parallèle en CUDA et développement C/C++.</p>
+          </div>
+        </div>
+        <div class="expertise-item">
+          <span class="expertise-num">[03]</span>
+          <div class="expertise-text">
+            <strong>Systèmes Intelligents & Edge</strong>
+            <p>Déploiement de modèles prédictifs, vision par ordinateur et traitement temps réel sur embarqué.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

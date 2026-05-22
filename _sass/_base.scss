@@ -43,18 +43,52 @@ pre.mermaid {
 /**
  * Basic styling
  */
+html {
+    background-color: var(--background-primary);
+}
+
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-size: 1.05rem;
+    font-family: var(--font-family-body), monospace;
+    font-size: 0.95rem;
     font-weight: 400;
     line-height: 1.7;
     color: var(--text-normal);
-    background-color: var(--background-primary);
+    background-color: transparent;
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-kerning: normal;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+
+    &::before {
+        content: " ";
+        display: block;
+        position: fixed;
+        top: 0; left: 0; bottom: 0; right: 0;
+        background-image: 
+            linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px),
+            url('../images/hermes_bg.webp');
+        background-size: 24px 24px, 24px 24px, cover;
+        background-position: top left, top left, center;
+        background-repeat: repeat, repeat, no-repeat;
+        opacity: 0.55;
+        z-index: -2;
+        pointer-events: none;
+    }
+
+    &::after {
+        content: " ";
+        display: block;
+        position: fixed;
+        top: 0; left: 0; bottom: 0; right: 0;
+        background: 
+            radial-gradient(circle at 85% 15%, var(--radial-bg-1) 0%, transparent 60%),
+            radial-gradient(circle at 15% 85%, var(--radial-bg-2) 0%, transparent 50%);
+        z-index: -1;
+        pointer-events: none;
+    }
 }
 
 
@@ -137,9 +171,9 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-family-headings), 'Outfit', sans-serif;
     color: var(--text-normal);
-    letter-spacing: -0.02em;
+    letter-spacing: 0.03em;
     line-height: 1.25;
 }
 
@@ -211,6 +245,7 @@ blockquote {
     font-size: 1em;
     letter-spacing: 0;
     font-style: italic;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 
     > :last-child {
         margin-bottom: 0;
@@ -225,22 +260,24 @@ blockquote {
  */
 pre,
 code {
-    font-size: 0.9em;
-    font-family: 'SF Mono', 'JetBrains Mono', 'Roboto Mono', Menlo, Monaco, Consolas, monospace;
+    font-family: var(--font-family-mono), monospace;
     border: 1px solid var(--code-border);
     border-radius: $radius-sm;
     background-color: var(--code-background);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 code {
+    font-size: 0.9rem;
     padding: 2px 6px;
 }
 
 pre {
+    font-size: 1rem;
     padding: $spacing-m;
     overflow-x: auto;
     box-shadow: var(--shadow-code);
-    line-height: 1.5;
+    line-height: 1.4;
 
     >code {
         border: 0;
@@ -269,6 +306,7 @@ table {
     font-size: 0.95em;
     background-color: var(--color-base-00);
     box-shadow: var(--shadow-xs);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 
     th,
     td {
@@ -312,7 +350,7 @@ table {
 
     // Zebra striping
     tbody tr:nth-child(even) {
-        background-color: rgba(0, 0, 0, 0.02);
+        background-color: rgba(255, 255, 255, 0.03);
     }
 
     // Hover effect
