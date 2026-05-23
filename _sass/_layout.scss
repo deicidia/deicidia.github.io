@@ -1130,136 +1130,41 @@
 /* ==========================================================================
    Hermes CV Horizontal & Social Bar Styles (Single-Page Consolidation)
    ========================================================================== */
-.hermes-cv-horizontal {
-    border-top: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
-    padding: 35px 25px;
-    margin: 40px 0;
-    background-color: var(--frame-background);
+.hermes-social-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 40px;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 30px;
 
     @include media-query($on-palm) {
-        padding: 25px 15px;
+        flex-wrap: wrap;
+        gap: 20px 30px;
     }
 
-    .hermes-cv-table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-        margin-bottom: 10px;
-    }
-
-    .hermes-profile-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.9rem;
-        text-align: left;
-
-        th, td {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-        }
-
-        th {
-            font-family: var(--font-family-headings), sans-serif;
-            font-size: 0.85rem;
-            font-weight: bold;
-            letter-spacing: 0.1em;
-            color: var(--color-accent);
-            text-transform: uppercase;
-            border-bottom: 2px solid var(--border-color);
-            background-color: var(--color-base-10);
-        }
-
-        td {
-            font-family: var(--font-family-body), sans-serif;
-            color: var(--color-base-80);
-            line-height: 1.6;
-        }
-
-        .table-label {
-            font-family: var(--font-family-headings), sans-serif;
-            font-size: 0.85rem;
-            font-weight: bold;
-            letter-spacing: 0.05em;
-            color: var(--color-base-90);
-            text-transform: uppercase;
-            width: 25%;
-            min-width: 150px;
-            border-right: 1px solid var(--border-color);
-            background-color: var(--color-base-10);
-
-            @include media-query($on-palm) {
-                width: auto;
-                min-width: 0;
-                border-right: none;
-                border-bottom: none;
-                padding-bottom: 4px;
-            }
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        @include media-query($on-palm) {
-            thead {
-                display: none;
-            }
-
-            tr {
-                display: flex;
-                flex-direction: column;
-                border-bottom: 1px solid var(--border-color);
-                padding: 12px 0;
-
-                &:last-child {
-                    border-bottom: none;
-                }
-            }
-
-            td {
-                padding: 6px 10px;
-                border-bottom: none;
-            }
-        }
-    }
-
-    .social-bar {
-        display: flex;
-        justify-content: center;
+    .social-link {
+        font-family: var(--font-family-mono), monospace;
+        font-size: 0.85rem;
+        color: var(--color-base-70);
+        text-decoration: none;
+        display: inline-flex;
         align-items: center;
-        gap: 40px;
-        margin-top: 35px;
-        border-top: 1px dashed var(--border-color);
-        padding-top: 25px;
+        gap: 8px;
+        transition: all $anim-duration-fast $anim-motion-smooth;
 
-        @include media-query($on-palm) {
-            flex-wrap: wrap;
-            gap: 20px 30px;
+        i {
+            font-size: 1rem;
+            transition: transform $anim-duration-fast $anim-motion-smooth;
         }
 
-        .social-link {
-            font-family: var(--font-family-mono), monospace;
-            font-size: 0.85rem;
-            color: var(--color-base-70);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all $anim-duration-fast $anim-motion-smooth;
+        &:hover {
+            color: var(--color-accent);
+            transform: translateY(-2px);
 
             i {
-                font-size: 1rem;
-                transition: transform $anim-duration-fast $anim-motion-smooth;
-            }
-
-            &:hover {
-                color: var(--color-accent);
-                transform: translateY(-2px);
-
-                i {
-                    transform: scale(1.15);
-                }
+                transform: scale(1.15);
             }
         }
     }
