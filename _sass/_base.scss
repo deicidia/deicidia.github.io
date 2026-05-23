@@ -69,7 +69,7 @@ body {
         background-image: 
             linear-gradient(var(--grid-line-color) 1px, transparent 1px),
             linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px),
-            url('../images/hermes_bg.webp');
+            url('/images/hermes_bg.webp');
         background-size: 24px 24px, 24px 24px, cover;
         background-position: top left, top left, center;
         background-repeat: repeat, repeat, no-repeat;

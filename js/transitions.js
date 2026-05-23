@@ -42,6 +42,71 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPage(window.location.pathname + window.location.search + window.location.hash, true);
   });
 
+  async function mergeHeadAndLoadScripts(newDoc) {
+    const currentHead = document.head;
+    const newHead = newDoc.head;
+
+    // Update theme-color meta if exists
+    const currentMetaColor = currentHead.querySelector('meta[name="theme-color"]');
+    const newMetaColor = newHead.querySelector('meta[name="theme-color"]');
+    if (currentMetaColor && newMetaColor) {
+      currentMetaColor.setAttribute('content', newMetaColor.getAttribute('content'));
+    }
+
+    const elements = newHead.querySelectorAll('link, style, script');
+    const scriptPromises = [];
+
+    elements.forEach(elem => {
+      let exists = false;
+      if (elem.tagName === 'LINK') {
+        const href = elem.getAttribute('href');
+        if (href) exists = !!currentHead.querySelector(`link[href="${href}"]`);
+      } else if (elem.tagName === 'SCRIPT') {
+        const src = elem.getAttribute('src');
+        if (src) {
+          exists = !!currentHead.querySelector(`script[src="${src}"]`);
+        } else {
+          // Compare inline script content
+          const inlineScripts = currentHead.querySelectorAll('script:not([src])');
+          for (let s of inlineScripts) {
+            if (s.textContent === elem.textContent) {
+              exists = true;
+              break;
+            }
+          }
+        }
+      } else if (elem.tagName === 'STYLE') {
+        const inlineStyles = currentHead.querySelectorAll('style');
+        for (let s of inlineStyles) {
+          if (s.textContent === elem.textContent) {
+            exists = true;
+            break;
+          }
+        }
+      }
+
+      if (!exists) {
+        const clone = document.createElement(elem.tagName);
+        Array.from(elem.attributes).forEach(attr => {
+          clone.setAttribute(attr.name, attr.value);
+        });
+        clone.textContent = elem.textContent;
+
+        if (elem.tagName === 'SCRIPT' && elem.getAttribute('src')) {
+          const promise = new Promise((resolve) => {
+            clone.onload = resolve;
+            clone.onerror = resolve; // Continue even if load fails
+          });
+          scriptPromises.push(promise);
+        }
+
+        currentHead.appendChild(clone);
+      }
+    });
+
+    await Promise.all(scriptPromises);
+  }
+
   async function loadPage(urlPath, isPopstate = false) {
     // Lancer la transition de fondu de sortie
     layoutFrame.classList.add('transitioning');
@@ -58,10 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const newFrame = newDoc.querySelector('.hermes-layout-frame');
       if (!newFrame) {
-        // Si la page cible n'a pas notre cadre de mise en page (ex. workout.html), charger normalement
+        // Si la page cible n'a pas notre cadre de mise en page, charger normalement
         window.location.href = urlPath;
         return;
       }
+
+      // Fusionner les balises head et charger les dépendances scripts
+      await mergeHeadAndLoadScripts(newDoc);
 
       // Attendre la fin de la transition de fondu de sortie (150ms)
       setTimeout(() => {
@@ -73,6 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mettre à jour le titre du document
         document.title = newDoc.title;
 
+        // Synchroniser les classes et styles de body (critique pour le background et layout)
+        document.body.className = newDoc.body.className;
+        document.body.style.cssText = newDoc.body.style.cssText;
+
         // Remplacer le contenu du cadre principal
         layoutFrame.innerHTML = newFrame.innerHTML;
 
@@ -80,20 +152,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const progress = document.getElementById('reading-progress');
         if (progress) progress.style.width = '0%';
 
-        // Ré-exécuter les scripts présents dans la nouvelle page
-        const scripts = newFrame.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-          const newScript = document.createElement('script');
-          Array.from(oldScript.attributes).forEach(attr => {
-            newScript.setAttribute(attr.name, attr.value);
-          });
-          if (oldScript.src) {
-            newScript.src = oldScript.src;
-          } else {
+        // Ré-exécuter les scripts présents dans la nouvelle page.
+        // IMPORTANT: on requête depuis layoutFrame (DOM actif), pas newFrame
+        // (document DOMParser inactif) — les scripts dans un doc inactif ne s'exécutent jamais.
+        // On sépare les scripts externes (src) des scripts inline pour les charger dans l'ordre.
+        const allScripts = Array.from(layoutFrame.querySelectorAll('script'));
+        const externalScripts = allScripts.filter(s => s.src);
+        const inlineScripts   = allScripts.filter(s => !s.src);
+
+        // Charge les scripts externes en séquence, puis exécute les inline
+        function runInlineScripts() {
+          inlineScripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
             newScript.textContent = oldScript.textContent;
-          }
-          oldScript.parentNode.replaceChild(newScript, oldScript);
-        });
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+          });
+        }
+
+        if (externalScripts.length === 0) {
+          runInlineScripts();
+        } else {
+          // Charge chaque script externe dans l'ordre, puis lance les inline
+          let chain = Promise.resolve();
+          externalScripts.forEach(oldScript => {
+            chain = chain.then(() => new Promise((resolve) => {
+              const newScript = document.createElement('script');
+              Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+              newScript.src = oldScript.src;
+              newScript.onload  = resolve;
+              newScript.onerror = resolve; // continue even on failure
+              oldScript.parentNode.replaceChild(newScript, oldScript);
+            }));
+          });
+          chain.then(runInlineScripts);
+        }
 
         // Relancer MathJax si présent
         if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
