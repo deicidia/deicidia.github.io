@@ -13,55 +13,153 @@ layout: default
     <h2 class="section-title-grid">QUI SUIS-JE ?</h2>
     <div class="bio-content-horizontal">
       <div class="bio-text">
-        <p>
+        <p style="margin-bottom: 0;">
           Nathan Thoumine, un ingénieur passionné par l'algorithmique, l'optimisation de performance et les
           architectures systèmes.
-          Expérience pratique au CEA dans l'optimisation et le déploiement de modèles Deep Learning sur architectures
-          contraintes. Spécialisé dans l'optimisation de l'inférence de modèles de Computer Vision via la
+          Fort d'une expérience pratique au CEA dans l'optimisation et le déploiement de modèles Deep Learning sur
+          architectures
+          contraintes, je me spécialise dans l'optimisation de l'inférence de modèles de Computer Vision via la
           quantification, le profiling et la création d'opérateurs personnalisés.
         </p>
       </div>
-
-      <div class="bio-expertise-grid">
-        <div class="expertise-item">
-          <span class="expertise-num">[01]</span>
-          <div class="expertise-text">
-            <strong>Algorithmique & Optimisation</strong>
-            <p>Conception d'algorithmes, structures de données complexes et optimisation de complexité.</p>
-          </div>
-        </div>
-        <div class="expertise-item">
-          <span class="expertise-num">[02]</span>
-          <div class="expertise-text">
-            <strong>Calcul Haute Performance (HPC)</strong>
-            <p>Programmation GPU massivement parallèle en CUDA et développement C/C++.</p>
-          </div>
-        </div>
-        <div class="expertise-item">
-          <span class="expertise-num">[03]</span>
-          <div class="expertise-text">
-            <strong>Systèmes Intelligents & Edge</strong>
-            <p>Déploiement de modèles prédictifs, vision par ordinateur et traitement temps réel sur embarqué.</p>
-              </div>
     </div>
   </div>
+
+  <div class="hermes-skills-section">
+    <h2 class="section-title-grid">Compétences Techniques & Tech Stack</h2>
+    <div class="hermes-skills-grid">
+
+      <!-- Column 1: Langages -->
+      <div class="skills-card">
+        <h3 class="skills-card-title">Langages</h3>
+        <ul class="skills-list">
+          <li>C++</li>
+          <li>Python</li>
+          <li>C</li>
+        </ul>
+      </div>
+
+      <!-- Column 2: Calcul & GPU -->
+      <div class="skills-card">
+        <h3 class="skills-card-title">Calcul & GPU</h3>
+        <ul class="skills-list">
+          <li>CUDA / TensorRT</li>
+          <li>SYCL</li>
+          <li>Profiling (Nsight)</li>
+        </ul>
+      </div>
+
+      <!-- Column 3: IA & Deep Learning -->
+      <div class="skills-card">
+        <h3 class="skills-card-title">IA & Deep Learning</h3>
+        <ul class="skills-list">
+          <li>PyTorch</li>
+          <li>Export & ONNX</li>
+          <li>Quantification</li>
+          <li>Plugins custom</li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Outils & Systèmes -->
+      <div class="skills-card">
+        <h3 class="skills-card-title">Outils & Sys</h3>
+        <ul class="skills-list">
+          <li>Git</li>
+          <li>Docker</li>
+          <li>Linux</li>
+          <li>Build</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Expériences Section -->
+  <div class="hermes-experiences-section">
+    <h2 class="section-title-grid">EXPÉRIENCES & FORMATION</h2>
+
+    <div class="hermes-experiences-list" style="display: flex; flex-direction: column; gap: 20px; margin-top: 40px;">
+
+      <!-- Exp 1 -->
+      <div class="experience-card">
+        <div class="exp-header">
+          <div>
+            <h3 class="exp-title">Ingénieur-Chercheur en Intelligence Artificielle Embarquée</h3>
+            <span class="exp-company">CEA — Laboratoire d'Intelligence Artificielle Embarquée</span>
+          </div>
+          <span class="exp-date">Décembre 2023 – Mai 2025</span>
+        </div>
+        <ul class="exp-details">
+          <li>Conception et évolution du framework <strong>Aidge</strong> pour le déploiement optimisé de réseaux de
+            neurones sur cibles matérielles embarquées.</li>
+          <li>Accélération GPU via <strong>CUDA</strong> et <strong>TensorRT</strong> : export et optimisation de
+            modèles de vision par ordinateur (SSD, YOLO) sur Jetson Orin.</li>
+        </ul>
+      </div>
+
+      <!-- Exp 2 -->
+      <div class="experience-card">
+        <div class="exp-header">
+          <div>
+            <h3 class="exp-title">Stagiaire en Développement GPU</h3>
+            <span class="exp-company">CEA — Département Simulation</span>
+          </div>
+          <span class="exp-date">Février 2023 – Juillet 2023</span>
+        </div>
+        <ul class="exp-details">
+          <li>Optimisation de noyaux de calcul complexes sur <strong>GPU</strong> pour codes de simulation
+            multi‑physique.</li>
+          <li>Évaluation de l’écosystème <strong>SYCL</strong> (OpenSYCL, oneAPI) pour le HPC hétérogène, avec
+            benchmarks comparatifs.</li>
+        </ul>
+      </div>
+
+      <!-- Master -->
+      <div class="experience-card">
+        <div class="exp-header">
+          <div>
+            <h3 class="exp-title">Master Informatique — Computer & Network Systems</h3>
+            <span class="exp-company">Université Paris-Saclay</span>
+          </div>
+          <span class="exp-date edu-date">Septembre 2020 – Juillet 2023</span>
+        </div>
+        <ul class="exp-details">
+          <li>Spécialisation en Systèmes Autonomes, Optimisation, IA et HPC.</li>
+        </ul>
+      </div>
+
+      <!-- Licence -->
+      <div class="experience-card">
+        <div class="exp-header">
+          <div>
+            <h3 class="exp-title">Licence Informatique — Conception et Intelligence des Logiciels et des Systèmes</h3>
+            <span class="exp-company">Université Paris-Saclay</span>
+          </div>
+          <span class="exp-date edu-date">Septembre 2017 – Juillet 2020</span>
+        </div>
+        <ul class="exp-details">
+          <li>Algorithmique, programmation, réseaux, bases de données.</li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 
   <!-- Minimalist Social Links Bar -->
   <div class="hermes-social-bar">
-      <a href="https://www.linkedin.com/in/nathan-thoumine/" target="_blank" class="social-link" title="LinkedIn">
-        <i class="fab fa-linkedin-in"></i> LinkedIn
-      </a>
-      <a href="https://github.com/DEICIDIA" target="_blank" class="social-link" title="GitHub">
-        <i class="fab fa-github"></i> GitHub
-      </a>
-      <a href="https://x.com/ThoumNth" target="_blank" class="social-link" title="Twitter / X">
-        <i class="fab fa-x-twitter"></i> Twitter
-      </a>
-      <a href="mailto:nathan.thoumine@gmail.com" class="social-link" title="Email">
-        <i class="far fa-envelope"></i> Email
-      </a>
-    </div>
+    <a href="https://www.linkedin.com/in/nathan-thoumine/" target="_blank" class="social-link" title="LinkedIn">
+      <i class="fab fa-linkedin-in"></i> LinkedIn
+    </a>
+    <a href="https://github.com/DEICIDIA" target="_blank" class="social-link" title="GitHub">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+    <a href="https://x.com/ThoumNth" target="_blank" class="social-link" title="Twitter / X">
+      <i class="fab fa-x-twitter"></i> Twitter
+    </a>
+    <a href="mailto:nathan.thoumine@gmail.com" class="social-link" title="Email">
+      <i class="far fa-envelope"></i> Email
+    </a>
   </div>
+</div>
 
 </div>
