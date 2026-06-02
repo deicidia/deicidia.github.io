@@ -13,6 +13,7 @@
     }
 
     .header-wrapper {
+        box-sizing: border-box !important;
         width: 100% !important;
         max-width: 100% !important;
         padding-right: 0 !important;
@@ -24,8 +25,8 @@
 
         @include media-query($on-palm) {
             min-height: 60px;
-            padding-left: 20px !important;
-            padding-right: 20px !important;
+            padding-left: 24px !important;
+            padding-right: 24px !important;
         }
     }
 }
@@ -96,18 +97,37 @@
         display: none;
     }
 
+    label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
     .menu-icon {
         display: none;
 
         @include media-query($on-palm) {
             display: block;
-            width: 36px;
-            height: 26px;
+            width: 38px;
+            height: 38px;
             line-height: 0;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1px solid var(--border-color);
+            background-color: var(--color-base-00);
+            transition: all $anim-duration-fast ease;
+
+            &:hover, &:active {
+                background-color: var(--color-accent-faint);
+                border-color: var(--color-accent);
+                
+                >svg path {
+                    fill: var(--color-accent);
+                }
+            }
 
             >svg {
                 width: 18px;
@@ -115,6 +135,7 @@
 
                 path {
                     fill: var(--text-normal);
+                    transition: fill $anim-duration-fast ease;
                 }
             }
         }
@@ -774,6 +795,8 @@
     @include media-query($on-palm) {
         border-left: none;
         border-right: none;
+        box-shadow: none;
+        background-color: var(--background-primary) !important;
     }
 }
 
@@ -786,6 +809,10 @@
     background-color: transparent;
     max-width: 800px;
     margin: 0 auto;
+
+    @include media-query($on-palm) {
+        padding: 40px 20px;
+    }
     
     .hero-badge {
         font-family: var(--font-family-body), monospace;
@@ -922,7 +949,7 @@
     padding: 60px 40px;
     
     @include media-query($on-palm) {
-        padding: 40px 20px;
+        padding: 40px 24px;
     }
     
     .bio-content-horizontal {
