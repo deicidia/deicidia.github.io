@@ -842,7 +842,7 @@
     .hero-tagline {
         font-family: var(--font-family-body), monospace;
         font-size: 0.9rem;
-        line-height: 1.6;
+        line-height: 1.75;
         color: var(--color-base-70);
         max-width: 650px;
         margin-bottom: 0;
@@ -959,7 +959,7 @@
         .bio-text {
             font-family: var(--font-family-body), monospace;
             font-size: 0.95rem;
-            line-height: 1.7;
+            line-height: 1.85;
             color: var(--color-base-80);
             
             p {
@@ -998,7 +998,7 @@
                 .expertise-text {
                     font-family: var(--font-family-body), monospace;
                     font-size: 0.9rem;
-                    line-height: 1.6;
+                    line-height: 1.75;
                     color: var(--color-base-80);
                     
                     strong {
@@ -1242,7 +1242,7 @@
         list-style-type: square;
         color: var(--color-base-80);
         font-size: 0.95rem;
-        line-height: 1.6;
+        line-height: 1.75;
         
         li {
             margin-bottom: 8px;
@@ -1314,7 +1314,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-family: var(--font-family-body), monospace;
+            font-family: var(--font-family-headings), sans-serif;
             font-size: 0.95rem;
             color: var(--color-base-80);
 
