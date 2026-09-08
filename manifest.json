@@ -1,7 +1,7 @@
 {
-  "name": "Nathan Thoumine - Portfolio & Blog",
-  "short_name": "N. Thoumine",
-  "description": "Portfolio et Blog de Nathan Thoumine. Ingénieur IA Embarquée & Robotique.",
+  "name": "Workout - Programme d'Entraînement",
+  "short_name": "Workout",
+  "description": "Programme d'entraînement et suivi sportif personnalisé.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

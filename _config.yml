@@ -1,12 +1,5 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely need to edit after that.
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'jekyll serve'. If you change this file, please restart the server process.
-
 # Site settings
-title: Nathan Thoumine
+title: Nathan Thoumine - Workout
 email: thoum.nathan@gmail.com
 author:
   name: Nathan Thoumine
@@ -16,8 +9,7 @@ author:
     - linkedin: nathan-thoumine
 
 description: >-
-  Portfolio et Blog de Nathan Thoumine. Ingénieur en IA Embarquée, Robotique et HPC. 
-  Découvrez mes explorations sur la vision par ordinateur, le calcul haute performance et l'autonomie.
+  Programme d'entraînement et suivi sportif - Coach & Tracker Workout.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://deicidia.github.io" # the base hostname & protocol for your site
 image: /images/blog_card.png # Default social sharing image for LinkedIn/Twitter
@@ -34,20 +26,11 @@ social:
     - https://www.linkedin.com/in/nathan-thoumine/
     - https://x.com/ThoumNth
 
-
 # Build settings
 markdown: kramdown
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
-
-exclude:
-  - todo
-
-# Collections
-collections:
-  scans:
-    output: true
 
 # SASS configuration
 sass:
